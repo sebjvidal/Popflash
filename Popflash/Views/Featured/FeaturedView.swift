@@ -235,6 +235,7 @@ private struct MoreFrom: View {
                         MapCell(map: map)
                             .padding(.horizontal, 16)
                             .padding(.bottom, 10)
+                            .shadow(radius: 6, y: 5)
                         
                     }
                     
