@@ -100,7 +100,6 @@ public struct MapCell: View {
                     KFImage(URL(string: map.background)!)
                         .resizable()
                         .setProcessor(processor)
-                        //.aspectRatio(contentMode: .fit)
                         .frame(height: 80)
                     
                     VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
