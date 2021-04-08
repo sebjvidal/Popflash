@@ -238,6 +238,7 @@ private struct MoreFrom: View {
                             .shadow(radius: 6, y: 5)
                         
                     }
+                    .buttonStyle(MapCellButtonStyle())
                     
                     Top5(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented, map: map.name)
                     
@@ -302,6 +303,7 @@ private struct Top5: View {
                         }
                                                 
                     }
+                    .buttonStyle(ComplimentsCellButtonStyle())
                     
                     Spacer()
                         .frame(width: 16)
@@ -335,6 +337,15 @@ private struct ComplimentsCell: View {
             Rectangle()
                 .foregroundColor(Color("Background"))
                 .frame(width: 220, height: 194)
+            
+            let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1.0))
+            
+            KFImage(URL(string: comp.thumbnail))
+                .resizable()
+                .setProcessor(processor)
+                .frame(width: 220)
+            
+            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
             
             VStack(alignment: .leading) {
                 

@@ -17,8 +17,6 @@
 		C2069AFC25CAE8D500ACFD15 /* FeaturedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2069AFB25CAE8D500ACFD15 /* FeaturedView.swift */; };
 		C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2069B0025CAF01900ACFD15 /* MapsView.swift */; };
 		C2069B1525CC041B00ACFD15 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2069B1425CC041B00ACFD15 /* ContentView.swift */; };
-		C20E57E026186FF900FA2513 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20E57DF26186FF900FA2513 /* PageViewController.swift */; };
-		C20E57E52618716800FA2513 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20E57E42618716800FA2513 /* PageView.swift */; };
 		C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21085C325E5832B0062DC81 /* WelcomeView.swift */; };
 		C223FB9225E6785B004EEA5F /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C223FB9125E6785B004EEA5F /* PlayerView.swift */; };
 		C227A48B25D82074003F6822 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C227A48A25D82074003F6822 /* FavouritesView.swift */; };
@@ -41,7 +39,6 @@
 		C27E495A25DE7DBF00692E01 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495925DE7DBF00692E01 /* VisualEffectView.swift */; };
 		C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495E25DE7DD800692E01 /* ScreenSize.swift */; };
 		C27E496925DEC78F00692E01 /* ArrayAppStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */; };
-		C27E497125DED72400692E01 /* CapitalizingFirstLetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E497025DED72400692E01 /* CapitalizingFirstLetter.swift */; };
 		C294C06125D2B96A00C54495 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C294C06025D2B96A00C54495 /* GoogleService-Info.plist */; };
 		C2D21AD725FBE38F00FA7368 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */; };
 		C2D21ADF25FD28DE00FA7368 /* OnRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */; };
@@ -83,8 +80,6 @@
 		C2069AFB25CAE8D500ACFD15 /* FeaturedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedView.swift; sourceTree = "<group>"; };
 		C2069B0025CAF01900ACFD15 /* MapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsView.swift; sourceTree = "<group>"; };
 		C2069B1425CC041B00ACFD15 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		C20E57DF26186FF900FA2513 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		C20E57E42618716800FA2513 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		C21085C325E5832B0062DC81 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		C223FB9125E6785B004EEA5F /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		C227A48A25D82074003F6822 /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
@@ -101,7 +96,6 @@
 		C27E495925DE7DBF00692E01 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		C27E495E25DE7DD800692E01 /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayAppStorage.swift; sourceTree = "<group>"; };
-		C27E497025DED72400692E01 /* CapitalizingFirstLetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapitalizingFirstLetter.swift; sourceTree = "<group>"; };
 		C294C06025D2B96A00C54495 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnRotation.swift; sourceTree = "<group>"; };
@@ -208,12 +202,10 @@
 		C2069B0825CB3A9C00ACFD15 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C20E57DE26186FDE00FA2513 /* PageViewController */,
 				C27E495425DE7D8300692E01 /* ScrollView.swift */,
 				C27E495925DE7DBF00692E01 /* VisualEffectView.swift */,
 				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
 				C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */,
-				C27E497025DED72400692E01 /* CapitalizingFirstLetter.swift */,
 				C223FB9125E6785B004EEA5F /* PlayerView.swift */,
 				C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */,
 				C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */,
@@ -221,15 +213,6 @@
 				C267B579261CD19800958E01 /* CustomButtonStyle.swift */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		C20E57DE26186FDE00FA2513 /* PageViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C20E57DF26186FF900FA2513 /* PageViewController.swift */,
-				C20E57E42618716800FA2513 /* PageView.swift */,
-			);
-			path = PageViewController;
 			sourceTree = "<group>";
 		};
 		C21085B625E580F00062DC81 /* Welcome */ = {
@@ -471,13 +454,11 @@
 				C223FB9225E6785B004EEA5F /* PlayerView.swift in Sources */,
 				C27E496925DEC78F00692E01 /* ArrayAppStorage.swift in Sources */,
 				C2F92E2525CC7A3C00AEECD0 /* MapsDetailView.swift in Sources */,
-				C20E57E026186FF900FA2513 /* PageViewController.swift in Sources */,
 				C2D21B2C260129C100FA7368 /* EditFavouriteMapsView.swift in Sources */,
 				C23C6D5525D41FCF008D283F /* MapsViewModel.swift in Sources */,
 				C227A49F25DB0869003F6822 /* NadesViewModel.swift in Sources */,
 				C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */,
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
-				C20E57E52618716800FA2513 /* PageView.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
 				C2069AFC25CAE8D500ACFD15 /* FeaturedView.swift in Sources */,
 				C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */,
@@ -486,7 +467,6 @@
 				C2069B1525CC041B00ACFD15 /* ContentView.swift in Sources */,
 				C23C6D0325D3EE08008D283F /* Map.swift in Sources */,
 				C2069ACB25CAE8B300ACFD15 /* SceneDelegate.swift in Sources */,
-				C27E497125DED72400692E01 /* CapitalizingFirstLetter.swift in Sources */,
 				C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */,
 				C227A48B25D82074003F6822 /* FavouritesView.swift in Sources */,
 				C23C6D1F25D3F9B6008D283F /* AuthenticationService.swift in Sources */,

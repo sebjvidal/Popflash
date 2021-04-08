@@ -95,7 +95,7 @@ public struct MapCell: View {
 
                 ZStack {
                     
-                    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1)) |> DownsamplingImageProcessor(size: CGSize(width: 1284, height: 100))
+                    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
                     
                     KFImage(URL(string: map.background)!)
                         .resizable()
@@ -356,7 +356,7 @@ struct MapsView: View {
                                         .padding(.bottom, 10)
                                     
                                 }
-                                .buttonStyle(CustomButtonStyle())
+                                .buttonStyle(MapCellButtonStyle())
                                 
                             }
                             

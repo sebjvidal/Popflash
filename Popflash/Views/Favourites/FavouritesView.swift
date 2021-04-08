@@ -53,6 +53,7 @@ struct FavouritesView: View {
                     
                 }
                 .onAppear {
+                    
                     standard.set(2, forKey: "tabSelection")
                     
                 }
@@ -122,7 +123,7 @@ private struct FavouriteMaps: View {
                                 .contentShape(Rectangle())
                             
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .buttonStyle(FavouriteMapCellButtonStyle())
                         
                     }
                     
@@ -161,7 +162,7 @@ private struct FavouriteMaps: View {
                     .frame(width: 24)
                 
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(FavouriteMapCellButtonStyle())
             
             Divider()
                 .frame(minWidth: UIScreen.screenWidth - 32)
@@ -211,7 +212,7 @@ private struct FavouriteMapCell: View {
                 .shadow(radius: 10)
             
         }
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .shadow(radius: 5, y: 4)
         .padding(.leading, 8)
         .padding(.bottom, 16)
@@ -264,7 +265,7 @@ private struct FavouriteNades: View {
                         .padding(.bottom, 8)
                     
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(FavouriteNadeCellButtonStyle())
                 .fullScreenCover(item: self.$selectedNade) { item in
                     
                     NadeView(nade: item)
@@ -272,6 +273,8 @@ private struct FavouriteNades: View {
                 }
                 
             }
+            
+            Spacer(minLength: 12)
             
         }
         .onAppear() {
@@ -292,9 +295,14 @@ private struct FavouriteNadeCell: View {
         
         ZStack(alignment: .leading) {
             
-            Rectangle()
-                .foregroundColor(Color("Background"))
+            let processor = CroppingImageProcessor(size: CGSize(width: 1, height: 722), anchor: CGPoint(x: 1, y: 0.5))
+            
+            KFImage(URL(string: nade.thumbnail))
+                .setProcessor(processor)
+                .resizable()
                 .frame(height: 106)
+            
+            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
             
             HStack(alignment: .top) {
                 
