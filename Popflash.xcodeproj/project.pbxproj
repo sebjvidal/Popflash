@@ -202,15 +202,15 @@
 		C2069B0825CB3A9C00ACFD15 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C27E495425DE7D8300692E01 /* ScrollView.swift */,
-				C27E495925DE7DBF00692E01 /* VisualEffectView.swift */,
-				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
 				C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */,
+				C267B579261CD19800958E01 /* CustomButtonStyle.swift */,
+				C2462B832607766600FFBE8E /* HasNotch.swift */,
+				C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */,
 				C223FB9125E6785B004EEA5F /* PlayerView.swift */,
 				C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */,
-				C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */,
-				C2462B832607766600FFBE8E /* HasNotch.swift */,
-				C267B579261CD19800958E01 /* CustomButtonStyle.swift */,
+				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
+				C27E495425DE7D8300692E01 /* ScrollView.swift */,
+				C27E495925DE7DBF00692E01 /* VisualEffectView.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
