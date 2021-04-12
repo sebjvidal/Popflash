@@ -12,10 +12,22 @@ import Kingfisher
 class MapsViewModel: ObservableObject {
     
     @Published var maps = [Map]()
+    @Published var loading = false
     
     private var db = Firestore.firestore()
+    private var lastDocument: QueryDocumentSnapshot!
     
     func fetchData(ref: Query) {
+        
+        self.loading = true
+        
+        var dbRef = ref.limit(to: 10)
+        
+        if !maps.isEmpty {
+            
+            dbRef = dbRef.start(afterDocument: lastDocument)
+            
+        }
         
         ref.getDocuments { (querySnapshot, error) in
             
@@ -25,11 +37,11 @@ class MapsViewModel: ObservableObject {
                 
             }
             
-            self.maps = documents.map { (queryDocumentSnapshot) -> Map in
+            for document in documents {
                 
-                let data = queryDocumentSnapshot.data()
+                let data = document.data()
                 
-                let id = queryDocumentSnapshot.documentID
+                let id = document.documentID
                 let name = data["name"] as? String ?? ""
                 let group = data["group"] as? String ?? ""
                 let scenario = data["scenario"] as? String ?? ""
@@ -38,7 +50,7 @@ class MapsViewModel: ObservableObject {
                 let icon = data["icon"] as? String ?? ""
                 let views = data["views"] as? Int ?? 0
                 let lastAdded = data["lastAdded"] as? String ?? ""
-                
+
                 let map = Map(id: id,
                               name: name,
                               group: group,
@@ -49,11 +61,15 @@ class MapsViewModel: ObservableObject {
                               views: views,
                               lastAdded: lastAdded)
                 
-                return map
+                self.lastDocument = document
+                
+                if !self.maps.contains(map) { self.maps.append(map) }
                 
             }
             
         }
+        
+        self.loading = false
         
     }
     

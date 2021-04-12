@@ -12,12 +12,24 @@ import FirebaseFirestore
 class NadesViewModel: ObservableObject {
     
     @Published var nades = [Nade]()
+    @Published var loading = false
     
     private var db = Firestore.firestore()
+    private var lastDocument: QueryDocumentSnapshot!
     
     func fetchData(ref: Query) {
+        
+        self.loading = true
+        
+        var dbRef = ref.limit(to: 10)
+        
+        if !nades.isEmpty {
             
-            ref.getDocuments { (querySnapshot, error) in
+            dbRef = dbRef.start(afterDocument: lastDocument)
+            
+        }
+            
+            dbRef.getDocuments { (querySnapshot, error) in
                 
                 guard let documents = querySnapshot?.documents else {
 
@@ -25,9 +37,9 @@ class NadesViewModel: ObservableObject {
                     
                 }
                 
-                self.nades = documents.map { (queryDocumentSnapshot) -> Nade in
+                for document in documents {
                     
-                    let data = queryDocumentSnapshot.data()
+                    let data = document.data()
                     
                     let id = data["id"] as? String ?? ""
                     let name = data["name"] as? String ?? ""
@@ -61,11 +73,15 @@ class NadesViewModel: ObservableObject {
                                     tags: tags,
                                     compliments: compliments)
                     
-                    return nade
+                    self.lastDocument = document
+                    
+                    if !self.nades.contains(nade) { self.nades.append(nade) }
                     
                 }
                 
             }
+        
+        self.loading = false
         
     }
     
