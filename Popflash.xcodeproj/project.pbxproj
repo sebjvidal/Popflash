@@ -40,6 +40,7 @@
 		C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495E25DE7DD800692E01 /* ScreenSize.swift */; };
 		C27E496925DEC78F00692E01 /* ArrayAppStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */; };
 		C294C06125D2B96A00C54495 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C294C06025D2B96A00C54495 /* GoogleService-Info.plist */; };
+		C2A8CD2E2628C344007F55B3 /* MapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8CD2D2628C344007F55B3 /* MapCell.swift */; };
 		C2D21AD725FBE38F00FA7368 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */; };
 		C2D21ADF25FD28DE00FA7368 /* OnRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */; };
 		C2D21B2C260129C100FA7368 /* EditFavouriteMapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21B2B260129C000FA7368 /* EditFavouriteMapsView.swift */; };
@@ -97,6 +98,7 @@
 		C27E495E25DE7DD800692E01 /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayAppStorage.swift; sourceTree = "<group>"; };
 		C294C06025D2B96A00C54495 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C2A8CD2D2628C344007F55B3 /* MapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCell.swift; sourceTree = "<group>"; };
 		C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnRotation.swift; sourceTree = "<group>"; };
 		C2D21B2B260129C000FA7368 /* EditFavouriteMapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavouriteMapsView.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 		C227A48725D8200D003F6822 /* Maps */ = {
 			isa = PBXGroup;
 			children = (
+				C2A8CD2D2628C344007F55B3 /* MapCell.swift */,
 				C2069B0025CAF01900ACFD15 /* MapsView.swift */,
 				C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */,
 			);
@@ -470,6 +473,7 @@
 				C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */,
 				C227A48B25D82074003F6822 /* FavouritesView.swift in Sources */,
 				C23C6D1F25D3F9B6008D283F /* AuthenticationService.swift in Sources */,
+				C2A8CD2E2628C344007F55B3 /* MapCell.swift in Sources */,
 				C2462B842607766600FFBE8E /* HasNotch.swift in Sources */,
 				C2D21AD725FBE38F00FA7368 /* ProgressBar.swift in Sources */,
 				C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */,

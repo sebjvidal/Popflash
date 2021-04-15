@@ -37,6 +37,8 @@ struct MapsView: View {
                         
                         MapsList(maps: mapsViewModel.maps)
                         
+                        Spacer(minLength: 8)
+                        
                     }
                     
                 }
@@ -154,135 +156,6 @@ private struct MapsFilterMenu: View {
                 .padding(.trailing, 16)
             
         }
-        
-    }
-    
-}
-
-private struct NewButton: View {
-    
-    var lastAdded: String
-    
-    var body: some View {
-        
-        if recentlyAdded(dateString: lastAdded) {
-            
-            ZStack {
-                
-                Rectangle()
-                    .frame(width: 75, height: 26)
-                    .foregroundColor(.blue)
-                    .cornerRadius(13)
-                
-                Text("NEW")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                
-            }
-            
-        }
-        
-    }
-    
-    func recentlyAdded(dateString: String) -> Bool {
-        
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "dd-MM-y"
-        
-        let calendar = Calendar.current
-        let currentDate = Date()
-        guard let lastAddedDate = dateFormatter.date(from: dateString) else { return false }
-        
-        var dateComponent = DateComponents()
-        
-        dateComponent.day = -7
-        
-        guard let dateThreshold = calendar.date(byAdding: dateComponent, to: currentDate) else { return false }
-        
-        if lastAddedDate > dateThreshold {
-            
-            return true
-            
-        } else {
-            
-            return false
-            
-        }
-        
-    }
-    
-}
-
-public struct MapCell: View {
-    
-    var map: Map
-    
-    @AppStorage("settings.compactMapsView") var compactMapsView = false
-    
-    public var body: some View {
-        
-        ZStack(alignment: .bottom) {
-            
-            VStack {
-                
-                if !compactMapsView {
-                    
-                    KFImage(URL(string: map.background)!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(Color("Loading"))
-                        .background(Color("Loading"))
-                        .frame(height: UIScreen.screenWidth / 1.777 - 32)
-                    
-                }
-                
-                ZStack {
-                    
-                    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
-                    
-                    KFImage(URL(string: map.background)!)
-                        .resizable()
-                        .setProcessor(processor)
-                        .frame(height: 80)
-                    
-                    VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                        .frame(height: 80)
-                    
-                    
-                    HStack {
-                        
-                        KFImage(URL(string: map.icon))
-                            .resizable()
-                            .frame(width: 55, height: 55)
-                            .padding(.leading, 12)
-                        
-                        VStack(alignment: .leading) {
-                            
-                            Text(map.name)
-                                .font(.headline)
-                            
-                            Text(map.group)
-                                .font(.subheadline)
-                            
-                        }
-                        
-                        Spacer()
-                        
-                        NewButton(lastAdded: map.lastAdded)
-                        
-                        Image(systemName: "chevron.right")
-                            .padding(.trailing, 12)
-                        
-                    }
-                    
-                }
-                .padding(.top, -2)
-                
-            }
-            
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         
     }
     
