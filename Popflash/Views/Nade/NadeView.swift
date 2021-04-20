@@ -319,6 +319,19 @@ private struct Details: View {
         
     }
     
+    func videoDetails(nade: Nade) -> [Detail] {
+        
+        let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
+                       Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
+                       Detail(name: "TICK RATE", value: nade.tick, image: Image(systemName: "clock.fill")),
+                       Detail(name: "JUMP BIND", value: nade.bind, image: Image("keyboard.fill")),
+                       Detail(name: "SIDE", value: nade.side, image: Image("\(nade.side.lowercased()).fill")),
+                       Detail(name: "TYPE", value: nade.type, image: Image(systemName: "circle.fill"))]
+        
+        return details
+        
+    }
+    
 }
 
 private struct FavouriteButton: View {
@@ -374,161 +387,98 @@ private struct FavouriteButton: View {
     
 }
 
-public struct VideoInfo: View {
+struct VideoInfo: View {
     
     var nade: Nade
+
+    var body: some View {
     
-    public var body: some View {
-        
         ScrollView(axes: .horizontal, showsIndicators: false) {
-            
+        
             VStack {
-                
+            
                 Divider()
-                    .background(Color.clear)
                     .padding(.horizontal)
-                
+                    
                 HStack {
                     
                     Spacer()
                         .frame(width: 24)
+                
+                    ForEach(videoDetails(detailsOf: nade), id: \.self) { detail in
                     
-                    VideoInfoDetails(nade: nade)
+                        ZStack {
+                        
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .frame(width: 80, height: 60)
+                                .padding(0)
+                            
+                            detail.image
+                                .foregroundColor(Color("Detail_Icon"))
+                        
+                            VStack {
+                    
+                                Text(detail.name)
+                                    .font(.system(size: 11))
+                                    .fontWeight(.semibold)
+                                    .padding(.bottom, 2)
+                                    .frame(height: 8)
+                                    .foregroundColor(Color("Detail_Name"))
+                                
+                                Spacer()
+                                    .frame(height: 36)
+                                
+                                Text(detail.value)
+                                    .font(.system(size: 12))
+                                    .fontWeight(.semibold)
+                                    .padding(.top, 2)
+                                    .frame(height: 8)
+                                    .foregroundColor(Color("Detail_Name"))
+                                    
+                            }
+                        
+                        }
+                        
+                        if detail != videoDetails(detailsOf: nade).last {
+                        
+                            Divider()
+                                .padding(.vertical)
+                                .frame(height: 70)
+                        
+                        }
+                    
+                    }
                     
                     Spacer()
-                        .frame(width: 23.9)
-                    
+                        .frame(width: 24)
+                
                 }
-
+                
                 Divider()
                     .padding(.horizontal)
-                
+            
             }
-            
+        
         }
-        
+    
     }
     
-}
+    func videoDetails(detailsOf: Nade) -> [Detail] {
+        
+        let nade = detailsOf
+        
+        let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
+                       Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
+                       Detail(name: "TICK RATE", value: nade.tick, image: Image(systemName: "clock.fill")),
+                       Detail(name: "JUMP BIND", value: nade.bind, image: Image("keyboard.fill")),
+                       Detail(name: "SIDE", value: nade.side, image: Image("\(nade.side.lowercased()).fill")),
+                       Detail(name: "TYPE", value: nade.type, image: Image(systemName: "circle.fill"))]
+        
+        return details
+        
+    }
 
-private struct VideoInfoDetails: View {
-    
-    var nade: Nade
-    
-    var body: some View {
-        
-        HStack {
-            
-            VideoBox(title: "VIEWS",
-                     symbol: "eye.fill",
-                     value: String(nade.views))
-            
-            BoxDivider()
-            
-            VideoBox(title: "FAVOURITES",
-                     symbol: "heart.fill",
-                     value: String(nade.favourites))
-            
-            BoxDivider()
-            
-            VideoBox(title: "TICK RATE",
-                     symbol: "clock.fill",
-                     value: nade.tick)
-            
-            BoxDivider()
-            
-            VideoBox(title: "JUMP BIND",
-                     symbol: "keyboard",
-                     value: nade.bind)
-            
-            BoxDivider()
-            
-            VideoBox(title: "SIDE",
-                     symbol: "terrorist.fill",
-                     value: nade.side)
-            
-            
-        }
-        
-    }
-    
-}
-
-private struct BoxDivider: View {
-    
-    var body: some View {
-        
-        Divider()
-            .padding(.vertical)
-            .frame(height: 70)
-        
-    }
-    
-}
-
-private struct VideoBox: View {
-    
-    var title: String
-    var symbol: String
-    var value: String
-    
-    let cellPadding = 32.0
-    let boxWidth = UIScreen.screenWidth / 4 - 32
-    
-    var body: some View {
-        
-        ZStack {
-            
-            Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 80, height: 60)
-                .padding(0)
-            
-            if symbol == "keyboard" {
-                
-                Image("keyboard.fill")
-                    .padding(.bottom, 2)
-                    .foregroundColor(.gray)
-                
-            } else if symbol == "terrorist.fill" {
-                
-                Image("terrorist.fill")
-                    .padding(.bottom, 2)
-                    .font(.system(size: 22))
-                    .foregroundColor(.gray)
-                
-            } else {
-                
-                Image(systemName: symbol)
-                    .padding(.bottom, 2)
-                    .foregroundColor(.gray)
-                
-            }
-            
-            VStack {
-                
-                Text(title)
-                    .font(.system(size: 11))
-                    .fontWeight(.semibold)
-                    .padding(.bottom, 2)
-                    .frame(width: boxWidth + 8, height: 8)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                    .frame(height: 36)
-                
-                Text(value)
-                    .font(.system(size: 12))
-                    .fontWeight(.semibold)
-                    .padding(.top, 2)
-                    .frame(width: boxWidth, height: 8)
-                    .foregroundColor(.gray)
-            }
-            
-        }
-        
-    }
-    
 }
 
 private struct Compliments: View {

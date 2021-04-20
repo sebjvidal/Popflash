@@ -381,13 +381,17 @@ private struct FeaturedVideoDetail: View {
     var nade: Nade
     
     var body: some View {
+        
         HStack {
+            
             VStack(alignment: .leading) {
+                
                 Text(nade.map)
                     .foregroundColor(.gray)
                     .fontWeight(.semibold)
                     .padding(.top, 2)
                     .padding(.horizontal)
+                
                 Text(nade.name)
                     .font(.system(size: 22))
                     .fontWeight(.bold)
@@ -412,9 +416,13 @@ private struct FeaturedVideoDetail: View {
                     .padding(.horizontal, 18)
                     .padding(.top, 4)
                     .padding(.bottom, 15)
+                
             }
+            
         }
+        
     }
+    
 }
 
 private struct FeaturedVideo: View {
@@ -422,24 +430,35 @@ private struct FeaturedVideo: View {
     var thumbnail: String
     
     var body: some View {
+        
         KFImage(URL(string: thumbnail))
             .resizable()
             .frame(width: UIScreen.screenWidth - 32,
                    height: (UIScreen.screenWidth - 32 ) / 1.77)
             .aspectRatio(contentMode: .fill)
+        
     }
+    
 }
 
 private struct SeeMore: View {
+    
     var body: some View {
+        
         HStack {
+            
             Text("Learn More...")
                 .foregroundColor(.blue)
+            
             Spacer()
+            
             Image(systemName: "chevron.right")
                 .foregroundColor(.blue)
+            
         }
+        
     }
+    
 }
 
 private struct Compliments: View {
