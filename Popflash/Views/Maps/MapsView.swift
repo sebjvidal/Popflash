@@ -169,7 +169,7 @@ private struct MapsList: View {
     
     var body: some View {
         
-        LazyVStack {
+        VStack {
             
             ForEach(filteredMaps(mapsList: maps), id: \.self) { map in
                 
