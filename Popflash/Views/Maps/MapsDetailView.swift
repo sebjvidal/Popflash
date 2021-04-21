@@ -1,10 +1,3 @@
-//
-//  MapsDetailView.swift
-//  Popflash
-//
-//  Created by Seb Vidal on 04/02/2021.
-//
-
 import SwiftUI
 import Kingfisher
 import FirebaseFirestore
@@ -46,38 +39,52 @@ struct MapsDetailView: View {
                 
             }) {
                 
-                Header(map: map, offset: scrollOffset)
+                LazyVStack {
                     
-                SearchBar(searchQuery: $searchQuery)
-                    .padding(.horizontal)
-                    .padding(.bottom, 8)
-                    .onChange(of: searchQuery) {
+                    Header(map: map, offset: scrollOffset)
                         
-                        if $0 != "" {
+                    SearchBar(searchQuery: $searchQuery)
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
+                        .onChange(of: searchQuery) {
                             
-                            self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                    .whereField("map", isEqualTo: map.name)
-                                                                    .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                            if $0 != "" {
+                                
+                                self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                                        .whereField("map", isEqualTo: map.name)
+                                                                        .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                                
+                            }
                             
                         }
-                        
-                    }
-                
-                NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades,
-                         searchQuery: $searchQuery)
+                    
+                    NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades,
+                             searchQuery: $searchQuery,
+                             isLoading: viewModel.loading)
+                    
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .onAppear() {
+                            
+                            self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                              .whereField("map", isEqualTo: map.name))
+                            
+                        }
 
-                Spacer()
-                    .frame(height: 10)
+                    Spacer()
+                        .frame(height: 12)
+                    
+                }
             
             }
             .onAppear() {
                 
                 let db = Firestore.firestore()
-//
+
                 db.collection("maps").document(map.id).setData([
                     "views": map.views + 1
                 ], merge: true)
-//
+
                 self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
                                                   .whereField("map", isEqualTo: map.name))
                 
@@ -161,50 +168,36 @@ private struct NadeList: View {
     @Binding var nades: [Nade]
     @Binding var searchQuery: String
     
+    @State var isLoading: Bool
+    
     @State private var selectedNade: Nade?
     
     var body: some View {
-        
-        if nades.isEmpty {
-                
-                ForEach(1..<10, id: \.self) { _ in
                     
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .foregroundColor(Color("Loading"))
-                        .frame(height: ((UIScreen.screenWidth - 32) / 1.77) + 91)
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
+        LazyVStack {
+            
+            //.sorted(by: { $0.tags.count > $1.tags.count })
+            
+            ForEach(nades, id: \.self) { nade in
+
+                Button {
+                    
+                    self.selectedNade = nade
+                    
+                } label: {
+                    
+                    NadeCell(nade: nade)
                     
                 }
-                
-//            }
-            
-        } else {
-            
-            LazyVStack {
-                
-                ForEach(nades.sorted(by: { $0.tags.count > $1.tags.count }), id: \.self) { nade in
-
-                    Button {
-                        
-                        self.selectedNade = nade
-                        
-                    } label: {
-                        
-                        NadeCell(nade: nade)
-                        
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .fullScreenCover(item: self.$selectedNade) { item in
-                        
-                        NadeView(nade: item)
-                        
-                    }
-
+                .buttonStyle(PlainButtonStyle())
+                .fullScreenCover(item: self.$selectedNade) { item in
+                    
+                    NadeView(nade: item)
+                    
                 }
-                
+
             }
-
+            
         }
         
     }
@@ -396,23 +389,27 @@ private struct NadeCellDetails: View {
                     Text(String(views))
                         .font(.caption2)
                         .padding(.trailing, 16)
+                        .fixedSize()
                     Image(systemName: "heart.fill")
                         .font(.caption2)
                         .padding(.trailing, -4)
                     Text(String(favourites))
                         .font(.caption2)
                         .padding(.trailing, 16)
+                        .fixedSize()
                     Image(systemName: "clock.fill")
                         .font(.caption2)
                         .padding(.trailing, -4)
                     Text(tick)
                         .font(.caption2)
                         .padding(.trailing, 16)
+                        .fixedSize()
                     Image("keyboard.fill")
                         .font(.caption2)
                         .padding(.trailing, -4)
                     Text(bind)
                         .font(.caption2)
+                        .fixedSize()
                     
                 }
                 .padding(.top, 4)

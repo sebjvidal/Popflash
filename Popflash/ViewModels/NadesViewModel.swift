@@ -21,7 +21,7 @@ class NadesViewModel: ObservableObject {
         
         self.loading = true
         
-        var dbRef = ref.limit(to: 10)
+        var dbRef = ref.limit(to: 3)
         
         if !nades.isEmpty {
             
