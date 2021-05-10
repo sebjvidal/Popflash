@@ -10,83 +10,102 @@ import FirebaseFirestore
 
 struct EditFavouriteMapsView: View {
     
-    @State var isEditMode: EditMode = .inactive
+    @StateObject var mapsViewModel = MapsViewModel()
     
     @AppStorage("favourites.maps") var favouriteMaps = [String]()
     
-    var maps = ["Dust II", "Mirage", "Nuke", "Inferno", "Overpass"]
-    var notMaps = ["Cache", "Cobblestone", "Vertigo", "Anubis", "Train"]
-    
-    @ObservedObject var mapsViewModel = MapsViewModel()
-    
     var body: some View {
-        
+ 
         NavigationView {
             
             ZStack(alignment: .top) {
                 
                 List {
                     
-                    Section() {
+                    ForEach(mapsViewModel.maps, id: \.self) { map in
                         
-                        ForEach(maps, id: \.self) { map in
+                        Button {
+                            
+                            if !favouriteMaps.contains(map.name) {
+                                
+                                favouriteMaps.append(map.name)
+                                
+                            } else {
+                                
+                                if let mapIndex = favouriteMaps.firstIndex(of: map.name) {
+                                    
+                                    favouriteMaps.remove(at: mapIndex)
+                                    
+                                }
+                                
+                            }
+                            
+                        } label: {
                             
                             HStack {
                                 
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundColor(.red)
-                                    .font(.system(size: 22))
+                                Image(systemName: favouriteMaps.contains(map.name) ? "checkmark.circle.fill" : "circle")
+                                    .font(.system(size: 24))
+                                    .padding(.vertical, 4)
+                                    .foregroundColor(Color.blue)
                                 
-                                Text(map)
+                                Text("\(map.name)")
                                 
                             }
                             
                         }
-                        .onMove(perform: { indices, newOffset in
-                            
-                            print(newOffset)
-                            
-                        })
-                        
-                    }
-                    
-                    Section() {
-                        
-                        ForEach(notMaps, id: \.self) { map in
-                            
-                            HStack {
-                                
-                                Image(systemName: "plus.circle.fill")
-                                    .foregroundColor(.green)
-                                    .font(.system(size: 22))
-                                
-                                Text(map)
-                                
-                            }
-                            
-                        }
-                        .onMove(perform: { indices, newOffset in
-                            
-                            print(newOffset)
-                            
-                        })
+                        .buttonStyle(PlainButtonStyle())
                         
                     }
                     
                 }
                 .listStyle(GroupedListStyle())
-                //            .deleteDisabled(true)
                 .navigationBarTitle("Favourite Maps", displayMode: .inline)
-                .environment(\.editMode, self.$isEditMode)
+                .toolbar {
+                    
+                    DoneToolbarItem()
+                    
+                }
                 .onAppear() {
                     
                     self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
                     
                 }
                 
-                VisualEffectView(effect: UIBlurEffect(style: .extraLight))
-                    .frame(height: 50)
-                    .edgesIgnoringSafeArea(.all)
+                VStack(spacing: 0) {
+                    
+                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+                        .frame(height: 56)
+                    
+                    Divider()
+                    
+                }
+                .edgesIgnoringSafeArea(.all)
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
+private struct DoneToolbarItem: ToolbarContent {
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    var body: some ToolbarContent {
+        
+        ToolbarItem(placement: .navigationBarTrailing) {
+            
+            Button {
+                
+                self.presentationMode.wrappedValue.dismiss()
+                
+            } label: {
+                
+                Text("Done")
+                    .fontWeight(.bold)
                 
             }
             

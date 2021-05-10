@@ -41,7 +41,7 @@ struct MapCell: View {
                         .opacity(compactMapsView ? 0 : 1)
                         .frame(height: 80)
                     
-                    VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
                         .frame(height: 80)
                     
                     
@@ -49,7 +49,8 @@ struct MapCell: View {
                         
                         KFImage(URL(string: map.icon))
                             .resizable()
-                            .frame(width: 55, height: 55)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 55)
                             .padding(.leading, 12)
                         
                         VStack(alignment: .leading) {
@@ -61,6 +62,7 @@ struct MapCell: View {
                                 .font(.subheadline)
                             
                         }
+                        .padding(.leading, 4)
                         
                         Spacer()
                         

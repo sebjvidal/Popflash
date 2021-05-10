@@ -29,6 +29,26 @@ struct MapCellButtonStyle: ButtonStyle {
     
 }
 
+struct NadeCellButtonStyle: ButtonStyle {
+    
+    var buttonOverlay: some View {
+        
+        Rectangle()
+            .foregroundColor(Color("Button_Overlay"))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        
+        configuration
+            .label
+            .overlay(configuration.isPressed ? buttonOverlay.opacity(0.25) : buttonOverlay.opacity(0.0))
+        
+    }
+    
+}
+
 struct ComplimentsCellButtonStyle: ButtonStyle {
     
     var buttonOverlay: some View {
@@ -36,8 +56,6 @@ struct ComplimentsCellButtonStyle: ButtonStyle {
         Rectangle()
             .foregroundColor(Color("Button_Overlay"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .padding(.trailing, 8)
-            .padding(.bottom, 20)
         
     }
     

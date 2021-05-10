@@ -31,25 +31,22 @@ struct FavouritesView: View {
                 
                 ScrollView {
                     
-                    Header()
-                    
-                    ScrollView(axes: .horizontal,
-                               showsIndicators: false,
-                               offsetChanged: {
-                                
-                                let offset = $0.y
-                                
-                                statusOpacitiy = Double((1 / 35) * -offset)
-                                
-                               }) {
+                    VStack {
                         
-                        FavouriteMaps()
+                        Header()
+                        
+                        ScrollView(axes: .horizontal,
+                                   showsIndicators: false) {
+                            
+                            FavouriteMaps()
+                            
+                        }
+                        .padding(.top, -6)
+                        
+                        FavouriteNades()
+                            .padding(.horizontal)
                         
                     }
-                    .padding(.top, -6)
-                    
-                    FavouriteNades()
-                        .padding(.horizontal)
                     
                 }
                 .onAppear {
@@ -64,6 +61,7 @@ struct FavouritesView: View {
                     .opacity(0.0)
                 
             }
+            .navigationBarTitle("", displayMode: .inline)
             
         }
         
@@ -106,8 +104,8 @@ private struct FavouriteMaps: View {
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .frame(width: 100, height: 150)
                             .foregroundColor(Color("Loading"))
-                            .padding([.leading, .bottom], 16)
-                            .padding(.trailing, -8)
+                            .padding(.leading, 8)
+                            .padding(.bottom, 16)
                         
                     }
                     
@@ -150,11 +148,10 @@ private struct FavouriteMaps: View {
                             .font(.system(size: 24))
                         
                     }
-                    .cornerRadius(10)
-                    .shadow(radius: 4, y: 3)
-                    .padding(.leading, 12)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .shadow(color: Color.black.opacity(0.15), radius: 5, y: 4)
+                    .padding(.leading, 8)
                     .padding(.bottom, 16)
-                    .padding(.trailing, -8)
                     
                 }
                 
@@ -168,8 +165,6 @@ private struct FavouriteMaps: View {
                 .frame(minWidth: UIScreen.screenWidth - 32)
                 .padding(.top, -8)
                 .padding(.horizontal)
-            
-            
             
         }
         .onAppear() {
@@ -247,7 +242,7 @@ private struct FavouriteNades: View {
             }
             
             ForEach(favouritesViewModel.nades, id: \.self) { nade in
-                
+                    
                 Button {
                     
                     self.selectedNade = nade
@@ -256,12 +251,6 @@ private struct FavouriteNades: View {
                 } label: {
                     
                     FavouriteNadeCell(nade: nade)
-                        .clipShape(
-                            
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            
-                        )
-                        .shadow(radius: 5, y: 4)
                         .padding(.bottom, 8)
                     
                 }
@@ -279,7 +268,11 @@ private struct FavouriteNades: View {
         }
         .onAppear() {
             
-            self.favouritesViewModel.fetchData(ref: Firestore.firestore().collection("nades").whereField("id", in: favouriteNades))
+            if !favouriteNades.isEmpty {
+                
+                self.favouritesViewModel.fetchData(ref: Firestore.firestore().collection("nades").whereField("id", in: favouriteNades))
+                
+            }
             
         }
         
@@ -291,12 +284,12 @@ private struct FavouriteNadeCell: View {
     
     var nade: Nade
     
+    let processor = CroppingImageProcessor(size: CGSize(width: 1, height: 722), anchor: CGPoint(x: 1, y: 0.5))
+    
     var body: some View {
         
         ZStack(alignment: .leading) {
-            
-            let processor = CroppingImageProcessor(size: CGSize(width: 1, height: 722), anchor: CGPoint(x: 1, y: 0.5))
-            
+
             KFImage(URL(string: nade.thumbnail))
                 .setProcessor(processor)
                 .resizable()
@@ -358,6 +351,8 @@ private struct FavouriteNadeCell: View {
             }
             
         }
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .shadow(radius: 6, y: 4)
         
     }
     

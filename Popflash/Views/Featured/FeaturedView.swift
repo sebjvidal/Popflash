@@ -20,7 +20,7 @@ struct FeaturedView: View {
     var statusBarBlur: some View {
         
         VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-            .frame(height: 47)
+            .frame(height: UIDevice.current.hasNotch ? 47 : 20)
             .edgesIgnoringSafeArea(.top)
         
     }
@@ -296,9 +296,9 @@ private struct Top5: View {
                             
                         } label: {
                             
-                            ComplimentsCell(comp: nade)
-                                .shadow(radius: 6, y: 5)
-                                .padding(.bottom, 4)
+                            ComplimentCell(nade: nade)
+                                .padding(.bottom, 16)
+                                .fixedSize()
                             
                         }
                                                 
@@ -313,7 +313,11 @@ private struct Top5: View {
                     
                     let db = Firestore.firestore()
                     
-                    top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
+                    if top5Nades.nades.isEmpty {
+                    
+                        top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
+                    
+                    }
                     
                 }
                 
@@ -321,56 +325,6 @@ private struct Top5: View {
             .padding(.top, -4)
             
         }
-        
-    }
-    
-}
-
-private struct ComplimentsCell: View {
-    
-    var comp: Nade
-    
-    var body: some View {
-        
-        ZStack(alignment: .top) {
-            
-            Rectangle()
-                .foregroundColor(Color("Background"))
-                .frame(width: 220, height: 194)
-            
-            let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1.0))
-            
-            KFImage(URL(string: comp.thumbnail))
-                .resizable()
-                .setProcessor(processor)
-                .frame(width: 220)
-            
-            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-            
-            VStack(alignment: .leading) {
-                
-                KFImage(URL(string: comp.thumbnail))
-                    .resizable()
-                    .frame(width: 220, height: 112.55)
-                
-                Text(comp.map)
-                    .foregroundColor(.gray)
-                    .font(.system(size: 14))
-                    .fontWeight(.semibold)
-                    .padding(.leading, 11)
-                
-                Text(comp.name)
-                    .fontWeight(.semibold)
-                    .padding(.top, 0)
-                    .padding(.leading, 11)
-                    .lineLimit(2)
-                
-            }
-            
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding(.bottom)
-        .padding(.trailing, 8)
         
     }
     

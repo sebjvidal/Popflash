@@ -16,6 +16,7 @@ struct Nade: Hashable, Identifiable {
     var side: String
     var thumbnail: String
     var video: String
+    var lineup: String
     var shortDescription: String
     var longDescription: String
     var views: Int
@@ -24,5 +25,6 @@ struct Nade: Hashable, Identifiable {
     var tick: String
     var tags: Array<String>
     var compliments: Array<String>
+    var warning: String
     
 }

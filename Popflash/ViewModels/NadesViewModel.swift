@@ -12,16 +12,13 @@ import FirebaseFirestore
 class NadesViewModel: ObservableObject {
     
     @Published var nades = [Nade]()
-    @Published var loading = false
     
     private var db = Firestore.firestore()
     private var lastDocument: QueryDocumentSnapshot!
     
     func fetchData(ref: Query) {
         
-        self.loading = true
-        
-        var dbRef = ref.limit(to: 3)
+        var dbRef = ref
         
         if !nades.isEmpty {
             
@@ -48,6 +45,7 @@ class NadesViewModel: ObservableObject {
                     let side = data["side"] as? String ?? ""
                     let thumbnail = data["thumbnail"] as? String ?? ""
                     let video = data["video"] as? String ?? ""
+                    let lineup = data["lineup"] as? String ?? ""
                     let shortDescription = data["shortDescription"] as? String ?? ""
                     let longDescription = data["longDescription"] as? String ?? ""
                     let views = data["views"] as? Int ?? 0
@@ -56,6 +54,7 @@ class NadesViewModel: ObservableObject {
                     let tick = data["tick"] as? String ?? ""
                     let tags = data["tags"] as? Array ?? [String]()
                     let compliments = data["compliments"] as? Array ?? [String]()
+                    let warning = data["warning"] as? String ?? ""
                     
                     let nade = Nade(id: id,
                                     name: name,
@@ -64,6 +63,7 @@ class NadesViewModel: ObservableObject {
                                     side: side,
                                     thumbnail: thumbnail,
                                     video: video,
+                                    lineup: lineup,
                                     shortDescription: shortDescription,
                                     longDescription: longDescription,
                                     views: views,
@@ -71,7 +71,8 @@ class NadesViewModel: ObservableObject {
                                     bind: bind,
                                     tick: tick,
                                     tags: tags,
-                                    compliments: compliments)
+                                    compliments: compliments,
+                                    warning: warning)
                     
                     self.lastDocument = document
                     
@@ -80,8 +81,6 @@ class NadesViewModel: ObservableObject {
                 }
                 
             }
-        
-        self.loading = false
         
     }
     

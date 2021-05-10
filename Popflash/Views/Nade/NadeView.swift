@@ -23,59 +23,57 @@ struct NadeView: View {
     @State var showControls = false
     @State var fullscreen = false
     
-    @State var isShowingVideo = true
+    @State var selection = "Video"
     
     var body: some View {
         
         ZStack(alignment: .top) {
             
-            VStack {
+            VStack(spacing: 0) {
                 
-                ZStack(alignment: .top) {
-                    
-                    VideoPlayer(player: player)
-                        .frame(width: UIScreen.screenWidth,
-                               alignment: .top)
-                    
-                    VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                    
-                }
-                .frame(height: 47)
+                Header(player: player)
+
+                Image("dust2_radar")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: UIScreen.screenWidth,
+                           height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.6)
+                    .background(Color.black)
+                    .animation(.easeInOut(duration: 0.2))
+                    .opacity(selection == "Overview" ? 1 : 0)
                 
-                Rectangle()
-                    .frame(height: UIScreen.screenWidth / 1.6)
-                    .foregroundColor(.clear)
-                    .padding(.top, -8)
+                SegmentedControl(selection: $selection)
+                    .animation(.easeInOut(duration: 0.2))
                 
                 ScrollView(axes: .vertical, showsIndicators: true) {
                     
-                    Details(nade: nade)
-                        .frame(width: UIScreen.screenWidth)
-                    
-                    if !nade.compliments.isEmpty {
+                    Group {
                         
-                        Compliments(nade: $nade, player: $player)
+                        Details(nade: nade)
+                            .frame(width: UIScreen.screenWidth)
+                        
+                        if !nade.compliments.isEmpty {
+                            
+                            Compliments(nade: $nade, player: $player)
+                            
+                        }
                         
                     }
+                    .animation(.none)
                     
                 }
-                .padding(.top, -8)
+                .animation(.easeInOut(duration: 0.2))
                 
             }
             .edgesIgnoringSafeArea(.top)
             
-            if isShowingVideo {
-                
-                VideoView(nade: nade, player: player, fullscreen: $fullscreen)
-                    .edgesIgnoringSafeArea(.all)
-                
-            }
+            NadeContent(nade: nade,
+                        player: player,
+                        fullscreen: fullscreen,
+                        contentSelection: selection)
             
             HStack {
-                
-                ToggleButton(videoSelected: $isShowingVideo)
-                    .padding([.leading, .top])
-                
+
                 Spacer()
                 
                 CloseButton(player: player)
@@ -89,56 +87,22 @@ struct NadeView: View {
     
 }
 
-private struct ToggleButton: View {
+private struct Header: View {
     
-    @Binding var videoSelected: Bool
+    var player: AVPlayer
     
     var body: some View {
         
-        ZStack(alignment: .leading) {
+        ZStack(alignment: .top) {
             
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                .frame(width: 75.5, height: 40)
-                .clipShape(RoundedRectangle(cornerRadius: 35, style: .continuous))
+            VideoPlayer(player: player)
+                .frame(width: UIScreen.screenWidth,
+                       alignment: .top)
             
-            Circle()
-                .frame(width: 35, height: 35)
-                .padding(.leading, 2.5)
-                .foregroundColor(Color("Blur_Overlay"))
-                .opacity(0.5)
-                .offset(x: videoSelected ? 0 : 35)
-                .animation(.easeInOut(duration: 0.25))
-            
-            HStack {
-
-                Button {
-                    
-                    videoSelected = true
-                    
-                } label: {
-                    
-                    Image(systemName: "play.rectangle.fill")
-                        .frame(width: 35, height: 35)
-                    
-                }
-                .padding(.leading, 2.5)
-                
-                Button {
-                    
-                    videoSelected = false
-                    
-                } label: {
-                    
-                    Image(systemName: "photo")
-                        .frame(width: 35, height: 35)
-                    
-                }
-                .padding(.leading, -7.5)
-                  
-            }
+            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
             
         }
-        .buttonStyle(PlainButtonStyle())
+        .frame(height: UIDevice.current.hasNotch ? 47 : 20)
         
     }
     
@@ -172,6 +136,35 @@ private struct CloseButton: View {
             
         }
         .buttonStyle(PlainButtonStyle())
+        
+    }
+    
+}
+
+private struct NadeContent: View {
+    
+    var nade: Nade
+    var player: AVPlayer
+    
+    @State var fullscreen: Bool
+    
+    var contentSelection: String
+    
+    var body: some View {
+        
+        ZStack(alignment: .top) {
+            
+            VideoView(nade: nade, player: player, fullscreen: $fullscreen)
+                .edgesIgnoringSafeArea(.all)
+                .opacity(contentSelection == "Video" ? 1 : 0)
+            
+            KFImage(URL(string: nade.lineup))
+                .resizable()
+                .pinchToZoom()
+                .frame(height: UIScreen.screenWidth / 1.6)
+                .opacity(contentSelection == "Line-up" ? 1 : 0)
+            
+        }
         
     }
     
@@ -234,7 +227,7 @@ private struct VideoView: View {
             .frame(width: fullscreen ? UIScreen.screenWidth * 1.777 : UIScreen.screenWidth,
                    height: fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.6)
             .rotationEffect(.degrees(rotation))
-            .offset(y: fullscreen ? 0 : 47)
+            .offset(y: fullscreen ? 0 : UIDevice.current.hasNotch ? 47 : 20)
             .animation(.easeInOut(duration: 0.25))
             .onRotate { orientation in
                 
@@ -273,6 +266,32 @@ private struct VideoView: View {
     
 }
 
+struct SegmentedControl: View {
+    
+    @Binding var selection: String
+    
+    var options = ["Video", "Line-up", "Overview"]
+    
+    var body: some View {
+        
+        Picker("Video or Lineup", selection: $selection) {
+            
+            ForEach(options, id: \.self) {
+                
+                Text($0)
+                
+            }
+            
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .frame(width: UIScreen.screenWidth - 28)
+        .padding(.top, 16)
+        .padding(.bottom, 14)
+        
+    }
+    
+}
+
 private struct Details: View {
     
     var nade: Nade
@@ -288,7 +307,7 @@ private struct Details: View {
                     Text(nade.map)
                         .foregroundColor(.gray)
                         .fontWeight(.semibold)
-                        .padding(.top, 3)
+                        .padding(.top, -12)
                         .padding(.horizontal)
                     
                     Text(nade.name)
@@ -306,11 +325,18 @@ private struct Details: View {
                 
                 FavouriteButton(id: nade.id)
                     .padding()
+                    .padding(.bottom, 8)
                 
             }
             
             VideoInfo(nade: nade)
                 .padding(.top, -8)
+            
+            if !nade.warning.isEmpty {
+                
+                Warning(warning: nade.warning)
+                
+            }
             
             Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
                 .padding(.horizontal)
@@ -408,23 +434,16 @@ struct VideoInfo: View {
                     ForEach(videoDetails(detailsOf: nade), id: \.self) { detail in
                     
                         ZStack {
-                        
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .frame(width: 80, height: 60)
-                                .padding(0)
                             
                             detail.image
                                 .foregroundColor(Color("Detail_Icon"))
+                                .frame(width: 80)
                         
                             VStack {
                     
                                 Text(detail.name)
                                     .font(.system(size: 11))
                                     .fontWeight(.semibold)
-                                    .padding(.bottom, 2)
-                                    .frame(height: 8)
-                                    .foregroundColor(Color("Detail_Name"))
                                 
                                 Spacer()
                                     .frame(height: 36)
@@ -432,20 +451,19 @@ struct VideoInfo: View {
                                 Text(detail.value)
                                     .font(.system(size: 12))
                                     .fontWeight(.semibold)
-                                    .padding(.top, 2)
-                                    .frame(height: 8)
-                                    .foregroundColor(Color("Detail_Name"))
                                     
                             }
                         
                         }
+                        .padding(.vertical, 2)
+                        .padding(.horizontal, 4)
+                        .foregroundColor(Color("Detail_Name"))
                         
                         if detail != videoDetails(detailsOf: nade).last {
-                        
+
                             Divider()
-                                .padding(.vertical)
-                                .frame(height: 70)
-                        
+                                .frame(height: 40)
+
                         }
                     
                     }
@@ -457,6 +475,7 @@ struct VideoInfo: View {
                 
                 Divider()
                     .padding(.horizontal)
+
             
             }
         
@@ -481,12 +500,52 @@ struct VideoInfo: View {
 
 }
 
+private struct Warning: View {
+    
+    var warning: String
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            HStack {
+                
+                ZStack {
+                    
+                    Image(systemName: "triangle.fill")
+                        .foregroundColor(.black)
+                        .font(.system(size: 20))
+                    
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.yellow)
+                        .font(.system(size: 24))
+                    
+                }
+                .padding(.leading, 4)
+                .padding(.trailing, 4)
+                
+                Text("\(warning)")
+                
+            }
+            
+            Divider()
+                .padding(.top, 8)
+            
+        }
+        .padding(.horizontal)
+        
+    }
+    
+}
+
 private struct Compliments: View {
     
     @StateObject private var complimentsViewModel = NadesViewModel()
     
     @Binding var nade: Nade
     @Binding var player: AVPlayer
+    
+    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1.0))
     
     var body: some View {
         
@@ -526,42 +585,13 @@ private struct Compliments: View {
                             
                         } label: {
                             
-                            ZStack(alignment: .top) {
-                                
-                                Rectangle()
-                                    .foregroundColor(Color("Background"))
-                                    .frame(width: 220, height: 194)
-                                
-                                VStack(alignment: .leading) {
-                                    
-                                    KFImage(URL(string: comp.thumbnail))
-                                        .resizable()
-                                        .frame(width: 220, height: 112.55)
-                                    
-                                    Text(comp.map)
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 14))
-                                        .fontWeight(.semibold)
-                                        .padding(.leading, 11)
-                                    
-                                    Text(comp.name)
-                                        .fontWeight(.semibold)
-                                        .padding(.top, 0)
-                                        .padding(.leading, 11)
-                                        .lineLimit(2)
-                                    
-                                }
-                                
-                            }
-                            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-                            .padding(.bottom)
-                            .padding(.trailing, 8)
+                            ComplimentCell(nade: comp)
+                                .padding(.bottom, 18)
                             
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .buttonStyle(ComplimentsCellButtonStyle())
                         
                     }
-                    .shadow(radius: 6, y: 5)
                     
                     Spacer()
                         .frame(width: 8)
@@ -593,11 +623,7 @@ private struct VideoPlayer: UIViewControllerRepresentable {
         
     }
     
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) {
-        
-        // Do nothing
-        
-    }
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) { }
     
 }
 
@@ -702,32 +728,6 @@ private struct VideoControls: View {
             }
             
         }
-        
-    }
-    
-}
-
-struct NadeView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        let test_nade = Nade(id: "nuke_outside_smoke",
-                             name: "Outside Smoke",
-                             map: "Nuke",
-                             type: "Smoke",
-                             side: "Terrorist",
-                             thumbnail: "https://firebasestorage.googleapis.com/v0/b/popflash-3e8b8.appspot.com/o/Thumbnails%2Fnuke_outside_smoke.jpg?alt=media&token=31f12683-fadc-4169-813f-de5f34da7f1d",
-                             video: "https://firebasestorage.googleapis.com/v0/b/popflash-3e8b8.appspot.com/o/Videos%2FDust%20II%2Fdust2_xbox_smoke.mp4?alt=media&token=8c07faf8-969d-40b2-92d1-683536e630aa",
-                             shortDescription: "Block vision of T Red to Secret.",
-                             longDescription: "Use this smoke during a B push to block a CT's vision of the bomb site from CT Spawn. Use this smoke in conjunction with a Coffins smoke and a New Box molotov to eliminate common CT positions and increase your chances of a successful B take.\n\nCTs can also deploy this smoke in a retake scenario when approaching the Bomb Site from Banana.",
-                             views: 420,
-                             favourites: 69,
-                             bind: "No",
-                             tick: "64 & 128",
-                             tags: [],
-                             compliments: [])
-        
-        NadeView(nade: test_nade)
         
     }
     

@@ -3,15 +3,19 @@ import Kingfisher
 import FirebaseFirestore
 
 extension UINavigationController {
+
     override open func viewDidLoad() {
+
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.backgroundColor = .clear
-        
+
         navigationBar.standardAppearance = appearance
         navigationBar.compactAppearance = appearance
         navigationBar.scrollEdgeAppearance = appearance
+
     }
+
 }
 
 struct MapsDetailView: View {
@@ -22,8 +26,9 @@ struct MapsDetailView: View {
     @StateObject private var searchViewModel = NadesViewModel()
     
     @State private var scrollOffset = 0.0
-    
     @State private var searchQuery = ""
+    
+    @State private var time = Timer.publish(every: 0.1, on: .main, in: .tracking).autoconnect()
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -39,10 +44,13 @@ struct MapsDetailView: View {
                 
             }) {
                 
-                LazyVStack {
+//                LazyVStack {
                     
-                    Header(map: map, offset: scrollOffset)
-                        
+                    Header(icon: map.icon,
+                           name: map.name,
+                           group: map.group,
+                           scenario: map.scenario)
+                    
                     SearchBar(searchQuery: $searchQuery)
                         .padding(.horizontal)
                         .padding(.bottom, 8)
@@ -50,9 +58,19 @@ struct MapsDetailView: View {
                             
                             if $0 != "" {
                                 
-                                self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                        .whereField("map", isEqualTo: map.name)
-                                                                        .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                                let queryArray = searchQuery.lowercased().split(separator: " ")
+                                
+                                if queryArray.count > 0 {
+                                    
+                                    self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                                    .whereField("map", isEqualTo: map.name)
+                                                                    .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                                    
+                                }
+                                
+                            } else {
+                                
+                                self.searchViewModel.nades = [Nade]()
                                 
                             }
                             
@@ -60,33 +78,45 @@ struct MapsDetailView: View {
                     
                     NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades,
                              searchQuery: $searchQuery,
-                             isLoading: viewModel.loading)
+                             isLoading: false)
                     
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .onAppear() {
-                            
-                            self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                              .whereField("map", isEqualTo: map.name))
-                            
-                        }
-
-                    Spacer()
-                        .frame(height: 12)
+                        .padding(.top, 4)
+                        .padding(.bottom, 20)
                     
-                }
-            
+                    GeometryReader { g in
+
+                        Color.clear
+                            .onAppear {
+
+                                self.time = Timer.publish(every: 0.1, on: .main, in: .tracking).autoconnect()
+
+                            }
+                            .onReceive(self.time) { (_)in
+
+                                if g.frame(in: .global).maxY < UIScreen.screenHeight {
+                                    
+                                    loadNades()
+
+                                }
+
+                            }
+
+                    }
+                    .frame(width: 0, height: 0)
+                    
+//                }
+                
             }
             .onAppear() {
                 
-                let db = Firestore.firestore()
-
-                db.collection("maps").document(map.id).setData([
-                    "views": map.views + 1
-                ], merge: true)
-
-                self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                  .whereField("map", isEqualTo: map.name))
+//                let db = Firestore.firestore()
+//
+//                db.collection("maps").document(map.id).setData([
+//                    "views": map.views + 1
+//                ], merge: true)
+                
+                loadNades()
                 
             }
             .navigationBarTitle(Text(""), displayMode: .inline)
@@ -96,18 +126,57 @@ struct MapsDetailView: View {
                 
             }
             
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                .frame(height: 91)
-                .edgesIgnoringSafeArea(.top)
-                .opacity(scrollOffset >= -90 ? 0 : scrollOffset <= -125 ? 1 : Double((1 / 35) * (-90 - scrollOffset)))
+//            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+//                            .frame(height: 91)
+//                            .edgesIgnoringSafeArea(.top)
+//                            .opacity(scrollOffset >= -90 ? 0 : scrollOffset <= -125 ? 1 : Double((1 / 35) * (-90 - scrollOffset)))
+//
+//            KFImage(URL(string: map.icon))
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 45)
+//                .padding(.top, 39)
+//                .edgesIgnoringSafeArea(.top)
+//                .opacity(scrollOffset <= -88 ? 1 : 0)
             
-            KFImage(URL(string: map.icon))
+        }
+        
+    }
+    
+    func loadNades() {
+            
+        self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                    .whereField("map", isEqualTo: map.name)
+                                    .limit(to: 10))
+
+    }
+    
+}
+
+private struct Header: View {
+    
+    var icon: String
+    var name: String
+    var group: String
+    var scenario: String
+    
+    var body: some View {
+        
+        VStack {
+            
+            KFImage(URL(string: icon))
                 .resizable()
-                .scaledToFit()
-                .frame(width: 45)
-                .padding(.top, 39)
-                .edgesIgnoringSafeArea(.top)
-                .opacity(scrollOffset <= -88 ? 1 : 0)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+            
+            Text("\(name)")
+                .font(.system(size: 32))
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("\(group) • \(scenario)")
+                .foregroundColor(.gray)
+                .padding(.bottom, 45)
             
         }
         
@@ -163,47 +232,6 @@ private struct FavouriteToolbarItem: ToolbarContent {
     
 }
 
-private struct NadeList: View {
-    
-    @Binding var nades: [Nade]
-    @Binding var searchQuery: String
-    
-    @State var isLoading: Bool
-    
-    @State private var selectedNade: Nade?
-    
-    var body: some View {
-                    
-        LazyVStack {
-            
-            //.sorted(by: { $0.tags.count > $1.tags.count })
-            
-            ForEach(nades, id: \.self) { nade in
-
-                Button {
-                    
-                    self.selectedNade = nade
-                    
-                } label: {
-                    
-                    NadeCell(nade: nade)
-                    
-                }
-                .buttonStyle(PlainButtonStyle())
-                .fullScreenCover(item: self.$selectedNade) { item in
-                    
-                    NadeView(nade: item)
-                    
-                }
-
-            }
-            
-        }
-        
-    }
-    
-}
-
 private struct SearchBar: View {
     
     @Binding var searchQuery: String
@@ -220,7 +248,6 @@ private struct SearchBar: View {
                     .frame(height: 38)
                     .cornerRadius(10)
                     .animation(.default)
-//                    .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                 
                 HStack {
                     
@@ -244,7 +271,7 @@ private struct SearchBar: View {
                             self.searchQuery = ""
                             
                         } label: {
-                        
+                            
                             Image(systemName: "multiply.circle.fill")
                                 .padding(.trailing, 10)
                                 .foregroundColor(Color("Search_Bar_Icons"))
@@ -280,45 +307,138 @@ private struct SearchBar: View {
     
 }
 
-private struct NadeCell: View {
+private struct NadeList: View {
+    
+    @Binding var nades: [Nade]
+    @Binding var searchQuery: String
+    
+    @State var isLoading: Bool
+    
+    @State private var selectedNade: Nade?
+    
+    var body: some View {
+        
+        LazyVStack {
+            
+            ForEach(nades, id: \.self) { nade in
+                    
+                Button {
+                    
+                    self.selectedNade = nade
+                    
+                } label: {
+                    
+                    NadeCell(nade: nade)
+                            .shadow(radius: 6, y: 5)
+                    
+                }
+                .buttonStyle(NadeCellButtonStyle())
+                .fullScreenCover(item: self.$selectedNade) { item in
+                    
+                    NadeView(nade: item)
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
+struct NadeCell: View {
+    
     var nade: Nade
+    
+    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
     
     var body: some View {
         
         ZStack(alignment: .topTrailing) {
             
-            ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
                 
-                NadeCellBackground(thumbnail: nade.thumbnail)
-                    .blur(radius: 20)
-                    .padding([.leading, .bottom, .trailing], -10.0)
-                
-                NadeCellBackground(thumbnail: nade.thumbnail)
-                    .padding(.bottom, 90)
+                KFImage(URL(string: nade.thumbnail))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                 
                 ZStack {
                     
-                    VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                        .frame(height: 91)
+                    KFImage(URL(string: nade.thumbnail))
+                        .resizable()
+                        .setProcessor(processor)
+                        .frame(height: 90)
                     
-                    NadeCellDetails(name: nade.name,
-                                    shortDescription: nade.shortDescription,
-                                    views: nade.views,
-                                    favourites: nade.favourites,
-                                    tick: nade.tick,
-                                    bind: nade.bind)
-                        .padding(.top, 8)
+                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+                        .frame(height: 90)
+                    
+                    HStack {
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            
+                            Text(nade.name)
+                                .font(.headline)
+                            
+                            Text(nade.shortDescription)
+                                .font(.subheadline)
+                                .lineLimit(1)
+                            
+                            NadeDetails(views: nade.views,
+                                        favourites: nade.favourites,
+                                        tick: nade.tick,
+                                        bind: nade.bind)
+                                .padding(.top, 16)
+                            
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                        
+                    }
+                    .padding(.leading, 12)
+                    .padding(.trailing)
                     
                 }
                 
             }
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .shadow(radius: 6, y: 5)
-            .padding(.leading, 16)
-            .padding(.trailing, 16)
-            .padding(.bottom, 10)
             
             NadeCellTypeIcon(type: nade.type)
+            
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+        
+    }
+    
+}
+
+struct NadeDetails: View {
+    
+    var views: Int
+    var favourites: Int
+    var tick: String
+    var bind: String
+    
+    var body: some View {
+        
+        HStack {
+            
+            Group {
+
+                Label("\(views)", systemImage: "eye.fill")
+                
+                Label("\(favourites)", systemImage: "heart.fill")
+                
+                Label("\(tick)", systemImage: "clock.fill")
+                
+                Label("\(bind)", image: "keyboard.fill")
+                
+            }
+            .padding(.trailing, 16)
+            .font(.system(size: 11))
             
         }
         
@@ -327,7 +447,7 @@ private struct NadeCell: View {
 }
 
 private struct NadeCellTypeIcon: View {
-    
+
     var type: String
 
     var body: some View {
@@ -355,125 +475,10 @@ private struct NadeCellTypeIcon: View {
             }
 
         }
-        .padding(.trailing, 24)
+        .padding(.trailing, 8)
         .padding(.top, 8)
 
     }
 
 }
 
-private struct NadeCellDetails: View {
-    
-    var name: String
-    var shortDescription: String
-    
-    var views: Int
-    var favourites: Int
-    var tick: String
-    var bind: String
-    
-    var body: some View {
-        
-        HStack {
-            VStack(alignment: .leading) {
-                Text(name)
-                    .font(.headline)
-                    .lineLimit(1)
-                Text(shortDescription)
-                    .font(.subheadline)
-                    .lineLimit(1)
-                HStack {
-                    Image(systemName: "eye.fill")
-                        .font(.caption2)
-                        .padding(.trailing, -4)
-                    Text(String(views))
-                        .font(.caption2)
-                        .padding(.trailing, 16)
-                        .fixedSize()
-                    Image(systemName: "heart.fill")
-                        .font(.caption2)
-                        .padding(.trailing, -4)
-                    Text(String(favourites))
-                        .font(.caption2)
-                        .padding(.trailing, 16)
-                        .fixedSize()
-                    Image(systemName: "clock.fill")
-                        .font(.caption2)
-                        .padding(.trailing, -4)
-                    Text(tick)
-                        .font(.caption2)
-                        .padding(.trailing, 16)
-                        .fixedSize()
-                    Image("keyboard.fill")
-                        .font(.caption2)
-                        .padding(.trailing, -4)
-                    Text(bind)
-                        .font(.caption2)
-                        .fixedSize()
-                    
-                }
-                .padding(.top, 4)
-            }
-            .padding(.leading)
-            Spacer()
-            Image(systemName: "chevron.right")
-                .padding()
-        }
-        .padding(.bottom, 12)
-        
-    }
-    
-}
-
-private struct NadeCellBackground: View {
-    
-    var thumbnail: String
-    
-    var body: some View {
-        
-        KFImage(URL(string: thumbnail))
-            .resizable()
-            .aspectRatio(contentMode: ContentMode.fill)
-            .frame(width: UIScreen.screenWidth - 32, height: (UIScreen.screenWidth - 32) / 1.77)
-        
-    }
-    
-}
-
-private struct Header: View {
-    
-    var map: Map
-    var offset: Double
-    
-    var body: some View {
-        
-        VStack {
-            
-            ZStack {
-                
-                Rectangle()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.clear)
-                
-                KFImage(URL(string: map.icon))
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: offset >= 0 ? 100 : offset <= -88 ? 45 : CGFloat(100 - abs(offset / 1.59)))
-                    .opacity(offset <= -88 ? 0 : 1)
-                
-            }
-            
-            Text("\(map.name)")
-                .font(.system(size: 32))
-                .font(.title)
-                .fontWeight(.bold)
-            
-            Text("\(map.group) • \(map.scenario)")
-                .foregroundColor(.gray)
-                .padding(.bottom, 45)
-            
-        }
-        
-    }
-    
-}

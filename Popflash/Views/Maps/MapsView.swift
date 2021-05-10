@@ -57,7 +57,6 @@ struct MapsView: View {
                 StatusBarBlur(opacity: statusOpacity)
                 
             }
-//            .navigationBarTitleDisplayMode(.inline)
             .navigationBarTitle("Maps", displayMode: .inline)
             .navigationBarHidden(true)
             
@@ -74,7 +73,7 @@ private struct StatusBarBlur: View {
     var body: some View {
         
         VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-            .frame(height: 47)
+            .frame(height: UIDevice.current.hasNotch ? 47 : 20)
             .edgesIgnoringSafeArea(.top)
             .opacity(opacity)
         
@@ -237,6 +236,20 @@ private struct LoadingList: View {
             
         }
                 
+    }
+    
+}
+
+struct MapsView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        MapsView()
+            .preferredColorScheme(.light)
+        
+        MapsView()
+            .preferredColorScheme(.dark)
+        
     }
     
 }

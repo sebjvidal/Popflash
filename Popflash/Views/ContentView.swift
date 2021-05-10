@@ -48,8 +48,8 @@ struct ContentView: View {
             SettingsView()
                 .tabItem {
                     
-                    Image(systemName: "gearshape.fill")
-                    Text("Settings")
+                    Image(systemName: "person.fill")
+                    Text("Profile")
                 }
                 
                 .tag(3)
@@ -74,6 +74,10 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         
         ContentView()
+            .preferredColorScheme(.light)
+        
+        ContentView()
+            .preferredColorScheme(.dark)
         
     }
     

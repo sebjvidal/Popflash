@@ -21,7 +21,7 @@ class MapsViewModel: ObservableObject {
         
         self.loading = true
         
-        var dbRef = ref.limit(to: 10)
+        var dbRef = ref
         
         if !maps.isEmpty {
             
@@ -29,7 +29,7 @@ class MapsViewModel: ObservableObject {
             
         }
         
-        ref.getDocuments { (querySnapshot, error) in
+        dbRef.getDocuments { (querySnapshot, error) in
             
             guard let documents = querySnapshot?.documents else {
                 

@@ -14,7 +14,7 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             Header()
-            
+
             VStack(alignment: .leading) {
                 Toggle("Compact Maps View", isOn: $compactMapView)
                     .padding(.horizontal)
@@ -23,6 +23,8 @@ struct SettingsView: View {
             }
         }
         .onAppear {
+            
+            UITableView.appearance().separatorStyle = .none
             
             tabSelection = 3
             

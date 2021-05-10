@@ -19,7 +19,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        AuthenticationService.signIn()
+        
+        Auth.auth().signInAnonymously() { (authResult, error) in
+            
+            guard let user = authResult?.user else {
+                
+                print("Authentication failed.")
+                
+                return
+                
+            }
+            
+            let _ = user.isAnonymous
+            let _ = user.uid
+
+        }
+        
         return true
     }
 
