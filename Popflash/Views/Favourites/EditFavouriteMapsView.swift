@@ -10,9 +10,13 @@ import FirebaseFirestore
 
 struct EditFavouriteMapsView: View {
     
+    @State var oldMapList = [String]()
+    
     @StateObject var mapsViewModel = MapsViewModel()
     
     @AppStorage("favourites.maps") var favouriteMaps = [String]()
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
  
@@ -61,14 +65,32 @@ struct EditFavouriteMapsView: View {
                 }
                 .listStyle(GroupedListStyle())
                 .navigationBarTitle("Favourite Maps", displayMode: .inline)
-                .toolbar {
-                    
-                    DoneToolbarItem()
-                    
-                }
+                .navigationBarItems(
+                    leading:
+                        Button(action: {
+                            
+                            favouriteMaps = oldMapList
+                            
+                            self.presentationMode.wrappedValue.dismiss()
+                            
+                        }) {
+                            Text("Cancel")
+                                .fontWeight(.regular)
+                        },
+                    trailing:
+                        Button(action: {
+                            
+                            self.presentationMode.wrappedValue.dismiss()
+                            
+                        }) {
+                            Text("Done")
+                        }
+                )
                 .onAppear() {
                     
                     self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+                    
+                    oldMapList = favouriteMaps
                     
                 }
                 
@@ -110,16 +132,6 @@ private struct DoneToolbarItem: ToolbarContent {
             }
             
         }
-        
-    }
-    
-}
-
-struct EditFavouriteMapsView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        EditFavouriteMapsView()
         
     }
     

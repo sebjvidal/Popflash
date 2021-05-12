@@ -12,6 +12,7 @@ import FirebaseFirestore
 struct FavouritesView: View {
     
     @State var statusOpacitiy = 0.0
+    @State var isShowing = false
     
     @AppStorage("favourites.nades") var favouriteNades: Array = [String]()
     
@@ -38,7 +39,7 @@ struct FavouritesView: View {
                         ScrollView(axes: .horizontal,
                                    showsIndicators: false) {
                             
-                            FavouriteMaps()
+                            FavouriteMaps(isShowing: $isShowing)
                             
                         }
                         .padding(.top, -6)
@@ -61,6 +62,11 @@ struct FavouritesView: View {
                     .opacity(0.0)
                 
             }
+            .sheet(isPresented: $isShowing, content: {
+                
+                EditFavouriteMapsView()
+                
+            })
             .navigationBarTitle("", displayMode: .inline)
             
         }
@@ -70,6 +76,8 @@ struct FavouritesView: View {
 }
 
 private struct FavouriteMaps: View {
+    
+    @Binding var isShowing: Bool
     
     @ObservedObject var mapsViewModel = MapsViewModel()
     
@@ -129,7 +137,7 @@ private struct FavouriteMaps: View {
                 
                 Button {
                     
-                    showingFavouriteMapsEdittingView.toggle()
+                    isShowing.toggle()
                     
                 } label: {
                     
@@ -174,11 +182,6 @@ private struct FavouriteMaps: View {
             self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
             
         }
-        .sheet(isPresented: $showingFavouriteMapsEdittingView, content: {
-            
-            EditFavouriteMapsView()
-            
-        })
         
     }
     
