@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-t-on-map.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
