@@ -53,8 +53,11 @@ class NadesViewModel: ObservableObject {
                     let bind = data["bind"] as? String ?? ""
                     let tick = data["tick"] as? String ?? ""
                     let tags = data["tags"] as? Array ?? [String]()
+                    
                     let compliments = data["compliments"] as? Array ?? [String]()
                     let warning = data["warning"] as? String ?? ""
+                    let player = data["player"] as? Array ?? [CGFloat]()
+                    let grenade = data["grenade"] as? Array ?? [CGFloat]()
                     
                     let nade = Nade(id: id,
                                     name: name,
@@ -72,7 +75,9 @@ class NadesViewModel: ObservableObject {
                                     tick: tick,
                                     tags: tags,
                                     compliments: compliments,
-                                    warning: warning)
+                                    warning: warning,
+                                    player: player,
+                                    grenade: grenade)
                     
                     self.lastDocument = document
                     

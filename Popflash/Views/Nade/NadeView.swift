@@ -33,33 +33,32 @@ struct NadeView: View {
                 
                 Header(player: player)
 
-                Image("dust2_radar")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: UIScreen.screenWidth,
-                           height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.6)
-                    .background(Color.black)
-                    .animation(.easeInOut(duration: 0.2))
+                OverviewContent(nade: nade,
+                                selection: $selection)
                     .opacity(selection == "Overview" ? 1 : 0)
                 
                 SegmentedControl(selection: $selection)
                     .animation(.easeInOut(duration: 0.2))
                 
-                ScrollView(axes: .vertical, showsIndicators: true) {
+                SwiftUI.ScrollView {
                     
-                    Group {
+                    ScrollViewReader { value in
                         
-                        Details(nade: nade)
-                            .frame(width: UIScreen.screenWidth)
-                        
-                        if !nade.compliments.isEmpty {
+                        Group {
+                            
+                            Details(nade: nade)
+                                .id(0)
+                                .frame(width: UIScreen.screenWidth)
                             
                             Compliments(nade: $nade, player: $player)
                             
                         }
+                        .animation(.none)
+                        .onChange(of: nade) { _ in
+                            value.scrollTo(0, anchor: .top)
+                        }
                         
                     }
-                    .animation(.none)
                     
                 }
                 .animation(.easeInOut(duration: 0.2))
@@ -160,14 +159,121 @@ private struct NadeContent: View {
             
             KFImage(URL(string: nade.lineup))
                 .resizable()
-                .pinchToZoom()
+//                .aspectRatio(contentMode: .fit)
                 .frame(height: UIScreen.screenWidth / 1.6)
+                .pinchToZoom()
                 .opacity(contentSelection == "Line-up" ? 1 : 0)
             
         }
         
     }
     
+}
+
+private struct OverviewContent: View {
+    
+    @State var nade: Nade
+    @Binding var selection: String
+    
+    @StateObject var mapViewModel = MapsViewModel()
+    
+    let radarIcons = ["Smoke": "Smoke_Radar_Icon",
+                      "Flashbang": "Flashbang_Radar_Icon",
+                      "Molotov": "Molotov_Radar_Icon",
+                      "Incendiary": "Molotov_Radar_Icon",
+                      "HE Grenade": "HE_Grenade_Icon"]
+    
+    var body: some View {
+        
+        ZStack {
+            
+            Color.black
+            
+            GeometryReader { o in
+                
+                ZStack {
+                    
+                    GeometryReader { g in
+
+                        KFImage(URL(string: "https://popflash.page.link/\(nade.map.replacingOccurrences(of: " ", with: "_"))_Radar"))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+
+                        Image(radarIcons[nade.type] ?? "Smoke_Radar_Icon")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .position(x: (g.frame(in: .local).maxX / 100) * grenadeLocation()["x"]!,
+                                      y: (g.frame(in: .local).maxY / 100) * grenadeLocation()["y"]!)
+                                
+                        Image(nade.side == "Terrorist" ? "T_Radar_Icon" : "CT_Radar_Icon")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .position(x: (g.frame(in: .local).maxX / 100) * playerLocation()["x"]!,
+                                      y: (g.frame(in: .local).maxY / 100) * playerLocation()["y"]!)
+                        
+                    }
+                    .frame(width: o.size.height)
+                    
+                }
+                .position(x: o.frame(in: .local).midX, y: o.frame(in: .local).midY)
+                
+            }
+            
+        }
+        .frame(height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.6)
+        .animation(.easeInOut(duration: 0.2))
+        .zIndex(1)
+        .pinchToZoom()
+        .onAppear() {
+            
+            
+            
+        }
+        
+    }
+    
+    func playerLocation() -> Dictionary<String, CGFloat> {
+        
+        var location = [String: CGFloat]()
+        
+        var locationX: CGFloat = 0
+        var locationY: CGFloat = 0
+        
+        if nade.player.count >= 2 {
+            
+            locationX = nade.player[0]
+            locationY = nade.player[1]
+            
+        }
+        
+        location["x"] = locationX
+        location["y"] = locationY
+        
+        return location
+        
+    }
+    
+    func grenadeLocation() -> Dictionary<String, CGFloat> {
+        
+        var location = [String: CGFloat]()
+        
+        var locationX: CGFloat = 0
+        var locationY: CGFloat = 0
+        
+        if nade.grenade.count >= 2 {
+            
+            locationX = nade.grenade[0]
+            locationY = nade.grenade[1]
+            
+        }
+        
+        location["x"] = locationX
+        location["y"] = locationY
+        
+        return location
+        
+    }
+
 }
 
 private struct VideoView: View {
@@ -307,7 +413,6 @@ private struct Details: View {
                     Text(nade.map)
                         .foregroundColor(.gray)
                         .fontWeight(.semibold)
-                        .padding(.top, -12)
                         .padding(.horizontal)
                     
                     Text(nade.name)
@@ -549,59 +654,71 @@ private struct Compliments: View {
     
     var body: some View {
         
-        ScrollView(axes: .horizontal, showsIndicators: false) {
+        if !nade.compliments.isEmpty {
             
-            VStack(alignment: .leading) {
+            ScrollView(axes: .horizontal, showsIndicators: false) {
                 
-                Divider()
-                    .frame(minWidth: UIScreen.screenWidth - 32)
-                    .padding(.horizontal)
-                    .padding(.bottom, 4)
-                    .onAppear() {
-                        
-                        print(nade.compliments)
-                        
-                        self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                    .whereField("id", in: nade.compliments))
-                        
-                    }
-                
-                Text("Use With")
-                    .font(.system(size: 20))
-                    .fontWeight(.semibold)
-                    .padding(.leading, 18)
-                
-                HStack {
+                VStack(alignment: .leading) {
                     
-                    Spacer()
-                        .frame(width: 16)
-                    
-                    ForEach(complimentsViewModel.nades, id: \.self) { comp in
-                        
-                        Button {
+                    Divider()
+                        .frame(minWidth: UIScreen.screenWidth - 32)
+                        .padding(.horizontal)
+                        .padding(.bottom, 4)
+                        .onAppear() {
                             
-                            nade = comp
-                            player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: comp.video)!))
+                            print(nade.compliments)
                             
-                        } label: {
-                            
-                            ComplimentCell(nade: comp)
-                                .padding(.bottom, 18)
+                            self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                                        .whereField("id", in: nade.compliments))
+
                             
                         }
-                        .buttonStyle(ComplimentsCellButtonStyle())
+                        .onChange(of: nade) { _ in
+                            
+                            self.complimentsViewModel.nades.removeAll()
+                            self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                                        .whereField("id", in: nade.compliments))
+                            
+                        }
+                    
+                    Text("Use With")
+                        .font(.system(size: 20))
+                        .fontWeight(.semibold)
+                        .padding(.leading, 18)
+                    
+                    HStack {
+                        
+                        Spacer()
+                            .frame(width: 16)
+                        
+                        ForEach(complimentsViewModel.nades, id: \.self) { comp in
+                            
+                            Button {
+                                
+                                nade = comp
+                                player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: comp.video)!))
+                                
+                            } label: {
+                                
+                                ComplimentCell(nade: comp)
+                                    .padding(.bottom, 18)
+                                
+                            }
+                            .buttonStyle(ComplimentsCellButtonStyle())
+                            
+                        }
+                        
+                        Spacer()
+                            .frame(width: 8)
                         
                     }
-                    
-                    Spacer()
-                        .frame(width: 8)
                     
                 }
                 
             }
+            .frame(width: UIScreen.screenWidth)
             
         }
-        .frame(width: UIScreen.screenWidth)
         
     }
     
@@ -646,7 +763,8 @@ private struct VideoControls: View {
                     
                     Button {
                         
-                        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
+//                        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
+                        progress = 0
                         
                     } label: {
                         
@@ -701,7 +819,7 @@ private struct VideoControls: View {
                     
                     Button {
                         
-                        player.seek(to: player.currentItem!.duration)
+                        player.seek(to: player.currentItem!.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
                         
                     } label: {
                         

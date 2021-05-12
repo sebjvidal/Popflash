@@ -126,18 +126,10 @@ struct MapsDetailView: View {
                 
             }
             
-//            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-//                            .frame(height: 91)
-//                            .edgesIgnoringSafeArea(.top)
-//                            .opacity(scrollOffset >= -90 ? 0 : scrollOffset <= -125 ? 1 : Double((1 / 35) * (-90 - scrollOffset)))
-//
-//            KFImage(URL(string: map.icon))
-//                .resizable()
-//                .scaledToFit()
-//                .frame(width: 45)
-//                .padding(.top, 39)
-//                .edgesIgnoringSafeArea(.top)
-//                .opacity(scrollOffset <= -88 ? 1 : 0)
+            Rectangle()
+                .foregroundColor(Color("True_Background"))
+                .frame(height: 91)
+                .edgesIgnoringSafeArea(.top)
             
         }
         

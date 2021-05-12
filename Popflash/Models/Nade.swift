@@ -24,7 +24,10 @@ struct Nade: Hashable, Identifiable {
     var bind: String
     var tick: String
     var tags: Array<String>
+    
     var compliments: Array<String>
     var warning: String
+    var player: Array<CGFloat>
+    var grenade: Array<CGFloat>
     
 }
