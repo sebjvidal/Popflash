@@ -15,7 +15,9 @@ extension UIDevice {
         
         let bottom = keyWindow?.safeAreaInsets.bottom ?? 0
         
-        return bottom > 0
+//        return bottom > 0
+        
+        return true
         
     }
     

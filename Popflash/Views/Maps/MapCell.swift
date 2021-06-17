@@ -40,10 +40,7 @@ struct MapCell: View {
                         .setProcessor(processor)
                         .opacity(compactMapsView ? 0 : 1)
                         .frame(height: 80)
-                    
-                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-                        .frame(height: 80)
-                    
+                        .overlay(.regularMaterial)
                     
                     HStack {
                         
@@ -80,6 +77,7 @@ struct MapCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .drawingGroup()
         
     }
     

@@ -16,32 +16,44 @@ struct MapsView: View {
     @StateObject var mapsViewModel = MapsViewModel()
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
+    @AppStorage("maps.listFilter") var listFilter = "Popularity"
     
     var body: some View {
         
         NavigationView {
             
             ZStack(alignment: .top) {
-                
-                ScrollView(offsetChanged: {
+            
+                SwiftUI.ScrollView {
                     
-                    let offset = $0.y
-                    
-                    statusOpacity = Double((1 / 42) * -offset)
-                    
-                }) {
-                    
-                    VStack {
+                    Group {
                         
                         Header()
                         
-                        MapsList(maps: mapsViewModel.maps)
+                        ForEach(filteredMaps(mapsList: mapsViewModel.maps), id: \.self) { map in
+                            
+                            NavigationLink(destination: MapsDetailView(map: map)){
+                                
+                                MapCell(map: map)
+                                    .shadow(radius: 6, y: 5)
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 10)
+                                
+                            }
+                            .listRowBackground(Color.white)
+                            .buttonStyle(MapCellButtonStyle())
+                            
+                        }
+                        .listRowBackground(Color.white)
                         
                         Spacer(minLength: 8)
                         
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.some(EdgeInsets()))
                     
                 }
+                .listStyle(.plain)
                 .onAppear() {
                     
                     if mapsViewModel.maps.isEmpty {
@@ -64,6 +76,34 @@ struct MapsView: View {
         
     }
     
+    func filteredMaps(mapsList: [Map]) -> [Map] {
+        
+        let filteredMapsList = mapsList.sorted(by: {
+            
+            if listFilter == "Popularity" {
+                return $0.views > $1.views
+            } else if listFilter == "A-Z" {
+                return $0.name < $1.name
+            } else {
+                return $0.name < $1.name
+            }
+            
+        }).filter( {
+            
+            if listFilter == "Active Duty" {
+                return $0.group == "Active Duty"
+            } else if listFilter == "Reserves" {
+                return $0.group == "Reserves"
+            } else {
+                return $0.group != ""
+            }
+            
+        })
+        
+        return filteredMapsList
+        
+    }
+    
 }
 
 private struct StatusBarBlur: View {
@@ -72,8 +112,9 @@ private struct StatusBarBlur: View {
     
     var body: some View {
         
-        VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+        Rectangle()
             .frame(height: UIDevice.current.hasNotch ? 47 : 20)
+            .background(.regularMaterial)
             .edgesIgnoringSafeArea(.top)
             .opacity(opacity)
         
@@ -85,7 +126,7 @@ private struct Header: View {
     
     var body: some View {
         
-        VStack {
+        LazyVStack(alignment: .center, spacing: 0) {
 
             Spacer()
                 .frame(height: 48)
@@ -104,9 +145,9 @@ private struct Header: View {
             }
 
             Divider()
-                .padding(.top, 2)
+                .padding(.top, 10)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+                .padding(.bottom, 10)
 
         }
         

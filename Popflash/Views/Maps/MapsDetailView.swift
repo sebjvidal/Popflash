@@ -2,21 +2,6 @@ import SwiftUI
 import Kingfisher
 import FirebaseFirestore
 
-extension UINavigationController {
-
-    override open func viewDidLoad() {
-
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .clear
-
-        navigationBar.standardAppearance = appearance
-        navigationBar.compactAppearance = appearance
-        navigationBar.scrollEdgeAppearance = appearance
-
-    }
-
-}
 
 struct MapsDetailView: View {
     
@@ -28,110 +13,57 @@ struct MapsDetailView: View {
     @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
     
-    @State private var time = Timer.publish(every: 0.1, on: .main, in: .tracking).autoconnect()
-    
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
-        
-        ZStack(alignment: .top) {
-            
-            ScrollView(axes: .vertical, showsIndicators: true, offsetChanged: {
                 
-                scrollOffset = Double($0.y)
+        List {
                 
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            Group {
                 
-            }) {
+                Header(icon: map.icon,
+                       name: map.name,
+                       group: map.group,
+                       scenario: map.scenario)
                 
-//                LazyVStack {
-                    
-                    Header(icon: map.icon,
-                           name: map.name,
-                           group: map.group,
-                           scenario: map.scenario)
-                    
-                    SearchBar(searchQuery: $searchQuery)
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
-                        .onChange(of: searchQuery) {
-                            
-                            if $0 != "" {
-                                
-                                let queryArray = searchQuery.lowercased().split(separator: " ")
-                                
-                                if queryArray.count > 0 {
-                                    
-                                    self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                    .whereField("map", isEqualTo: map.name)
-                                                                    .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
-                                    
-                                }
-                                
-                            } else {
-                                
-                                self.searchViewModel.nades = [Nade]()
-                                
-                            }
-                            
-                        }
-                    
-                    NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades,
-                             searchQuery: $searchQuery,
-                             isLoading: false)
-                    
-                    ProgressView()
-                        .padding(.top, 4)
-                        .padding(.bottom, 20)
-                    
-                    GeometryReader { g in
-
-                        Color.clear
-                            .onAppear {
-
-                                self.time = Timer.publish(every: 0.1, on: .main, in: .tracking).autoconnect()
-
-                            }
-                            .onReceive(self.time) { (_)in
-
-                                if g.frame(in: .global).maxY < UIScreen.screenHeight {
-                                    
-                                    loadNades()
-
-                                }
-
-                            }
-
+                SearchBar(placeholder: "Search \(map.name)",
+                          query: $searchQuery)
+                    .padding(.bottom, 8)
+                    .onChange(of: searchQuery) {
+                        
+                        handleSearch(query: $0)
+                        
                     }
-                    .frame(width: 0, height: 0)
-                    
-//                }
+                
+                NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades)
+                
+                ActivityIndicator()
+                    .onAppear {
+                        
+                        loadNades()
+                        
+                    }
                 
             }
-            .onAppear() {
-                
-//                let db = Firestore.firestore()
-//
-//                db.collection("maps").document(map.id).setData([
-//                    "views": map.views + 1
-//                ], merge: true)
+            .listRowSeparator(.hidden)
+            
+        }
+        .listStyle(.plain)
+        .onAppear() {
+            
+            if viewModel.nades.isEmpty {
                 
                 loadNades()
                 
             }
-            .navigationBarTitle(Text(""), displayMode: .inline)
-            .toolbar {
-                
-                FavouriteToolbarItem(mapName: map.name)
-                
-            }
-            
-            Rectangle()
-                .foregroundColor(Color("True_Background"))
-                .frame(height: 91)
-                .edgesIgnoringSafeArea(.top)
             
         }
+        .toolbar {
+            
+            FavouriteToolbarItem(mapName: map.name)
+            
+        }
+        .navigationBarTitle(Text(""), displayMode: .inline)
         
     }
     
@@ -141,6 +73,28 @@ struct MapsDetailView: View {
                                     .whereField("map", isEqualTo: map.name)
                                     .limit(to: 10))
 
+    }
+    
+    func handleSearch(query: String) {
+        
+        if query != "" {
+            
+            let queryArray = searchQuery.lowercased().split(separator: " ")
+            
+            if queryArray.count > 0 {
+                
+                self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                .whereField("map", isEqualTo: map.name)
+                                                .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                
+            }
+            
+        } else {
+            
+            self.searchViewModel.nades = [Nade]()
+            
+        }
+        
     }
     
 }
@@ -154,7 +108,7 @@ private struct Header: View {
     
     var body: some View {
         
-        VStack {
+        LazyVStack(alignment: .center) {
             
             KFImage(URL(string: icon))
                 .resizable()
@@ -224,112 +178,31 @@ private struct FavouriteToolbarItem: ToolbarContent {
     
 }
 
-private struct SearchBar: View {
-    
-    @Binding var searchQuery: String
-    
-    @State private var isEditing = false
-    
-    var body: some View {
-        
-        HStack {
-            
-            ZStack {
-                
-                Color("Search_Bar")
-                    .frame(height: 38)
-                    .cornerRadius(10)
-                    .animation(.default)
-                
-                HStack {
-                    
-                    Image(systemName: "magnifyingglass")
-                        .padding(.leading, 12)
-                        .foregroundColor(Color("Search_Bar_Icons"))
-                    
-                    TextField("Search", text: $searchQuery)
-                        .font(.system(size: 18))
-                        .onTapGesture {
-                            
-                            self.isEditing = true
-                            
-                        }
-                        .animation(.default)
-                    
-                    if self.searchQuery != "" {
-                        
-                        Button {
-                            
-                            self.searchQuery = ""
-                            
-                        } label: {
-                            
-                            Image(systemName: "multiply.circle.fill")
-                                .padding(.trailing, 10)
-                                .foregroundColor(Color("Search_Bar_Icons"))
-                            
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            if isEditing {
-                
-                Button("Cancel") {
-                    
-                    self.searchQuery = ""
-                    self.isEditing = false
-                    
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    
-                }
-                .padding(.horizontal, 6)
-                .transition(AnyTransition.move(edge: .trailing).combined(with: .opacity))
-                .animation(.default)
-                
-            }
-            
-        }
-        
-    }
-    
-}
-
 private struct NadeList: View {
     
     @Binding var nades: [Nade]
-    @Binding var searchQuery: String
-    
-    @State var isLoading: Bool
     
     @State private var selectedNade: Nade?
     
     var body: some View {
-        
-        LazyVStack {
             
-            ForEach(nades, id: \.self) { nade in
-                    
-                Button {
-                    
-                    self.selectedNade = nade
-                    
-                } label: {
-                    
-                    NadeCell(nade: nade)
-                            .shadow(radius: 6, y: 5)
-                    
-                }
-                .buttonStyle(NadeCellButtonStyle())
-                .fullScreenCover(item: self.$selectedNade) { item in
-                    
-                    NadeView(nade: item)
-                    
-                }
+        ForEach(nades, id: \.self) { nade in
+                
+            Button {
+                
+                self.selectedNade = nade
+                
+            } label: {
+                
+                NadeCell(nade: nade)
+                    .shadow(radius: 6, y: 5)
+                    .padding(.bottom, 8)
+                
+            }
+            .buttonStyle(NadeCellButtonStyle())
+            .fullScreenCover(item: self.$selectedNade) { item in
+                
+                NadeView(nade: item)
                 
             }
             
@@ -353,6 +226,7 @@ struct NadeCell: View {
                 
                 KFImage(URL(string: nade.thumbnail))
                     .resizable()
+                    .frame(width: UIScreen.screenWidth - 32, height: (UIScreen.screenWidth - 32) / 1.777)
                     .aspectRatio(contentMode: .fit)
                 
                 ZStack {
@@ -361,9 +235,7 @@ struct NadeCell: View {
                         .resizable()
                         .setProcessor(processor)
                         .frame(height: 90)
-                    
-                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-                        .frame(height: 90)
+                        .overlay(.regularMaterial)
                     
                     HStack {
                         
@@ -400,8 +272,6 @@ struct NadeCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding(.horizontal)
-        .padding(.bottom, 8)
         
     }
     
@@ -426,9 +296,10 @@ struct NadeDetails: View {
                 
                 Label("\(tick)", systemImage: "clock.fill")
                 
-                Label("\(bind)", image: "keyboard.fill")
+                Label("\(bind)", systemImage: "keyboard.fill")
                 
             }
+            .foregroundStyle(.primary)
             .padding(.trailing, 16)
             .font(.system(size: 11))
             
@@ -446,27 +317,17 @@ private struct NadeCellTypeIcon: View {
 
         ZStack {
 
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .frame(width: 40, height: 40)
 
-            if type == "Molotov" {
 
-                Image("\(type)_Icon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30)
-
-            } else {
-
-                Image("\(type)_Icon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 25)
-
-            }
+            Image("\(type)_Icon")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: type == "Molotov" ? 30 : 25)
 
         }
+        .frame(width: 40, height: 40)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .padding(.trailing, 8)
         .padding(.top, 8)
 
@@ -474,3 +335,18 @@ private struct NadeCellTypeIcon: View {
 
 }
 
+private struct ActivityIndicator: View {
+    
+    var body: some View {
+        
+        LazyVStack {
+            
+            ProgressView()
+                .padding(.top, 12)
+                .padding(.bottom, 20)
+            
+        }
+        
+    }
+    
+}
