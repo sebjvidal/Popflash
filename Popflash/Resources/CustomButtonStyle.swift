@@ -36,6 +36,7 @@ struct NadeCellButtonStyle: ButtonStyle {
         Rectangle()
             .foregroundColor(Color("Button_Overlay"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .padding(.bottom, 8)
         
     }
     
