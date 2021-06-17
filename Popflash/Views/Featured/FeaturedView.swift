@@ -11,6 +11,8 @@ import FirebaseFirestore
 
 struct FeaturedView: View {
     
+    @StateObject var featuredNades = FeaturedViewModel()
+    
     @State var statusOppacity = 0.0
     @State var selectedNade: Nade?
     @State var nadeViewIsPresented = false
@@ -19,8 +21,9 @@ struct FeaturedView: View {
     
     var statusBarBlur: some View {
         
-        VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+        Rectangle()
             .frame(height: UIDevice.current.hasNotch ? 47 : 20)
+            .background(.regularMaterial)
             .edgesIgnoringSafeArea(.top)
         
     }
@@ -28,56 +31,59 @@ struct FeaturedView: View {
     var body: some View {
         
         NavigationView {
-            
-            ZStack(alignment: .top) {
                 
-                ScrollView(offsetChanged: {
+                List {
                     
-                    let offset = $0.y
-                    
-                    statusOppacity = Double((1 / 35) * -offset)
-                    
-                }) {
-                    
-                    VStack(alignment: .leading) {
+                    Group {
                         
                         Header()
                         
-                        FeaturedNade(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented)
+                        FeaturedNade(nades: $featuredNades.nades,
+                                     selectedNade: $selectedNade,
+                                     nadeViewIsPresented: $nadeViewIsPresented)
                         
-                        Divider()
-                            .padding(.horizontal, 16)
-                        
-                        MoreFrom(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented)
+                        MoreFrom(selectedNade: $selectedNade,
+                                 nadeViewIsPresented: $nadeViewIsPresented)
                         
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    .listRowSeparator(.hidden)
+                    .buttonStyle(.plain)
                     .fullScreenCover(item: self.$selectedNade) { item in
                         
                         NadeView(nade: item)
                         
                     }
+                    .listRowInsets(.some(EdgeInsets()))
                                     
                 }
+                .listStyle(.plain)
+                .navigationBarTitle("Featured", displayMode: .inline)
+                .navigationBarHidden(true)
+                .refreshable {
+                    
+                    featuredNades.nades = []
+                    fetchFeaturedNade()
+                    
+                }
                 .onAppear {
+                    
+                    fetchFeaturedNade()
                     
                     tabSelection = 0
                                                             
                 }
-                
-                statusBarBlur
-                    .opacity(statusOppacity)
-                
-            }
-            .navigationBarTitle("Featured", displayMode: .inline)
-            .navigationBarHidden(true)
             
         }
         
     }
     
+    func fetchFeaturedNade() {
+        
+        featuredNades.fetchData()
+        
+    }
+    
 }
-
 
 private struct Header: View {
     
@@ -85,37 +91,36 @@ private struct Header: View {
     
     var body: some View {
         
-        VStack {
-            
+        LazyVStack(alignment: .center, spacing: 0) {
+
             Spacer()
                 .frame(height: 32)
-            
+
             HStack {
-                
+
                 VStack(alignment: .leading) {
-                    
+
                     Text(dateTimeString.uppercased())
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
                         .fontWeight(.semibold)
-                    
+
                     Text("Featured")
                         .font(.system(size: 32))
                         .fontWeight(.bold)
-                    
+
                 }
-                .padding(.leading)
-                
+
                 Spacer()
-                
+
             }
-            
+
             Divider()
-                .padding(.horizontal)
-                .padding(.top, 2)
-                .padding(.bottom, 8)
-            
+                .padding(.top, 10)
+                .padding(.bottom, 16)
+
         }
+        .padding(.horizontal)
         .onAppear() {
             
             dateTimeString = getDateString()
@@ -141,7 +146,7 @@ private struct Header: View {
 
 private struct FeaturedNade: View {
     
-    @StateObject var featuredNades = NadesViewModel()
+    @Binding var nades: [Nade]
     
     @Binding var selectedNade: Nade?
     @Binding var nadeViewIsPresented: Bool
@@ -150,7 +155,7 @@ private struct FeaturedNade: View {
         
         VStack {
             
-            ForEach(featuredNades.nades, id: \.self) { nade in
+            ForEach(nades, id: \.self) { nade in
                 
                 Button {
                     
@@ -163,19 +168,12 @@ private struct FeaturedNade: View {
                         .cornerRadius(15)
                         .clipped()
                         .shadow(radius: 6, y: 5)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal)
                         .padding(.bottom, 12)
                     
                 }
                 
             }
-            
-        }
-        .onAppear() {
-            
-            let db = Firestore.firestore()
-            
-            featuredNades.fetchData(ref: db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "nade"))
             
         }
         
@@ -188,24 +186,18 @@ private struct FeaturedCell: View {
     var nade: Nade
     
     var body: some View {
-        
-        ZStack(alignment: .top) {
             
-            Rectangle()
-                .foregroundColor(Color("Background"))
+        VStack(spacing: 0) {
             
-            VStack {
-                
-                FeaturedVideo(thumbnail: nade.thumbnail)
-                
-                FeaturedVideoDetail(nade: nade)
-                
-            }
+            FeaturedVideo(thumbnail: nade.thumbnail)
+
+            FeaturedVideoDetail(nade: nade)
             
         }
-
-    }
+        .background(Color("True_Background"))
     
+    }
+        
 }
 
 private struct MoreFrom: View {
@@ -218,6 +210,10 @@ private struct MoreFrom: View {
     var body: some View {
         
         VStack(alignment: .leading) {
+            
+            Divider()
+                .padding(.horizontal, 16)
+                .opacity(featuredMap.maps.isEmpty ? 0 : 1)
             
             ForEach(featuredMap.maps, id: \.self) { map in
                 
@@ -306,7 +302,7 @@ private struct Top5: View {
                     .buttonStyle(ComplimentsCellButtonStyle())
                     
                     Spacer()
-                        .frame(width: 16)
+                        .frame(width: 8)
                     
                 }
                 .onAppear() {
@@ -330,55 +326,6 @@ private struct Top5: View {
     
 }
 
-private struct FeaturedVideoDetail: View {
-    
-    var nade: Nade
-    
-    var body: some View {
-        
-        HStack {
-            
-            VStack(alignment: .leading) {
-                
-                Text(nade.map)
-                    .foregroundColor(.gray)
-                    .fontWeight(.semibold)
-                    .padding(.top, 2)
-                    .padding(.horizontal)
-                
-                Text(nade.name)
-                    .font(.system(size: 22))
-                    .fontWeight(.bold)
-                    .padding(.horizontal)
-                
-                Text(nade.shortDescription)
-                    .padding(.top, 4)
-                    .padding([.horizontal])
-                
-                VideoInfo(nade: nade)
-                    .padding(.top, -8)
-                
-                Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
-                    .lineLimit(3)
-                    .padding([.horizontal])
-                
-                Divider()
-                    .padding(.top, 4)
-                    .padding(.horizontal)
-                
-                SeeMore()
-                    .padding(.horizontal, 18)
-                    .padding(.top, 4)
-                    .padding(.bottom, 15)
-                
-            }
-            
-        }
-        
-    }
-    
-}
-
 private struct FeaturedVideo: View {
     
     var thumbnail: String
@@ -390,6 +337,50 @@ private struct FeaturedVideo: View {
             .frame(width: UIScreen.screenWidth - 32,
                    height: (UIScreen.screenWidth - 32 ) / 1.77)
             .aspectRatio(contentMode: .fill)
+        
+    }
+    
+}
+
+private struct FeaturedVideoDetail: View {
+    
+    var nade: Nade
+    
+    var body: some View {
+            
+        VStack(alignment: .leading) {
+            
+            Text(nade.map)
+                .foregroundColor(.gray)
+                .fontWeight(.semibold)
+                .padding(.top, 10)
+                .padding(.horizontal)
+            
+            Text(nade.name)
+                .font(.system(size: 22))
+                .fontWeight(.bold)
+                .padding(.horizontal)
+            
+            Text(nade.shortDescription)
+                .padding(.top, 4)
+                .padding([.horizontal])
+            
+            VideoInfo(nade: nade)
+                .padding(.top, -8)
+            
+            Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
+                .lineLimit(3)
+                .padding([.horizontal])
+            
+            Divider()
+                .padding(.horizontal)
+            
+            SeeMore()
+                .padding(.top, 4)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 16)
+            
+        }
         
     }
     
@@ -507,10 +498,4 @@ private struct Compliments: View {
         
     }
     
-}
-
-struct FeaturedView_Previews: PreviewProvider {
-    static var previews: some View {
-        FeaturedView()
-    }
 }
