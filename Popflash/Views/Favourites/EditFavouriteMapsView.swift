@@ -21,88 +21,76 @@ struct EditFavouriteMapsView: View {
     var body: some View {
  
         NavigationView {
-            
-            ZStack(alignment: .top) {
                 
-                List {
+            List {
+                
+                ForEach(mapsViewModel.maps, id: \.self) { map in
                     
-                    ForEach(mapsViewModel.maps, id: \.self) { map in
+                    Button {
                         
-                        Button {
+                        if !favouriteMaps.contains(map.name) {
                             
-                            if !favouriteMaps.contains(map.name) {
-                                
-                                favouriteMaps.append(map.name)
-                                
-                            } else {
-                                
-                                if let mapIndex = favouriteMaps.firstIndex(of: map.name) {
-                                    
-                                    favouriteMaps.remove(at: mapIndex)
-                                    
-                                }
-                                
-                            }
+                            favouriteMaps.append(map.name)
                             
-                        } label: {
+                        } else {
                             
-                            HStack {
+                            if let mapIndex = favouriteMaps.firstIndex(of: map.name) {
                                 
-                                Image(systemName: favouriteMaps.contains(map.name) ? "checkmark.circle.fill" : "circle")
-                                    .font(.system(size: 24))
-                                    .padding(.vertical, 4)
-                                    .foregroundColor(Color.blue)
-                                
-                                Text("\(map.name)")
+                                favouriteMaps.remove(at: mapIndex)
                                 
                             }
                             
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        
+                    } label: {
+                        
+                        HStack {
+                            
+                            Image(systemName: favouriteMaps.contains(map.name) ? "checkmark.circle.fill" : "circle")
+                                .font(.system(size: 24))
+                                .padding(.vertical, 4)
+                                .foregroundColor(Color.blue)
+                            
+                            Text("\(map.name)")
+                            
+                            Spacer()
+                            
+                        }
                         
                     }
-                    
-                }
-                .listStyle(GroupedListStyle())
-                .navigationBarTitle("Favourite Maps", displayMode: .inline)
-                .navigationBarItems(
-                    leading:
-                        Button(action: {
-                            
-                            favouriteMaps = oldMapList
-                            
-                            self.presentationMode.wrappedValue.dismiss()
-                            
-                        }) {
-                            Text("Cancel")
-                                .fontWeight(.regular)
-                        },
-                    trailing:
-                        Button(action: {
-                            
-                            self.presentationMode.wrappedValue.dismiss()
-                            
-                        }) {
-                            Text("Done")
-                        }
-                )
-                .onAppear() {
-                    
-                    self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
-                    
-                    oldMapList = favouriteMaps
+                    .buttonStyle(PlainButtonStyle())
                     
                 }
                 
-                VStack(spacing: 0) {
-                    
-                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-                        .frame(height: 56)
-                    
-                    Divider()
-                    
-                }
-                .edgesIgnoringSafeArea(.all)
+            }
+            .navigationBarTitle("Favourite Maps", displayMode: .inline)
+            .navigationBarItems(
+                leading:
+                    Button(action: {
+                        
+                        favouriteMaps = oldMapList
+                        
+                        self.presentationMode.wrappedValue.dismiss()
+                        
+                    }) {
+                        Text("Cancel")
+                            .fontWeight(.regular)
+                    },
+                trailing:
+                    Button(action: {
+                        
+                        self.presentationMode.wrappedValue.dismiss()
+                        
+                    }) {
+                        Text("Done")
+                            .fontWeight(.bold)
+                    }
+            )
+            .onAppear() {
+                
+                self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+                
+                oldMapList = favouriteMaps
                 
             }
             

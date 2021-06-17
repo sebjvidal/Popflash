@@ -18,9 +18,11 @@ struct FavouritesView: View {
     
     var statusBarBlur: some View {
         
-        VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+        Rectangle()
             .frame(height: 47)
+            .background(.regularMaterial)
             .edgesIgnoringSafeArea(.top)
+            .opacity(statusOpacitiy)
         
     }
     
@@ -36,16 +38,9 @@ struct FavouritesView: View {
                         
                         Header()
                         
-                        ScrollView(axes: .horizontal,
-                                   showsIndicators: false) {
-                            
-                            FavouriteMaps(isShowing: $isShowing)
-                            
-                        }
-                        .padding(.top, -6)
+                        FavouriteMaps(isShowing: $isShowing)
                         
                         FavouriteNades()
-                            .padding(.horizontal)
                         
                     }
                     
@@ -59,7 +54,6 @@ struct FavouritesView: View {
                 .navigationBarHidden(true)
                 
                 statusBarBlur
-                    .opacity(0.0)
                 
             }
             .sheet(isPresented: $isShowing, content: {
@@ -88,93 +82,73 @@ private struct FavouriteMaps: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        ScrollView(axes: .horizontal,
+                   showsIndicators: false) {
             
-            Divider()
-                .frame(minWidth: UIScreen.screenWidth - 32)
-                .padding(.horizontal)
-                .padding(.bottom, 4)
-            
-            Text("Maps")
-                .font(.system(size: 20))
-                .fontWeight(.semibold)
-                .padding(.leading, 18)
-            
-            HStack {
+            VStack(alignment: .leading) {
                 
-                Spacer()
-                    .frame(width: 8)
+                Divider()
+                    .frame(minWidth: UIScreen.screenWidth - 32)
+                    .padding(.horizontal)
+                    .padding(.bottom, 4)
                 
-                if mapsViewModel.maps.isEmpty {
+                Text("Maps")
+                    .font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .padding(.leading, 18)
+
+                HStack {
                     
-                    ForEach(favouriteMaps.filter({ $0 != "" }), id: \.self) { _ in
-                        
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .frame(width: 100, height: 150)
-                            .foregroundColor(Color("Loading"))
-                            .padding(.leading, 8)
-                            .padding(.bottom, 16)
-                        
-                    }
+                    Spacer()
+                        .frame(width: 8)
                     
-                } else {
-                    
-                    ForEach(favouriteMaps.filter({ $0 != "" }), id: \.self) { favouriteMap in
+                    if mapsViewModel.maps.isEmpty {
                         
-                        let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap })!
-                        
-                        NavigationLink(destination: MapsDetailView(map: map)) {
+                        ForEach(favouriteMaps.filter({ $0 != "" }), id: \.self) { _ in
                             
-                            FavouriteMapCell(map: map)
-                                .contentShape(Rectangle())
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .frame(width: 100, height: 150)
+                                .foregroundColor(Color("Loading"))
+                                .padding(.leading, 8)
+                                .padding(.bottom, 16)
                             
                         }
-                        .buttonStyle(FavouriteMapCellButtonStyle())
+                        
+                    } else {
+                        
+                        ForEach(favouriteMaps.filter({ $0 != "" }), id: \.self) { favouriteMap in
+                            
+                            let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap })!
+                            
+                            NavigationLink(destination: MapsDetailView(map: map)) {
+                                
+                                FavouriteMapCell(map: map)
+                                    .contentShape(Rectangle())
+                                
+                            }
+                            .buttonStyle(FavouriteMapCellButtonStyle())
+                            
+                        }
                         
                     }
                     
-                }
-                
-                Button {
+                    EditFavouritesButton(isShowing: $isShowing)
                     
-                    isShowing.toggle()
-                    
-                } label: {
-                    
-                    ZStack {
-                        
-                        Rectangle()
-                            .frame(width: 100, height: 150)
-                            .foregroundColor(Color("Favourite_Map_Background"))
-                        
-                        Circle()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(Color("Favourite_Map_Button"))
-                        
-                        Image(systemName: "plus")
-                            .foregroundColor(.blue)
-                            .font(.system(size: 24))
-                        
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .shadow(color: Color.black.opacity(0.15), radius: 5, y: 4)
-                    .padding(.leading, 8)
-                    .padding(.bottom, 16)
+                    Spacer()
+                        .frame(width: 24)
                     
                 }
+                .buttonStyle(FavouriteMapCellButtonStyle())
                 
-                Spacer()
-                    .frame(width: 24)
+                Divider()
+                    .frame(minWidth: UIScreen.screenWidth - 32)
+                    .padding(.top, -8)
+                    .padding(.horizontal)
                 
             }
-            .buttonStyle(FavouriteMapCellButtonStyle())
-            
-            Divider()
-                .frame(minWidth: UIScreen.screenWidth - 32)
-                .padding(.top, -8)
-                .padding(.horizontal)
             
         }
+        .padding(.top, -6)
         .onAppear() {
             
             tabSelection = 2
@@ -214,6 +188,44 @@ private struct FavouriteMapCell: View {
         .shadow(radius: 5, y: 4)
         .padding(.leading, 8)
         .padding(.bottom, 16)
+        
+    }
+    
+}
+
+private struct EditFavouritesButton: View {
+    
+    @Binding var isShowing: Bool
+    
+    var body: some View {
+        
+        Button {
+            
+            isShowing.toggle()
+            
+        } label: {
+            
+            ZStack {
+                
+                Rectangle()
+                    .frame(width: 100, height: 150)
+                    .foregroundColor(Color("Favourite_Map_Background"))
+                
+                Circle()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(Color("Favourite_Map_Button"))
+                
+                Image(systemName: "plus")
+                    .foregroundColor(.blue)
+                    .font(.system(size: 24))
+                
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .shadow(color: Color.black.opacity(0.15), radius: 5, y: 4)
+            .padding(.leading, 8)
+            .padding(.bottom, 16)
+            
+        }
         
     }
     
@@ -269,6 +281,7 @@ private struct FavouriteNades: View {
             Spacer(minLength: 12)
             
         }
+        .padding(.horizontal)
         .onAppear() {
             
             if !favouriteNades.isEmpty {
@@ -291,65 +304,65 @@ private struct FavouriteNadeCell: View {
     
     var body: some View {
         
-        ZStack(alignment: .leading) {
-
+        HStack(spacing: 0) {
+            
             KFImage(URL(string: nade.thumbnail))
-                .setProcessor(processor)
                 .resizable()
-                .frame(height: 106)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 166, height: 106)
+                .clipped()
             
-            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-            
-            HStack(alignment: .top) {
+            ZStack {
                 
                 KFImage(URL(string: nade.thumbnail))
+                    .setProcessor(processor)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 166, height: 106)
-                    .clipped()
+                    .frame(height: 106)
+                    .overlay(.regularMaterial)
                 
                 VStack(alignment: .leading) {
-                    
+
                     Text(nade.map)
                         .foregroundColor(.gray)
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(.top, 8)
                         .padding(.leading, 4)
-                    
+
                     Text(nade.name)
                         .fontWeight(.semibold)
                         .padding(.top, 0)
                         .padding(.leading, 4)
                         .lineLimit(2)
-                    
+
                     Spacer()
-                    
+
                     HStack {
-                        
+
                         Image(systemName: "eye.fill")
                             .font(.system(size: 10))
-                        
+
                         Text(String(nade.views))
                             .font(.system(size: 12))
-                        
+
                         Image(systemName: "heart.fill")
                             .font(.system(size: 12))
-                        
+
                         Text(String(nade.favourites))
                             .font(.system(size: 12))
-                        
+
                         Spacer()
-                        
+
                         Image(systemName: "chevron.right")
                             .font(.system(size: 12))
                             .padding(.trailing, 12)
-                        
+
                     }
                     .padding(.leading, 6)
                     .padding(.bottom, 10)
-                    
+
                 }
+                .padding(.leading, 8)
                 
             }
             
@@ -362,24 +375,27 @@ private struct FavouriteNadeCell: View {
 }
 
 private struct Header: View {
+    
     var body: some View {
+        
         VStack {
+            
             Spacer()
                 .frame(height: 48)
             
             HStack {
+                
                 Text("Favourites")
                     .font(.system(size: 32))
                     .fontWeight(.bold)
                     .padding(.leading)
+                
                 Spacer()
+                
             }
+            
         }
+        
     }
-}
-
-struct FavouritesView_Previews: PreviewProvider {
-    static var previews: some View {
-        FavouritesView()
-    }
+    
 }
