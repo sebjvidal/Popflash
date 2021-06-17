@@ -29,9 +29,7 @@ struct ComplimentCell: View {
                     .resizable()
                     .setProcessor(processor)
                     .frame(width: 220, height: 80)
-                
-                VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-                    .frame(width: 220, height: 80)
+                    .overlay(.regularMaterial)
                 
                 LazyVStack(alignment: .leading) {
                     

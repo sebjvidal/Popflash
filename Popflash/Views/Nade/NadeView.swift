@@ -95,10 +95,8 @@ private struct Header: View {
         ZStack(alignment: .top) {
             
             VideoPlayer(player: player)
-                .frame(width: UIScreen.screenWidth,
-                       alignment: .top)
-            
-            VisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+                .frame(width: UIScreen.screenWidth, alignment: .top)
+                .overlay(.regularMaterial)
             
         }
         .frame(height: UIDevice.current.hasNotch ? 47 : 20)
@@ -121,17 +119,12 @@ private struct CloseButton: View {
             presentationMode.wrappedValue.dismiss()
             
         } label: {
-            
-            ZStack {
                 
-                VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                    .frame(width: 35, height: 35)
-                
-                Image(systemName: "multiply")
-                    .font(.system(size: 20, weight: .semibold))
-                
-            }
-            .cornerRadius(25)
+            Image(systemName: "multiply")
+                .font(.system(size: 20, weight: .semibold))
+                .frame(width: 35, height: 35)
+                .background(.regularMaterial)
+                .cornerRadius(25)
             
         }
         .buttonStyle(PlainButtonStyle())
@@ -159,8 +152,7 @@ private struct NadeContent: View {
             
             KFImage(URL(string: nade.lineup))
                 .resizable()
-//                .aspectRatio(contentMode: .fit)
-                .frame(height: UIScreen.screenWidth / 1.6)
+                .frame(height: UIScreen.screenWidth / 1.777)
                 .pinchToZoom()
                 .opacity(contentSelection == "Line-up" ? 1 : 0)
             
@@ -220,7 +212,7 @@ private struct OverviewContent: View {
             }
             
         }
-        .frame(height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.6)
+        .frame(height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.777)
         .animation(.easeInOut(duration: 0.2))
         .zIndex(1)
         .pinchToZoom()
@@ -331,7 +323,7 @@ private struct VideoView: View {
                 
             }
             .frame(width: fullscreen ? UIScreen.screenWidth * 1.777 : UIScreen.screenWidth,
-                   height: fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.6)
+                   height: fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.777)
             .rotationEffect(.degrees(rotation))
             .offset(y: fullscreen ? 0 : UIDevice.current.hasNotch ? 47 : 20)
             .animation(.easeInOut(duration: 0.25))
@@ -373,14 +365,14 @@ private struct VideoView: View {
 }
 
 struct SegmentedControl: View {
-    
+
     @Binding var selection: String
     
-    var options = ["Video", "Line-up", "Overview"]
+    var options = ["Video", "Line-up"] // Add "Overview" here
     
     var body: some View {
         
-        Picker("Video or Lineup", selection: $selection) {
+        Picker("Content View", selection: $selection) {
             
             ForEach(options, id: \.self) {
                 
@@ -455,7 +447,7 @@ private struct Details: View {
         let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
                        Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
                        Detail(name: "TICK RATE", value: nade.tick, image: Image(systemName: "clock.fill")),
-                       Detail(name: "JUMP BIND", value: nade.bind, image: Image("keyboard.fill")),
+                       Detail(name: "JUMP BIND", value: nade.bind, image: Image(systemName: "keyboard.fill")),
                        Detail(name: "SIDE", value: nade.side, image: Image("\(nade.side.lowercased()).fill")),
                        Detail(name: "TYPE", value: nade.type, image: Image(systemName: "circle.fill"))]
         
@@ -472,47 +464,42 @@ private struct FavouriteButton: View {
     @AppStorage("favourites.nades") var favouriteNades: Array = [String()]
     
     var body: some View {
-        
-        ZStack {
             
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
+        Button {
             
-            Button {
+            if favouriteNades.contains(id) {
                 
-                if favouriteNades.contains(id) {
+                if let index = favouriteNades.firstIndex(of: id) {
                     
-                    if let index = favouriteNades.firstIndex(of: id) {
-                        
-                        favouriteNades.remove(at: index)
-                    }
-                    
-                } else {
-                    
-                    favouriteNades.append(id)
-                    
+                    favouriteNades.remove(at: index)
                 }
                 
-            } label: {
+            } else {
                 
-                if favouriteNades.contains(id) {
-                    
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 21))
-                        .foregroundColor(Color("Heart"))
-                    
-                } else {
-                    
-                    Image(systemName: "heart")
-                        .font(.system(size: 21))
-                    
-                }
+                favouriteNades.append(id)
                 
             }
-            .offset(y: 0.5)
+            
+        } label: {
+            
+            if favouriteNades.contains(id) {
+                
+                Image(systemName: "heart.fill")
+                    .font(.system(size: 21))
+                    .foregroundColor(Color("Heart"))
+                
+            } else {
+                
+                Image(systemName: "heart")
+                    .font(.system(size: 21))
+                
+            }
             
         }
+        .frame(width: 40, height: 40)
+        .background(.regularMaterial)
+        .clipShape(Circle())
+        .offset(y: 0.5)
         
     }
     
@@ -595,7 +582,7 @@ struct VideoInfo: View {
         let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
                        Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
                        Detail(name: "TICK RATE", value: nade.tick, image: Image(systemName: "clock.fill")),
-                       Detail(name: "JUMP BIND", value: nade.bind, image: Image("keyboard.fill")),
+                       Detail(name: "JUMP BIND", value: nade.bind, image: Image(systemName: "keyboard.fill")),
                        Detail(name: "SIDE", value: nade.side, image: Image("\(nade.side.lowercased()).fill")),
                        Detail(name: "TYPE", value: nade.type, image: Image(systemName: "circle.fill"))]
         
@@ -614,20 +601,13 @@ private struct Warning: View {
         VStack(alignment: .leading, spacing: 0) {
             
             HStack {
-                
-                ZStack {
-                    
-                    Image(systemName: "triangle.fill")
-                        .foregroundColor(.black)
-                        .font(.system(size: 20))
-                    
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.yellow)
-                        .font(.system(size: 24))
-                    
-                }
-                .padding(.leading, 4)
-                .padding(.trailing, 4)
+
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.black, .yellow)
+                    .font(.system(size: 24))
+                    .padding(.leading, 4)
+                    .padding(.trailing, 4)
                 
                 Text("\(warning)")
                 

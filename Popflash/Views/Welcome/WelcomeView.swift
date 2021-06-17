@@ -167,7 +167,8 @@ private struct GetStarted: View {
         }
         .background(
             
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+            Rectangle()
+                .background(.regularMaterial)
             
         )
         .clipShape(
