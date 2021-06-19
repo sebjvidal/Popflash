@@ -150,7 +150,7 @@ private struct NadeContent: View {
                 .edgesIgnoringSafeArea(.all)
                 .opacity(contentSelection == "Video" ? 1 : 0)
             
-            KFImage(URL(string: nade.lineup))
+            KFImage(URL(string: nade.lineup ?? ""))
                 .resizable()
                 .frame(height: UIScreen.screenWidth / 1.777)
                 .pinchToZoom()

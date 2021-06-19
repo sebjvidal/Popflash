@@ -40,20 +40,15 @@ struct MapsView: View {
                                     .padding(.bottom, 10)
                                 
                             }
-                            .listRowBackground(Color.white)
                             .buttonStyle(MapCellButtonStyle())
                             
                         }
-                        .listRowBackground(Color.white)
                         
                         Spacer(minLength: 8)
                         
                     }
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(.some(EdgeInsets()))
                     
                 }
-                .listStyle(.plain)
                 .onAppear() {
                     
                     if mapsViewModel.maps.isEmpty {
@@ -147,7 +142,7 @@ private struct Header: View {
             Divider()
                 .padding(.top, 10)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 10)
+                .padding(.bottom, 8)
 
         }
         

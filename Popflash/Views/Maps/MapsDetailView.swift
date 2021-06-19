@@ -26,9 +26,8 @@ struct MapsDetailView: View {
                        group: map.group,
                        scenario: map.scenario)
                 
-                SearchBar(placeholder: "Search \(map.name)",
-                          query: $searchQuery)
-                    .padding(.bottom, 8)
+                SearchBar(placeholder: "Search \(map.name)", query: $searchQuery)
+                    .padding(.bottom, 6)
                     .onChange(of: searchQuery) {
                         
                         handleSearch(query: $0)
@@ -45,7 +44,10 @@ struct MapsDetailView: View {
                     }
                 
             }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
             .listRowSeparator(.hidden)
+            .listRowInsets(.some(EdgeInsets()))
             
         }
         .listStyle(.plain)
@@ -122,9 +124,10 @@ private struct Header: View {
             
             Text("\(group) • \(scenario)")
                 .foregroundColor(.gray)
-                .padding(.bottom, 45)
             
         }
+        .padding(.top, 4)
+        .padding(.bottom, 45)
         
     }
     
