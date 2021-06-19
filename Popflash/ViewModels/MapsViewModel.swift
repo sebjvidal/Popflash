@@ -15,19 +15,12 @@ class MapsViewModel: ObservableObject {
     @Published var loading = false
     
     private var db = Firestore.firestore()
-    private var lastDocument: QueryDocumentSnapshot!
     
     func fetchData(ref: Query) {
         
         self.loading = true
         
         var dbRef = ref
-        
-        if !maps.isEmpty {
-            
-            dbRef = dbRef.start(afterDocument: lastDocument)
-            
-        }
         
         dbRef.getDocuments { (querySnapshot, error) in
             
@@ -60,8 +53,6 @@ class MapsViewModel: ObservableObject {
                               icon: icon,
                               views: views,
                               lastAdded: lastAdded)
-                
-                self.lastDocument = document
                 
                 if !self.maps.contains(map) { self.maps.append(map) }
                 

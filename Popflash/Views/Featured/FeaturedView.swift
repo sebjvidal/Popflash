@@ -8,14 +8,16 @@
 import SwiftUI
 import Kingfisher
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct FeaturedView: View {
     
-    @StateObject var featuredNades = FeaturedViewModel()
+    @StateObject var featuredNadeViewModel = NadesViewModel()
+    @StateObject var featuredMapViewModel = MapsViewModel()
     
-    @State var statusOppacity = 0.0
-    @State var selectedNade: Nade?
-    @State var nadeViewIsPresented = false
+    @State private var statusOppacity = 0.0
+    @State private var selectedNade: Nade?
+    @State private var nadeViewIsPresented = false
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -38,11 +40,12 @@ struct FeaturedView: View {
                         
                         Header()
                         
-                        FeaturedNade(nades: $featuredNades.nades,
+                        FeaturedNade(nades: $featuredNadeViewModel.nades,
                                      selectedNade: $selectedNade,
                                      nadeViewIsPresented: $nadeViewIsPresented)
-                        
-                        MoreFrom(selectedNade: $selectedNade,
+
+                        MoreFrom(maps: $featuredMapViewModel.maps,
+                                 selectedNade: $selectedNade,
                                  nadeViewIsPresented: $nadeViewIsPresented)
                         
                     }
@@ -61,13 +64,17 @@ struct FeaturedView: View {
                 .navigationBarHidden(true)
                 .refreshable {
                     
-                    featuredNades.nades = []
-                    fetchFeaturedNade()
+                    featuredNadeViewModel.nades.removeAll()
+                    fetchFeaturedData()
                     
                 }
                 .onAppear {
                     
-                    fetchFeaturedNade()
+                    if featuredNadeViewModel.nades.isEmpty {
+                        
+                        fetchFeaturedData()
+                        
+                    }
                     
                     tabSelection = 0
                                                             
@@ -77,9 +84,15 @@ struct FeaturedView: View {
         
     }
     
-    func fetchFeaturedNade() {
+    func fetchFeaturedData() {
         
-        featuredNades.fetchData()
+        let db = Firestore.firestore()
+        
+        let nadeRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "nade").limit(to: 1)
+        let mapRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "map").limit(to: 1)
+        
+        featuredNadeViewModel.fetchData(ref: nadeRef)
+        featuredMapViewModel.fetchData(ref: mapRef)
         
     }
     
@@ -117,7 +130,7 @@ private struct Header: View {
 
             Divider()
                 .padding(.top, 10)
-                .padding(.bottom, 16)
+                .padding(.bottom, 4)
 
         }
         .padding(.horizontal)
@@ -165,11 +178,9 @@ private struct FeaturedNade: View {
                 } label: {
                     
                     FeaturedCell(nade: nade)
-                        .cornerRadius(15)
-                        .clipped()
                         .shadow(radius: 6, y: 5)
                         .padding(.horizontal)
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 6)
                     
                 }
                 
@@ -194,60 +205,65 @@ private struct FeaturedCell: View {
             FeaturedVideoDetail(nade: nade)
             
         }
-        .background(Color("True_Background"))
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
     
     }
         
 }
 
 private struct MoreFrom: View {
-    
-    @StateObject var featuredMap = MapsViewModel()
-    
+        
+    @Binding var maps: [Map]
     @Binding var selectedNade: Nade?
     @Binding var nadeViewIsPresented: Bool
     
+    @State private var action: Int? = 0
+    
     var body: some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             
             Divider()
                 .padding(.horizontal, 16)
-                .opacity(featuredMap.maps.isEmpty ? 0 : 1)
+                .opacity(maps.isEmpty ? 0 : 1)
             
-            ForEach(featuredMap.maps, id: \.self) { map in
+            ForEach(maps, id: \.self) { map in
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     
                     Text("More from \(map.name)")
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
-                        .padding(.top, 3)
+                        .padding(.top, 10)
                         .padding(.leading, 17)
-                        .padding(.bottom, 3)
-                    
-                    NavigationLink(destination: MapsDetailView(map: map)) {
+                        .padding(.bottom, 10)
+                        
+                    Button {
+
+                        action = 1
+
+                    } label: {
                         
                         MapCell(map: map)
                             .padding(.horizontal, 16)
-                            .padding(.bottom, 10)
                             .shadow(radius: 6, y: 5)
                         
                     }
-                    .buttonStyle(MapCellButtonStyle())
+                    
+                    NavigationLink(destination: MapsDetailView(map: map), tag: 1, selection: $action) {
+                    
+                        EmptyView()
+                        
+                    }
+                    .hidden()
+                    .disabled(true)
                     
                     Top5(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented, map: map.name)
                     
                 }
                 
             }
-            
-        }
-        .onAppear() {
-            
-            let db = Firestore.firestore()
-            
-            featuredMap.fetchData(ref: db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "map"))
             
         }
         
@@ -266,13 +282,13 @@ private struct Top5: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             
             Text("Top 5 on \(map)")
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
-                .padding(.top, -2)
                 .padding(.leading, 17)
+                .padding(.bottom, 2)
             
             ScrollView(axes: .horizontal, showsIndicators: false) {
                 
@@ -307,19 +323,24 @@ private struct Top5: View {
                 }
                 .onAppear() {
                     
-                    let db = Firestore.firestore()
-                    
-                    if top5Nades.nades.isEmpty {
-                    
-                        top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
-                    
-                    }
+                    fetchTop5Nades()
                     
                 }
                 
             }
-            .padding(.top, -4)
             
+        }
+        
+    }
+    
+    func fetchTop5Nades() {
+        
+        let db = Firestore.firestore()
+        
+        if top5Nades.nades.isEmpty {
+        
+            top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
+        
         }
         
     }
@@ -423,8 +444,6 @@ private struct Compliments: View {
                     .padding(.horizontal)
                     .padding(.bottom, 4)
                     .onAppear() {
-                        
-                        print(nade.compliments)
                         
                         self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
                                                                      .whereField("id", in: nade.compliments))

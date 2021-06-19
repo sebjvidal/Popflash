@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Nade: Hashable, Identifiable {
+struct Nade: Hashable, Codable, Identifiable {
     
     var id: String
     var name: String
