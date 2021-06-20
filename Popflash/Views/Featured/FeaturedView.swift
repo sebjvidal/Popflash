@@ -64,7 +64,6 @@ struct FeaturedView: View {
                 .navigationBarHidden(true)
                 .refreshable {
                     
-                    featuredNadeViewModel.nades.removeAll()
                     fetchFeaturedData()
                     
                 }
@@ -91,6 +90,9 @@ struct FeaturedView: View {
         let nadeRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "nade").limit(to: 1)
         let mapRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "map").limit(to: 1)
         
+        featuredNadeViewModel.nades.removeAll()
+        featuredMapViewModel.maps.removeAll()
+        
         featuredNadeViewModel.fetchData(ref: nadeRef)
         featuredMapViewModel.fetchData(ref: mapRef)
         
@@ -107,7 +109,7 @@ private struct Header: View {
         LazyVStack(alignment: .center, spacing: 0) {
 
             Spacer()
-                .frame(height: 32)
+                .frame(height: 36)
 
             HStack {
 
@@ -129,7 +131,7 @@ private struct Header: View {
             }
 
             Divider()
-                .padding(.top, 10)
+                .padding(.top, 6)
                 .padding(.bottom, 4)
 
         }

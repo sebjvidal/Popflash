@@ -15,7 +15,7 @@ struct MapCellButtonStyle: ButtonStyle {
             .foregroundColor(Color("Button_Overlay"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .padding(.horizontal, 16)
-            .padding(.bottom, 10)
+            .padding(.bottom, 16)
         
     }
     

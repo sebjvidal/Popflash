@@ -78,7 +78,7 @@ private struct FavouriteMaps: View {
     @State private var showingFavouriteMapsEdittingView = false
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
-    @AppStorage("favourites.maps") private var favouriteMaps: Array = [String]()
+    @AppStorage("favourites.maps") var favouriteMaps: Array = [String]()
     
     var body: some View {
         

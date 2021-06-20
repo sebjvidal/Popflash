@@ -16,68 +16,65 @@ struct MapCell: View {
     
     public var body: some View {
         
-        ZStack(alignment: .bottom) {
+        VStack(spacing: 0) {
             
-            VStack {
+            if !compactMapsView {
                 
-                if !compactMapsView {
-                    
-                    KFImage(URL(string: map.background)!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .foregroundColor(Color("Loading"))
-                        .background(Color("Loading"))
-                        .frame(height: UIScreen.screenWidth / 1.777 - 32)
-                    
-                }
+                KFImage(URL(string: map.background)!)
+                    .resizable()
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fill)
+                    .foregroundColor(Color("Loading"))
+                    .background(Color("Loading"))
+                    .frame(height: UIScreen.screenWidth / 1.777 - 32)
                 
-                ZStack {
+            }
+            
+            ZStack {
+                
+                let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
+                
+                KFImage(URL(string: map.background)!)
+                    .resizable()
+                    .setProcessor(processor)
+                    .loadImmediately()
+                    .opacity(compactMapsView ? 0 : 1)
+                    .frame(height: 80)
+                    .overlay(.regularMaterial)
+                
+                HStack {
                     
-                    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
-                    
-                    KFImage(URL(string: map.background)!)
+                    KFImage(URL(string: map.icon))
                         .resizable()
-                        .setProcessor(processor)
-                        .opacity(compactMapsView ? 0 : 1)
-                        .frame(height: 80)
-                        .overlay(.regularMaterial)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 55)
+                        .padding(.leading, 12)
                     
-                    HStack {
+                    VStack(alignment: .leading) {
                         
-                        KFImage(URL(string: map.icon))
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 55)
-                            .padding(.leading, 12)
+                        Text(map.name)
+                            .font(.headline)
                         
-                        VStack(alignment: .leading) {
-                            
-                            Text(map.name)
-                                .font(.headline)
-                            
-                            Text(map.group)
-                                .font(.subheadline)
-                            
-                        }
-                        .padding(.leading, 4)
-                        
-                        Spacer()
-                        
-                        NewButton(lastAdded: map.lastAdded)
-                        
-                        Image(systemName: "chevron.right")
-                            .padding(.trailing, 12)
+                        Text(map.group)
+                            .font(.subheadline)
                         
                     }
+                    .padding(.leading, 4)
+                    
+                    Spacer()
+                    
+                    NewButton(lastAdded: map.lastAdded)
+                    
+                    Image(systemName: "chevron.right")
+                        .padding(.trailing, 12)
                     
                 }
-                .padding(.top, -2)
                 
             }
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .drawingGroup()
         
     }
     

@@ -33,8 +33,8 @@
 		C2500539267BDB4B004F3A59 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C2500538267BDB4B004F3A59 /* FirebaseAuth */; };
 		C250053B267BDB4B004F3A59 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C250053A267BDB4B004F3A59 /* FirebaseFirestore */; };
 		C250053D267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = C250053C267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta */; };
+		C2500543267E6F75004F3A59 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C2500542267E6F75004F3A59 /* Kingfisher */; };
 		C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267B579261CD19800958E01 /* CustomButtonStyle.swift */; };
-		C26FA4B425E26326003CB3E8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C26FA4B325E26326003CB3E8 /* Kingfisher */; };
 		C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495425DE7D8300692E01 /* ScrollView.swift */; };
 		C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495E25DE7DD800692E01 /* ScreenSize.swift */; };
 		C27E496925DEC78F00692E01 /* ArrayAppStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */; };
@@ -114,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C26FA4B425E26326003CB3E8 /* Kingfisher in Frameworks */,
+				C2500543267E6F75004F3A59 /* Kingfisher in Frameworks */,
 				C250053D267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				C2500539267BDB4B004F3A59 /* FirebaseAuth in Frameworks */,
 				C250053B267BDB4B004F3A59 /* FirebaseFirestore in Frameworks */,
@@ -330,10 +330,10 @@
 			);
 			name = Popflash;
 			packageProductDependencies = (
-				C26FA4B325E26326003CB3E8 /* Kingfisher */,
 				C2500538267BDB4B004F3A59 /* FirebaseAuth */,
 				C250053A267BDB4B004F3A59 /* FirebaseFirestore */,
 				C250053C267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta */,
+				C2500542267E6F75004F3A59 /* Kingfisher */,
 			);
 			productName = Popflash;
 			productReference = C2069AC525CAE8B300ACFD15 /* Popflash.app */;
@@ -407,8 +407,8 @@
 			);
 			mainGroup = C2069ABC25CAE8B300ACFD15;
 			packageReferences = (
-				C26FA4B225E26326003CB3E8 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C2500537267BDB4B004F3A59 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C2500541267E6F75004F3A59 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = C2069AC625CAE8B300ACFD15 /* Products */;
 			projectDirPath = "";
@@ -821,7 +821,7 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		C26FA4B225E26326003CB3E8 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		C2500541267E6F75004F3A59 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -847,9 +847,9 @@
 			package = C2500537267BDB4B004F3A59 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreSwift-Beta";
 		};
-		C26FA4B325E26326003CB3E8 /* Kingfisher */ = {
+		C2500542267E6F75004F3A59 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C26FA4B225E26326003CB3E8 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = C2500541267E6F75004F3A59 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

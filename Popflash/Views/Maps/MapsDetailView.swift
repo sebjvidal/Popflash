@@ -187,6 +187,8 @@ private struct NadeList: View {
     
     @State private var selectedNade: Nade?
     
+    @AppStorage("favourites.nades") var favouriteNades: Array = [String]()
+    
     var body: some View {
             
         ForEach(nades, id: \.self) { nade in
@@ -203,10 +205,56 @@ private struct NadeList: View {
                 
             }
             .buttonStyle(NadeCellButtonStyle())
+            .swipeActions {
+                
+                Button {
+                    
+                    favouriteButtonAction(nade: nade.id)
+                    
+                } label: {
+
+                    Label("", image: isFavourite(nadeID: nade.id) ? "Unfavourite_Swipe_Action" : "Favourite_Swipe_Action")
+
+                }
+                .frame(width: 20)
+                .tint(Color("True_Background"))
+                
+            }
             .fullScreenCover(item: self.$selectedNade) { item in
                 
                 NadeView(nade: item)
                 
+            }
+            
+        }
+        
+    }
+    
+    func isFavourite(nadeID: String) -> Bool {
+        
+        if favouriteNades.contains(nadeID) {
+            
+            return true
+            
+        } else {
+            
+            return false
+            
+        }
+        
+    }
+    
+    func favouriteButtonAction(nade: String) {
+        
+        if isFavourite(nadeID: nade) {
+            
+            favouriteNades.insert(nade, at: 0)
+            
+        } else {
+            
+            if let index = favouriteNades.firstIndex(of: nade) {
+                
+                favouriteNades.remove(at: index)
             }
             
         }

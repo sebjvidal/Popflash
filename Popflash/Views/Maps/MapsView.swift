@@ -22,96 +22,35 @@ struct MapsView: View {
         
         NavigationView {
             
-            ZStack(alignment: .top) {
-            
-                SwiftUI.ScrollView {
-                    
-                    Group {
-                        
-                        Header()
-                        
-                        ForEach(filteredMaps(mapsList: mapsViewModel.maps), id: \.self) { map in
-                            
-                            NavigationLink(destination: MapsDetailView(map: map)){
-                                
-                                MapCell(map: map)
-                                    .shadow(radius: 6, y: 5)
-                                    .padding(.horizontal, 16)
-                                    .padding(.bottom, 10)
-                                
-                            }
-                            .buttonStyle(MapCellButtonStyle())
-                            
-                        }
-                        
-                        Spacer(minLength: 8)
-                        
-                    }
-                    
-                }
-                .onAppear() {
-                    
-                    if mapsViewModel.maps.isEmpty {
-                        
-                        mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
-                        
-                    }
-                    
-                    tabSelection = 1
-                    
-                }
+            List {
                 
-                StatusBarBlur(opacity: statusOpacity)
+                Group {
+                    
+                    Header()
+                    
+                    MapsList(maps: mapsViewModel.maps)
+                    
+                }
+                .listRowSeparator(.hidden)
+                .listRowInsets(.some(EdgeInsets()))
                 
             }
+            .listStyle(.plain)
             .navigationBarTitle("Maps", displayMode: .inline)
             .navigationBarHidden(true)
-            
-        }
-        
-    }
-    
-    func filteredMaps(mapsList: [Map]) -> [Map] {
-        
-        let filteredMapsList = mapsList.sorted(by: {
-            
-            if listFilter == "Popularity" {
-                return $0.views > $1.views
-            } else if listFilter == "A-Z" {
-                return $0.name < $1.name
-            } else {
-                return $0.name < $1.name
-            }
-            
-        }).filter( {
-            
-            if listFilter == "Active Duty" {
-                return $0.group == "Active Duty"
-            } else if listFilter == "Reserves" {
-                return $0.group == "Reserves"
-            } else {
-                return $0.group != ""
-            }
-            
-        })
-        
-        return filteredMapsList
-        
-    }
-    
-}
+            .onAppear() {
 
-private struct StatusBarBlur: View {
-    
-    var opacity: Double
-    
-    var body: some View {
-        
-        Rectangle()
-            .frame(height: UIDevice.current.hasNotch ? 47 : 20)
-            .background(.regularMaterial)
-            .edgesIgnoringSafeArea(.top)
-            .opacity(opacity)
+                if mapsViewModel.maps.isEmpty {
+
+                    mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+
+                }
+
+                tabSelection = 1
+
+            }
+
+        }
         
     }
     
@@ -124,7 +63,7 @@ private struct Header: View {
         LazyVStack(alignment: .center, spacing: 0) {
 
             Spacer()
-                .frame(height: 48)
+                .frame(height: 52)
 
             HStack() {
 
@@ -140,9 +79,9 @@ private struct Header: View {
             }
 
             Divider()
-                .padding(.top, 10)
+                .padding(.top, 6)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+                .padding(.bottom, 16)
 
         }
         
@@ -202,23 +141,37 @@ private struct MapsList: View {
     
     @AppStorage("maps.listFilter") var listFilter = "Popularity"
     
+    @State private var action: Int? = 0
+    
     var body: some View {
-        
-        VStack {
             
-            ForEach(filteredMaps(mapsList: maps), id: \.self) { map in
+        ForEach(filteredMaps(mapsList: maps), id: \.self) { map in
+            
+            ZStack {
                 
-                NavigationLink(destination: MapsDetailView(map: map)){
+                NavigationLink(destination: MapsDetailView(map: map), tag: generateID(forMap: map.id), selection: $action) {
                     
+                    EmptyView()
+                    
+                }
+                .hidden()
+                .disabled(true)
+
+                Button {
+
+                    action = generateID(forMap: map.id)
+
+                } label: {
+
                     MapCell(map: map)
                         .shadow(radius: 6, y: 5)
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 10)
-                    
+                        .padding(.bottom, 16)
+
                 }
-                .buttonStyle(MapCellButtonStyle())
-                
+
             }
+            .buttonStyle(MapCellButtonStyle())
             
         }
         
@@ -249,6 +202,25 @@ private struct MapsList: View {
         })
         
         return filteredMapsList
+        
+    }
+    
+    func generateID(forMap: String) -> Int {
+        
+        let rawString = forMap
+        var idString = ""
+        
+        for character in rawString {
+            
+            if character.isASCII {
+                
+                idString.append(String(character.asciiValue!))
+                
+            }
+            
+        }
+        
+        return Int(idString.prefix(9)) ?? 0
         
     }
     
