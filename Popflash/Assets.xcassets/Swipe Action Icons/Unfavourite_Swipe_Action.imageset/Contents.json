@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Unfavourite_Swipe_Action.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
