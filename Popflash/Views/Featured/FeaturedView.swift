@@ -132,7 +132,7 @@ private struct Header: View {
 
             Divider()
                 .padding(.top, 6)
-                .padding(.bottom, 4)
+                .padding(.bottom, 16)
 
         }
         .padding(.horizontal)
@@ -182,7 +182,7 @@ private struct FeaturedNade: View {
                     FeaturedCell(nade: nade)
                         .shadow(radius: 6, y: 5)
                         .padding(.horizontal)
-                        .padding(.bottom, 6)
+                        .padding(.bottom, 16)
                     
                 }
                 
@@ -393,6 +393,7 @@ private struct FeaturedVideoDetail: View {
             
             Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
                 .lineLimit(3)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding([.horizontal])
             
             Divider()
@@ -401,7 +402,7 @@ private struct FeaturedVideoDetail: View {
             SeeMore()
                 .padding(.top, 4)
                 .padding(.horizontal, 18)
-                .padding(.bottom, 16)
+                .padding(.bottom, 15)
             
         }
         
