@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -22,6 +20,8 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -41,6 +41,33 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>star</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Featured</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>FeaturedAction</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>map</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Maps</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>MapsAction</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>heart</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Favourites</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>FavouritesAction</string>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -52,6 +79,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -59,33 +88,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>FeaturedAction</string>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>star</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Featured</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>MapsAction</string>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>map</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Maps</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>FavouritesAction</string>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>heart</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Favourites</string>
-		</dict>
 	</array>
 </dict>
 </plist>

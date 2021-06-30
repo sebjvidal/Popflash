@@ -1,5 +1,6 @@
 import SwiftUI
 import Kingfisher
+import BottomSheet
 import FirebaseFirestore
 
 
@@ -10,8 +11,11 @@ struct MapsDetailView: View {
     @StateObject private var viewModel = NadesViewModel()
     @StateObject private var searchViewModel = NadesViewModel()
     
+    @State private var selectedNade: Nade?
     @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
+    @State private var showingBottomSheet = false
+    @State private var showingNavigationBarTitle = false
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -34,7 +38,7 @@ struct MapsDetailView: View {
                         
                     }
                 
-                NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades)
+                NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades, selectedNade: $selectedNade)
                 
                 ActivityIndicator()
                     .onAppear {
@@ -48,24 +52,64 @@ struct MapsDetailView: View {
             .padding(.bottom, 8)
             .listRowSeparator(.hidden)
             .listRowInsets(.some(EdgeInsets()))
-            
-        }
-        .listStyle(.plain)
-        .onAppear() {
-            
-            if viewModel.nades.isEmpty {
+            .sheet(item: self.$selectedNade) { item in
                 
-                loadNades()
-                
+                NadeView(nade: item)
+                                
             }
             
         }
+        .listStyle(.plain)
         .toolbar {
+            
+//            ToolbarItem(placement: .principal) {
+//
+//                Button { } label: {
+//
+//                    GeometryReader { geo in
+//
+//                        KFImage(URL(string: map.icon))
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .onAppear {
+//
+//                                print(geo.frame(in: .global).maxY)
+//
+//                            }
+//
+//                    }
+//                    .frame(width: 45, height: 45)
+//                    .edgesIgnoringSafeArea(.top)
+//                    .padding(.bottom, 14)
+//
+//                }
+//                .disabled(true)
+//
+//            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                
+                Button {
+
+                    showingBottomSheet.toggle()
+
+                } label: {
+
+                    Image(systemName: "ellipsis")
+
+                }
+                
+            }
             
             FavouriteToolbarItem(mapName: map.name)
             
         }
-        .navigationBarTitle(Text(""), displayMode: .inline)
+        .navigationBarTitle(showingNavigationBarTitle ? map.name : "", displayMode: .inline)
+        .bottomSheet(isPresented: $showingBottomSheet, detents: [.medium(), .large()], prefersGrabberVisible: true) {
+            
+            FilterView()
+            
+        }
         
     }
     
@@ -93,7 +137,7 @@ struct MapsDetailView: View {
             
         } else {
             
-            self.searchViewModel.nades = [Nade]()
+            self.searchViewModel.nades.removeAll()
             
         }
         
@@ -160,18 +204,18 @@ private struct FavouriteToolbarItem: ToolbarContent {
                 
             } label: {
                 
-                if favouriteMaps.contains(mapName) {
-                    
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 21))
-                        .foregroundColor(Color("Heart"))
-                    
-                } else {
-                    
-                    Image(systemName: "heart")
-                        .font(.system(size: 21))
-                    
-                }
+                Image(systemName: favouriteMaps.contains(mapName) ? "heart.fill" : "heart")
+                
+//                if favouriteMaps.contains(mapName) {
+//
+//                    Image(systemName: "heart.fill")
+//                        .foregroundColor(Color("Heart"))
+//
+//                } else {
+//
+//                    Image(systemName: "heart")
+//
+//                }
                 
             }
             
@@ -184,8 +228,7 @@ private struct FavouriteToolbarItem: ToolbarContent {
 private struct NadeList: View {
     
     @Binding var nades: [Nade]
-    
-    @State private var selectedNade: Nade?
+    @Binding var selectedNade: Nade?
     
     @AppStorage("favourites.nades") var favouriteNades: Array = [String]()
     
@@ -200,6 +243,7 @@ private struct NadeList: View {
             } label: {
                 
                 NadeCell(nade: nade)
+                    .equatable()
                     .shadow(radius: 6, y: 5)
                     .padding(.bottom, 8)
                 
@@ -218,11 +262,6 @@ private struct NadeList: View {
                 }
                 .frame(width: 20)
                 .tint(Color("True_Background"))
-                
-            }
-            .fullScreenCover(item: self.$selectedNade) { item in
-                
-                NadeView(nade: item)
                 
             }
             
@@ -263,7 +302,7 @@ private struct NadeList: View {
     
 }
 
-struct NadeCell: View {
+struct NadeCell: View, Equatable {
     
     var nade: Nade
     
@@ -326,6 +365,12 @@ struct NadeCell: View {
         
     }
     
+    static func == (lhs: NadeCell, rhs: NadeCell) -> Bool {
+        
+        return lhs.nade.id == lhs.nade.id
+        
+    }
+    
 }
 
 struct NadeDetails: View {
@@ -368,12 +413,10 @@ private struct NadeCellTypeIcon: View {
 
         ZStack {
 
-
-
             Image("\(type)_Icon")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: type == "Molotov" ? 30 : 25)
+                .frame(width: 30)
 
         }
         .frame(width: 40, height: 40)
@@ -399,5 +442,13 @@ private struct ActivityIndicator: View {
         }
         
     }
+    
+}
+
+private struct HeaderOffsetPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
     
 }
