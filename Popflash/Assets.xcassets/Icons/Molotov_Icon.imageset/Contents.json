@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Molotov_Test_Dark.png",
+      "filename" : "Molotov_Dark.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Molotov_Test.png",
+      "filename" : "Molotov_Light.png",
       "idiom" : "universal"
     }
   ],

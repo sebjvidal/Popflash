@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Flashbang_Test_Dark.png",
+      "filename" : "Flashbang_Dark.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Flashbang_Test.png",
+      "filename" : "Flashbang_Light.png",
       "idiom" : "universal"
     }
   ],

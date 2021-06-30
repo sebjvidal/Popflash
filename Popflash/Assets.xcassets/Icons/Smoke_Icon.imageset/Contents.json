@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Smoke_Test_Dark.png",
+      "filename" : "Smoke_Dark.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Smoke_Test.png",
+      "filename" : "Smoke_Light.png",
       "idiom" : "universal"
     }
   ],
