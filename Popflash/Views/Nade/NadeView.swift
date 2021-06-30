@@ -30,15 +30,13 @@ struct NadeView: View {
         ZStack(alignment: .top) {
             
             VStack(spacing: 0) {
-                
-                Header(player: player)
 
-                OverviewContent(nade: nade,
-                                selection: $selection)
-                    .opacity(selection == "Overview" ? 1 : 0)
+                NadeContent(nade: nade,
+                            player: player,
+                            fullscreen: fullscreen,
+                            contentSelection: selection)
                 
                 SegmentedControl(selection: $selection)
-                    .animation(.easeInOut(duration: 0.2))
                 
                 SwiftUI.ScrollView {
                     
@@ -53,7 +51,6 @@ struct NadeView: View {
                             Compliments(nade: $nade, player: $player)
                             
                         }
-                        .animation(.none)
                         .onChange(of: nade) { _ in
                             value.scrollTo(0, anchor: .top)
                         }
@@ -61,15 +58,8 @@ struct NadeView: View {
                     }
                     
                 }
-                .animation(.easeInOut(duration: 0.2))
                 
             }
-            .edgesIgnoringSafeArea(.top)
-            
-            NadeContent(nade: nade,
-                        player: player,
-                        fullscreen: fullscreen,
-                        contentSelection: selection)
             
             HStack {
 
@@ -81,25 +71,6 @@ struct NadeView: View {
             }
             
         }
-        
-    }
-    
-}
-
-private struct Header: View {
-    
-    var player: AVPlayer
-    
-    var body: some View {
-        
-        ZStack(alignment: .top) {
-            
-            VideoPlayer(player: player)
-                .frame(width: UIScreen.screenWidth, alignment: .top)
-                .overlay(.regularMaterial)
-            
-        }
-        .frame(height: UIDevice.current.hasNotch ? 47 : 20)
         
     }
     
@@ -147,125 +118,19 @@ private struct NadeContent: View {
         ZStack(alignment: .top) {
             
             VideoView(nade: nade, player: player, fullscreen: $fullscreen)
-                .edgesIgnoringSafeArea(.all)
                 .opacity(contentSelection == "Video" ? 1 : 0)
             
-            KFImage(URL(string: nade.lineup ?? ""))
+            KFImage(URL(string: nade.lineup))
                 .resizable()
                 .frame(height: UIScreen.screenWidth / 1.777)
                 .pinchToZoom()
                 .opacity(contentSelection == "Line-up" ? 1 : 0)
             
         }
-        
-    }
-    
-}
-
-private struct OverviewContent: View {
-    
-    @State var nade: Nade
-    @Binding var selection: String
-    
-    @StateObject var mapViewModel = MapsViewModel()
-    
-    let radarIcons = ["Smoke": "Smoke_Radar_Icon",
-                      "Flashbang": "Flashbang_Radar_Icon",
-                      "Molotov": "Molotov_Radar_Icon",
-                      "Incendiary": "Molotov_Radar_Icon",
-                      "HE Grenade": "HE_Grenade_Icon"]
-    
-    var body: some View {
-        
-        ZStack {
-            
-            Color.black
-            
-            GeometryReader { o in
-                
-                ZStack {
-                    
-                    GeometryReader { g in
-
-                        KFImage(URL(string: "https://popflash.page.link/\(nade.map.replacingOccurrences(of: " ", with: "_"))_Radar"))
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-
-                        Image(radarIcons[nade.type] ?? "Smoke_Radar_Icon")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .position(x: (g.frame(in: .local).maxX / 100) * grenadeLocation()["x"]!,
-                                      y: (g.frame(in: .local).maxY / 100) * grenadeLocation()["y"]!)
-                                
-                        Image(nade.side == "Terrorist" ? "T_Radar_Icon" : "CT_Radar_Icon")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .position(x: (g.frame(in: .local).maxX / 100) * playerLocation()["x"]!,
-                                      y: (g.frame(in: .local).maxY / 100) * playerLocation()["y"]!)
-                        
-                    }
-                    .frame(width: o.size.height)
-                    
-                }
-                .position(x: o.frame(in: .local).midX, y: o.frame(in: .local).midY)
-                
-            }
-            
-        }
-        .frame(height: selection == "Overview" ? UIScreen.screenWidth : UIScreen.screenWidth / 1.777)
-        .animation(.easeInOut(duration: 0.2))
         .zIndex(1)
-        .pinchToZoom()
-        .onAppear() {
-            
-            
-            
-        }
         
     }
     
-    func playerLocation() -> Dictionary<String, CGFloat> {
-        
-        var location = [String: CGFloat]()
-        
-        var locationX: CGFloat = 0
-        var locationY: CGFloat = 0
-        
-        if nade.player.count >= 2 {
-            
-            locationX = nade.player[0]
-            locationY = nade.player[1]
-            
-        }
-        
-        location["x"] = locationX
-        location["y"] = locationY
-        
-        return location
-        
-    }
-    
-    func grenadeLocation() -> Dictionary<String, CGFloat> {
-        
-        var location = [String: CGFloat]()
-        
-        var locationX: CGFloat = 0
-        var locationY: CGFloat = 0
-        
-        if nade.grenade.count >= 2 {
-            
-            locationX = nade.grenade[0]
-            locationY = nade.grenade[1]
-            
-        }
-        
-        location["x"] = locationX
-        location["y"] = locationY
-        
-        return location
-        
-    }
-
 }
 
 private struct VideoView: View {
@@ -280,16 +145,10 @@ private struct VideoView: View {
     @Binding var fullscreen: Bool
     
     var body: some View {
-        
-        ZStack(alignment: fullscreen ? .center : .top) {
             
-            Rectangle()
-                .foregroundColor(.black)
-                .edgesIgnoringSafeArea(.all)
-                .opacity(fullscreen ? 1 : 0)
-                .animation(.easeInOut(duration: 0.25))
+        GeometryReader { geo in
             
-            ZStack(alignment: .center) {
+            ZStack {
                 
                 VideoPlayer(player: player)
                     .onTapGesture {
@@ -297,54 +156,67 @@ private struct VideoView: View {
                         showControls.toggle()
                         
                     }
-                    .onAppear() {
+                    .onAppear {
                         
-                        player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
-                        
-                        self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: .main) { (_) in
-                            
-                            self.progress = self.getSliderValue()
-                            
-                            if self.progress == 1.0 {
-                                
-                                self.isPlaying = false
-                                
-                            }
-                        }
+                        setupPlayer()
                         
                     }
-                
-                Rectangle()
-                    .foregroundColor(.black)
-                    .opacity(showControls ? 0.4 : 0)
-                
-                VideoControls(player: $player, isPlaying: self.$isPlaying, progress: self.$progress, fullscreen: self.$fullscreen)
+
+                ControlsView(player: $player, isPlaying: $isPlaying, progress: $progress, fullscreen: $fullscreen, showControls: $showControls)
                     .opacity(showControls ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.25), value: showControls)
                 
             }
-            .frame(width: fullscreen ? UIScreen.screenWidth * 1.777 : UIScreen.screenWidth,
-                   height: fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.777)
-            .rotationEffect(.degrees(rotation))
-            .offset(y: fullscreen ? 0 : UIDevice.current.hasNotch ? 47 : 20)
-            .animation(.easeInOut(duration: 0.25))
-            .onRotate { orientation in
+            .preference(key: SheetOffsetPreferenceKey.self, value: geo.frame(in: .global).minY)
+            
+        }
+        .frame(width: width(), height: height())
+        .padding(.top, fullscreen ? 82 : 0)
+        .animation(.easeInOut(duration: 0.25), value: fullscreen)
+        .onPreferenceChange(SheetOffsetPreferenceKey.self) {
+            
+            if $0 <= 57 && $0 > 0 {
                 
-                if orientation == .portrait {
-                    
-                    fullscreen = false
-                    rotation = 0.0
-                    
-                } else if orientation == .landscapeLeft {
-                    
-                    fullscreen = true
-                    rotation = 90.0
-                    
-                } else if orientation == .landscapeRight {
-                    
-                    fullscreen = true
-                    rotation = -90.0
-                    
-                }
+                AppDelegate.orientationLock = UIInterfaceOrientationMask.allButUpsideDown
+                
+            } else {
+                
+                AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
+                
+            }
+            
+        }
+        .onRotate { orientation in
+            
+            handleRotation(orientation: orientation)
+            
+        }
+        
+    }
+    
+    func width() -> CGFloat {
+        
+        return fullscreen ? UIScreen.screenWidth * 1.777 : UIScreen.screenWidth
+        
+    }
+    
+    func height() -> CGFloat {
+        
+        return fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.777
+        
+    }
+    
+    func setupPlayer() {
+        
+        player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
+        
+        self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: .main) { (_) in
+            
+            self.progress = getSliderValue()
+            
+            if self.progress == 1.0 {
+                
+                self.isPlaying = false
                 
             }
             
@@ -352,14 +224,63 @@ private struct VideoView: View {
         
     }
     
-    func getSliderValue() -> Float{
+    func getSliderValue() -> Float {
         
         return Float(self.player.currentTime().seconds / (self.player.currentItem?.duration.seconds)!)
+        
     }
     
-    func getSeconds() -> Double{
+    func getSeconds() -> Double {
         
         return Double(Double(self.progress) * (self.player.currentItem?.duration.seconds)!)
+        
+    }
+    
+    func handleRotation(orientation: UIDeviceOrientation) {
+        
+        if orientation == .portrait {
+            
+            fullscreen = false
+            
+        } else if orientation == .landscapeLeft {
+            
+            fullscreen = true
+            
+        } else if orientation == .landscapeRight {
+            
+            fullscreen = true
+            
+        }
+        
+    }
+    
+}
+
+private struct ControlsView: View {
+    
+    @Binding var player: AVPlayer
+    @Binding var isPlaying: Bool
+    @Binding var progress: Float
+    @Binding var fullscreen: Bool
+    @Binding var showControls: Bool
+    
+    var body: some View {
+        
+        ZStack {
+            
+            Rectangle()
+                .foregroundColor(.black)
+                .opacity(0.4)
+                .onTapGesture {
+                    
+                    showControls.toggle()
+                    
+                }
+            
+            VideoControls(player: $player, isPlaying: self.$isPlaying, progress: self.$progress, fullscreen: self.$fullscreen)
+            
+        }
+        
     }
     
 }
@@ -368,7 +289,7 @@ struct SegmentedControl: View {
 
     @Binding var selection: String
     
-    var options = ["Video", "Line-up"] // Add "Overview" here
+    var options = ["Video", "Line-up"]
     
     var body: some View {
         
@@ -382,9 +303,9 @@ struct SegmentedControl: View {
             
         }
         .pickerStyle(SegmentedPickerStyle())
-        .frame(width: UIScreen.screenWidth - 28)
+        .frame(width: UIScreen.screenWidth - 30)
         .padding(.top, 16)
-        .padding(.bottom, 14)
+        .padding(.bottom, 10)
         
     }
     
@@ -396,11 +317,11 @@ private struct Details: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             
             HStack {
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     
                     Text(nade.map)
                         .foregroundColor(.gray)
@@ -413,7 +334,7 @@ private struct Details: View {
                         .padding(.horizontal)
                     
                     Text(nade.shortDescription)
-                        .padding(.top, 4)
+                        .padding(.top, 8)
                         .padding(.horizontal)
                     
                 }
@@ -427,7 +348,8 @@ private struct Details: View {
             }
             
             VideoInfo(nade: nade)
-                .padding(.top, -8)
+                .padding(.top, 4)
+                .padding(.bottom, 12)
             
             if !nade.warning.isEmpty {
                 
@@ -499,7 +421,6 @@ private struct FavouriteButton: View {
         .frame(width: 40, height: 40)
         .background(.regularMaterial)
         .clipShape(Circle())
-        .offset(y: 0.5)
         
     }
     
@@ -646,8 +567,6 @@ private struct Compliments: View {
                         .padding(.bottom, 4)
                         .onAppear() {
                             
-                            print(nade.compliments)
-                            
                             self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
                                                                         .whereField("id", in: nade.compliments))
 
@@ -704,26 +623,6 @@ private struct Compliments: View {
     
 }
 
-private struct VideoPlayer: UIViewControllerRepresentable {
-    
-    var player: AVPlayer
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayer>) -> AVPlayerViewController {
-        
-        let controller = AVPlayerViewController()
-        
-        controller.player = player
-        controller.showsPlaybackControls = false
-        controller.videoGravity = .resizeAspectFill
-        
-        return controller
-        
-    }
-    
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) { }
-    
-}
-
 private struct VideoControls: View {
     
     @Binding var player: AVPlayer
@@ -743,7 +642,7 @@ private struct VideoControls: View {
                     
                     Button {
                         
-//                        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
+                        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
                         progress = 0
                         
                     } label: {
@@ -828,5 +727,35 @@ private struct VideoControls: View {
         }
         
     }
+    
+}
+
+private struct VideoPlayer: UIViewControllerRepresentable {
+    
+    var player: AVPlayer
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayer>) -> AVPlayerViewController {
+        
+        let controller = AVPlayerViewController()
+        
+        controller.player = player
+        controller.showsPlaybackControls = false
+        controller.videoGravity = .resizeAspectFill
+        
+        try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+        
+        return controller
+        
+    }
+    
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) { }
+    
+}
+
+private struct SheetOffsetPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
     
 }

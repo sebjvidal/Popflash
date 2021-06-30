@@ -34,6 +34,9 @@
 		C250053B267BDB4B004F3A59 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C250053A267BDB4B004F3A59 /* FirebaseFirestore */; };
 		C250053D267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = C250053C267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta */; };
 		C2500543267E6F75004F3A59 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C2500542267E6F75004F3A59 /* Kingfisher */; };
+		C25005462681CCDE004F3A59 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = C25005452681CCDE004F3A59 /* BottomSheet */; };
+		C25005482681D7FF004F3A59 /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25005472681D7FF004F3A59 /* SegmentedPicker.swift */; };
+		C250054B2681F010004F3A59 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C250054A2681F010004F3A59 /* FilterView.swift */; };
 		C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267B579261CD19800958E01 /* CustomButtonStyle.swift */; };
 		C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495425DE7D8300692E01 /* ScrollView.swift */; };
 		C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495E25DE7DD800692E01 /* ScreenSize.swift */; };
@@ -95,6 +98,8 @@
 		C23C6D1E25D3F9B6008D283F /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
 		C23C6D5425D41FCF008D283F /* MapsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsViewModel.swift; sourceTree = "<group>"; };
 		C2462B832607766600FFBE8E /* HasNotch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasNotch.swift; sourceTree = "<group>"; };
+		C25005472681D7FF004F3A59 /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
+		C250054A2681F010004F3A59 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		C267B579261CD19800958E01 /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
 		C27E495425DE7D8300692E01 /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		C27E495E25DE7DD800692E01 /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
@@ -114,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C25005462681CCDE004F3A59 /* BottomSheet in Frameworks */,
 				C2500543267E6F75004F3A59 /* Kingfisher in Frameworks */,
 				C250053D267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				C2500539267BDB4B004F3A59 /* FirebaseAuth in Frameworks */,
@@ -214,6 +220,7 @@
 				C223FB9125E6785B004EEA5F /* PlayerView.swift */,
 				C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */,
 				C2C5EEFA267209DA002ACAE1 /* SearchBar.swift */,
+				C25005472681D7FF004F3A59 /* SegmentedPicker.swift */,
 				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
 				C27E495425DE7D8300692E01 /* ScrollView.swift */,
 			);
@@ -233,7 +240,7 @@
 			children = (
 				C2A8CD2D2628C344007F55B3 /* MapCell.swift */,
 				C2069B0025CAF01900ACFD15 /* MapsView.swift */,
-				C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */,
+				C25005492681EFEE004F3A59 /* MapsDetailView */,
 			);
 			path = Maps;
 			sourceTree = "<group>";
@@ -304,6 +311,15 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		C25005492681EFEE004F3A59 /* MapsDetailView */ = {
+			isa = PBXGroup;
+			children = (
+				C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */,
+				C250054A2681F010004F3A59 /* FilterView.swift */,
+			);
+			path = MapsDetailView;
+			sourceTree = "<group>";
+		};
 		C2D21B2225FE528A00FA7368 /* Nade */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,6 +350,7 @@
 				C250053A267BDB4B004F3A59 /* FirebaseFirestore */,
 				C250053C267BDB4B004F3A59 /* FirebaseFirestoreSwift-Beta */,
 				C2500542267E6F75004F3A59 /* Kingfisher */,
+				C25005452681CCDE004F3A59 /* BottomSheet */,
 			);
 			productName = Popflash;
 			productReference = C2069AC525CAE8B300ACFD15 /* Popflash.app */;
@@ -409,6 +426,7 @@
 			packageReferences = (
 				C2500537267BDB4B004F3A59 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				C2500541267E6F75004F3A59 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				C25005442681CCDD004F3A59 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = C2069AC625CAE8B300ACFD15 /* Products */;
 			projectDirPath = "";
@@ -465,6 +483,7 @@
 				C23C6D5525D41FCF008D283F /* MapsViewModel.swift in Sources */,
 				C227A49F25DB0869003F6822 /* NadesViewModel.swift in Sources */,
 				C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */,
+				C250054B2681F010004F3A59 /* FilterView.swift in Sources */,
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
 				C2069AFC25CAE8D500ACFD15 /* FeaturedView.swift in Sources */,
@@ -478,6 +497,7 @@
 				C2069ACB25CAE8B300ACFD15 /* SceneDelegate.swift in Sources */,
 				C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */,
 				C227A48B25D82074003F6822 /* FavouritesView.swift in Sources */,
+				C25005482681D7FF004F3A59 /* SegmentedPicker.swift in Sources */,
 				C23C6D1F25D3F9B6008D283F /* AuthenticationService.swift in Sources */,
 				C2A8CD2E2628C344007F55B3 /* MapCell.swift in Sources */,
 				C2462B842607766600FFBE8E /* HasNotch.swift in Sources */,
@@ -829,6 +849,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		C25005442681CCDD004F3A59 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adamfootdev/BottomSheet.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.6;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -851,6 +879,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C2500541267E6F75004F3A59 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		C25005452681CCDE004F3A59 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C25005442681CCDD004F3A59 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

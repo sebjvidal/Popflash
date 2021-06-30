@@ -13,18 +13,9 @@ struct FavouritesView: View {
     
     @State var statusOpacitiy = 0.0
     @State var isShowing = false
+    @State var selectedNade: Nade?
     
     @AppStorage("favourites.nades") var favouriteNades: Array = [String]()
-    
-    var statusBarBlur: some View {
-        
-        Rectangle()
-            .frame(height: 47)
-            .background(.regularMaterial)
-            .edgesIgnoringSafeArea(.top)
-            .opacity(statusOpacitiy)
-        
-    }
     
     var body: some View {
         
@@ -40,7 +31,7 @@ struct FavouritesView: View {
                         
                         FavouriteMaps(isShowing: $isShowing)
                         
-                        FavouriteNades()
+                        FavouriteNades(selectedNade: $selectedNade)
                         
                     }
                     
@@ -53,14 +44,17 @@ struct FavouritesView: View {
                 .navigationBarTitle("Favourites", displayMode: .inline)
                 .navigationBarHidden(true)
                 
-                statusBarBlur
+            }.sheet(item: self.$selectedNade) { item in
+                
+                NadeView(nade: item)
                 
             }
-            .sheet(isPresented: $isShowing, content: {
+            .sheet(isPresented: $isShowing) {
                 
                 EditFavouriteMapsView()
+                    .interactiveDismissDisabled()
                 
-            })
+            }
             .navigationBarTitle("", displayMode: .inline)
             
         }
@@ -237,7 +231,7 @@ private struct FavouriteNades: View {
     
     @AppStorage("favourites.nades") var favouriteNades = [String]()
     
-    @State var selectedNade: Nade?
+    @Binding var selectedNade: Nade?
     @State var nadeViewIsPresented = false
     
     var body: some View {
@@ -270,11 +264,6 @@ private struct FavouriteNades: View {
                     
                 }
                 .buttonStyle(FavouriteNadeCellButtonStyle())
-                .fullScreenCover(item: self.$selectedNade) { item in
-                    
-                    NadeView(nade: item)
-                    
-                }
                 
             }
             

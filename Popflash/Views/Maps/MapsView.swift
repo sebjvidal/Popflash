@@ -247,17 +247,3 @@ private struct LoadingList: View {
     }
     
 }
-
-struct MapsView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        MapsView()
-            .preferredColorScheme(.light)
-        
-        MapsView()
-            .preferredColorScheme(.dark)
-        
-    }
-    
-}
