@@ -21,15 +21,6 @@ struct FeaturedView: View {
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
-    var statusBarBlur: some View {
-        
-        Rectangle()
-            .frame(height: UIDevice.current.hasNotch ? 47 : 20)
-            .background(.regularMaterial)
-            .edgesIgnoringSafeArea(.top)
-        
-    }
-    
     var body: some View {
         
         NavigationView {
@@ -50,13 +41,13 @@ struct FeaturedView: View {
                         
                     }
                     .listRowSeparator(.hidden)
+                    .listRowInsets(.some(EdgeInsets()))
                     .buttonStyle(.plain)
-                    .fullScreenCover(item: self.$selectedNade) { item in
+                    .sheet(item: self.$selectedNade) { item in
                         
                         NadeView(nade: item)
                         
                     }
-                    .listRowInsets(.some(EdgeInsets()))
                                     
                 }
                 .listStyle(.plain)
@@ -136,9 +127,9 @@ private struct Header: View {
 
         }
         .padding(.horizontal)
-        .onAppear() {
+        .task {
             
-            dateTimeString = getDateString()
+            dateTimeString = getDateString().uppercased()
             
         }
         
@@ -182,11 +173,12 @@ private struct FeaturedNade: View {
                     FeaturedCell(nade: nade)
                         .shadow(radius: 6, y: 5)
                         .padding(.horizontal)
-                        .padding(.bottom, 16)
+                        .padding(.bottom, 8)
                     
                 }
                 
             }
+            .buttonStyle(MapCellButtonStyle())
             
         }
         
@@ -202,9 +194,48 @@ private struct FeaturedCell: View {
             
         VStack(spacing: 0) {
             
-            FeaturedVideo(thumbnail: nade.thumbnail)
-
-            FeaturedVideoDetail(nade: nade)
+            KFImage(URL(string: nade.thumbnail))
+                .resizable()
+                .frame(width: UIScreen.screenWidth - 32,
+                       height: (UIScreen.screenWidth - 32 ) / 1.777)
+                .aspectRatio(contentMode: .fill)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                
+                Text(nade.map)
+                    .foregroundColor(.gray)
+                    .fontWeight(.semibold)
+                    .padding(.top, 10)
+                    .padding(.horizontal)
+                
+                Text(nade.name)
+                    .font(.system(size: 22))
+                    .fontWeight(.bold)
+                    .padding(.horizontal)
+                
+                Text(nade.shortDescription)
+                    .padding(.top, 8)
+                    .padding([.horizontal])
+                
+                VideoInfo(nade: nade)
+                    .padding(.top, 4)
+                    .padding(.bottom, 12)
+                
+                Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
+                
+                Divider()
+                    .padding(.horizontal)
+                
+                SeeMore()
+                    .padding(.top, 12)
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 15)
+                
+            }
             
         }
         .background(Color("Background"))
@@ -212,6 +243,27 @@ private struct FeaturedCell: View {
     
     }
         
+}
+
+
+private struct SeeMore: View {
+    
+    var body: some View {
+        
+        HStack {
+            
+            Text("Learn More...")
+                .foregroundColor(.blue)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.blue)
+            
+        }
+        
+    }
+    
 }
 
 private struct MoreFrom: View {
@@ -223,36 +275,24 @@ private struct MoreFrom: View {
     @State private var action: Int? = 0
     
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
             
-            Divider()
-                .padding(.horizontal, 16)
-                .opacity(maps.isEmpty ? 0 : 1)
+        ForEach(maps, id: \.self) { map in
             
-            ForEach(maps, id: \.self) { map in
+            VStack(alignment: .leading, spacing: 0) {
                 
-                VStack(alignment: .leading, spacing: 0) {
+                Divider()
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                
+                Text("More from \(map.name)")
+                    .font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .padding(.top, 10)
+                    .padding(.leading, 17)
+                    .padding(.bottom, 10)
                     
-                    Text("More from \(map.name)")
-                        .font(.system(size: 20))
-                        .fontWeight(.semibold)
-                        .padding(.top, 10)
-                        .padding(.leading, 17)
-                        .padding(.bottom, 10)
-                        
-                    Button {
-
-                        action = 1
-
-                    } label: {
-                        
-                        MapCell(map: map)
-                            .padding(.horizontal, 16)
-                            .shadow(radius: 6, y: 5)
-                        
-                    }
-                    
+                ZStack {
+                                            
                     NavigationLink(destination: MapsDetailView(map: map), tag: 1, selection: $action) {
                     
                         EmptyView()
@@ -261,13 +301,27 @@ private struct MoreFrom: View {
                     .hidden()
                     .disabled(true)
                     
-                    Top5(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented, map: map.name)
+                    Button {
+
+                        action = 1
+
+                    } label: {
+                        
+                        MapCell(map: map)
+                            .shadow(radius: 6, y: 5)
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 16)
+                        
+                    }
                     
                 }
+                
+                Top5(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented, map: map.name)
                 
             }
             
         }
+        .buttonStyle(MapCellButtonStyle())
         
     }
     
@@ -320,7 +374,7 @@ private struct Top5: View {
                     .buttonStyle(ComplimentsCellButtonStyle())
                     
                     Spacer()
-                        .frame(width: 8)
+                        .frame(width: 10)
                     
                 }
                 .onAppear() {
@@ -343,87 +397,6 @@ private struct Top5: View {
         
             top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
         
-        }
-        
-    }
-    
-}
-
-private struct FeaturedVideo: View {
-    
-    var thumbnail: String
-    
-    var body: some View {
-        
-        KFImage(URL(string: thumbnail))
-            .resizable()
-            .frame(width: UIScreen.screenWidth - 32,
-                   height: (UIScreen.screenWidth - 32 ) / 1.77)
-            .aspectRatio(contentMode: .fill)
-        
-    }
-    
-}
-
-private struct FeaturedVideoDetail: View {
-    
-    var nade: Nade
-    
-    var body: some View {
-            
-        VStack(alignment: .leading) {
-            
-            Text(nade.map)
-                .foregroundColor(.gray)
-                .fontWeight(.semibold)
-                .padding(.top, 10)
-                .padding(.horizontal)
-            
-            Text(nade.name)
-                .font(.system(size: 22))
-                .fontWeight(.bold)
-                .padding(.horizontal)
-            
-            Text(nade.shortDescription)
-                .padding(.top, 4)
-                .padding([.horizontal])
-            
-            VideoInfo(nade: nade)
-                .padding(.top, -8)
-            
-            Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
-                .lineLimit(3)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding([.horizontal])
-            
-            Divider()
-                .padding(.horizontal)
-            
-            SeeMore()
-                .padding(.top, 4)
-                .padding(.horizontal, 18)
-                .padding(.bottom, 15)
-            
-        }
-        
-    }
-    
-}
-
-private struct SeeMore: View {
-    
-    var body: some View {
-        
-        HStack {
-            
-            Text("Learn More...")
-                .foregroundColor(.blue)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundColor(.blue)
-            
         }
         
     }
