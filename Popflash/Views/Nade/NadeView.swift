@@ -13,64 +13,91 @@ import AVKit
 struct NadeView: View {
     
     @State var nade: Nade
-    
-    @State var rotation = 0.0
-    
     @State var player = AVPlayer()
     @State var isPlaying = false
     @State var progress: Float = 0
-    
     @State var showControls = false
     @State var fullscreen = false
-    
     @State var selection = "Video"
     
     var body: some View {
-        
-        ZStack(alignment: .top) {
-            
-            VStack(spacing: 0) {
+                        
+        VStack(alignment: .leading, spacing: 0) {
 
-                NadeContent(nade: nade,
-                            player: player,
-                            fullscreen: fullscreen,
-                            contentSelection: selection)
-                
-                SegmentedControl(selection: $selection)
-                
-                SwiftUI.ScrollView {
+            NadeContent(nade: nade,
+                        player: player,
+                        contentSelection: selection,
+                        fullscreen: $fullscreen)
                     
-                    ScrollViewReader { value in
+            SegmentedControl(selection: $selection)
+            
+            SwiftUI.ScrollView {
+                
+                ScrollViewReader { value in
+                    
+                    Group {
                         
-                        Group {
-                            
-                            Details(nade: nade)
-                                .id(0)
-                                .frame(width: UIScreen.screenWidth)
-                            
-                            Compliments(nade: $nade, player: $player)
-                            
-                        }
-                        .onChange(of: nade) { _ in
-                            value.scrollTo(0, anchor: .top)
-                        }
+                        Details(nade: nade)
+                            .id(0)
                         
+                        Compliments(nade: $nade, player: $player)
+                        
+                    }
+                    .onChange(of: nade) { _ in
+                        value.scrollTo(0, anchor: .top)
                     }
                     
                 }
                 
             }
             
-            HStack {
-
-                Spacer()
-                
-                CloseButton(player: player)
-                    .padding([.trailing, .top])
-                
-            }
+        }
+        .background {
+            
+            Color.black
+                .opacity(fullscreen ? 1 : 0)
+                .edgesIgnoringSafeArea(.all)
+                .animation(.easeInOut(duration: 0.25), value: fullscreen)
             
         }
+        .onAppear {
+            
+            print("Should work")
+            
+        }
+        .onAppear {
+            
+            print("Breaker")
+            
+        }
+        .onChange(of: nade) { _ in
+            
+            print("Test")
+            
+//            incrementViews()
+            
+        }
+        
+    }
+    
+    func onAppear() {
+        
+        incrementViews()
+        
+    }
+    
+    func incrementViews() {
+            
+        let db = Firestore.firestore()
+        let viewsRef = db.collection("nades").document(nade.documentID)
+        
+        viewsRef.updateData([
+            
+            "views": FieldValue.increment(1.0)
+            
+        ])
+        
+        print("+1")
         
     }
     
@@ -80,14 +107,14 @@ private struct CloseButton: View {
     
     @State var player: AVPlayer
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         
         Button {
             
             player.pause()
-            presentationMode.wrappedValue.dismiss()
+            dismiss()
             
         } label: {
                 
@@ -108,14 +135,13 @@ private struct NadeContent: View {
     
     var nade: Nade
     var player: AVPlayer
-    
-    @State var fullscreen: Bool
-    
     var contentSelection: String
+    
+    @Binding var fullscreen: Bool
     
     var body: some View {
         
-        ZStack(alignment: .top) {
+        ZStack {
             
             VideoView(nade: nade, player: player, fullscreen: $fullscreen)
                 .opacity(contentSelection == "Video" ? 1 : 0)
@@ -127,6 +153,8 @@ private struct NadeContent: View {
                 .opacity(contentSelection == "Line-up" ? 1 : 0)
             
         }
+        .padding(.top, fullscreen ? 78 : 0)
+        .animation(.easeInOut, value: fullscreen)
         .zIndex(1)
         
     }
@@ -137,12 +165,13 @@ private struct VideoView: View {
     
     @State var nade: Nade
     @State var player: AVPlayer
-    
-    @State var rotation = 0.0
     @State var isPlaying = false
     @State var progress: Float = 0
     @State var showControls = false
+    
     @Binding var fullscreen: Bool
+    
+    @AppStorage("settings.autoPlayVideo") var autoPlayVideo = false
     
     var body: some View {
             
@@ -156,25 +185,19 @@ private struct VideoView: View {
                         showControls.toggle()
                         
                     }
-                    .onAppear {
-                        
-                        setupPlayer()
-                        
-                    }
+                    .onAppear(perform: setupPlayer)
+                    .onDisappear(perform: resetPlayer)
 
-                ControlsView(player: $player, isPlaying: $isPlaying, progress: $progress, fullscreen: $fullscreen, showControls: $showControls)
-                    .opacity(showControls ? 1 : 0)
-                    .animation(.easeInOut(duration: 0.25), value: showControls)
+                VideoControls(player: $player, isPlaying: $isPlaying, progress: $progress, fullscreen: $fullscreen, showControls: $showControls)
                 
             }
             .preference(key: SheetOffsetPreferenceKey.self, value: geo.frame(in: .global).minY)
             
         }
         .frame(width: width(), height: height())
-        .padding(.top, fullscreen ? 82 : 0)
         .animation(.easeInOut(duration: 0.25), value: fullscreen)
         .onPreferenceChange(SheetOffsetPreferenceKey.self) {
-            
+                
             if $0 <= 57 && $0 > 0 {
                 
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.allButUpsideDown
@@ -222,6 +245,20 @@ private struct VideoView: View {
             
         }
         
+        if autoPlayVideo {
+            
+            self.isPlaying = true
+            self.player.play()
+            
+        }
+        
+    }
+    
+    func resetPlayer() {
+        
+        self.isPlaying = false
+        self.player.pause()
+        
     }
     
     func getSliderValue() -> Float {
@@ -242,21 +279,35 @@ private struct VideoView: View {
             
             fullscreen = false
             
-        } else if orientation == .landscapeLeft {
+        } else {
             
-            fullscreen = true
-            
-        } else if orientation == .landscapeRight {
-            
-            fullscreen = true
+            if orientation == .landscapeLeft {
+                        
+                fullscreen = true
+                
+            } else if orientation == .landscapeRight {
+
+                fullscreen = true
+                
+            }
             
         }
+        
+        
         
     }
     
 }
 
-private struct ControlsView: View {
+private struct SheetOffsetPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
+    
+}
+
+private struct VideoControls: View {
     
     @Binding var player: AVPlayer
     @Binding var isPlaying: Bool
@@ -268,18 +319,116 @@ private struct ControlsView: View {
         
         ZStack {
             
-            Rectangle()
-                .foregroundColor(.black)
+            Color.black
                 .opacity(0.4)
-                .onTapGesture {
+                .onTapGesture(perform: toggleControls)
+            
+            VStack {
+                
+                HStack {
                     
-                    showControls.toggle()
+                    Spacer()
+                    
+                    Button(action: rewind, label: {
+                        
+                        Image(systemName: "backward.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 26))
+                        
+                    })
+                    
+                    Spacer()
+                    
+                    Button(action: playPause, label: {
+                        
+                        Image(systemName: progress == 1 ? "gobackward" : isPlaying ? "pause.fill" : "play.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: progress == 1 ? 36 : 42, weight: progress == 1 ? .bold : .regular))
+                        
+                    })
+                    .frame(width: 45)
+                    
+                    Spacer()
+                    
+                    Button(action: forward, label: {
+                        
+                        Image(systemName: "forward.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 26))
+                        
+                    })
+                    
+                    Spacer()
                     
                 }
+                
+            }
             
-            VideoControls(player: $player, isPlaying: self.$isPlaying, progress: self.$progress, fullscreen: self.$fullscreen)
+            VStack {
+                
+                Spacer()
+                
+                ProgressBar(value: $progress, player: $player, isplaying: $isPlaying)
+                    .padding(.horizontal, fullscreen ? 34 : 20)
+                    .padding(.bottom, fullscreen ? 26: 16)
+                
+            }
             
         }
+        .opacity(showControls ? 1 : 0)
+        .animation(.easeInOut(duration: 0.25), value: showControls)
+        
+    }
+    
+    func toggleControls() {
+        
+        showControls.toggle()
+        
+    }
+    
+    func rewind() {
+        
+        let wasPlaying = isPlaying
+        
+        player.pause()
+        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
+        progress = 0
+        
+        if wasPlaying {
+            
+            player.play()
+            
+            
+        }
+        
+    }
+    
+    func playPause() {
+        
+        if !isPlaying {
+            
+            if progress == 1 {
+                
+                player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
+                
+            }
+            
+            player.play()
+            isPlaying = true
+            
+        } else {
+            
+            player.pause()
+            isPlaying = false
+            
+        }
+        
+    }
+    
+    func forward() {
+        
+        player.seek(to: player.currentItem!.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
+        progress = 1
         
     }
     
@@ -303,8 +452,7 @@ struct SegmentedControl: View {
             
         }
         .pickerStyle(SegmentedPickerStyle())
-        .frame(width: UIScreen.screenWidth - 30)
-        .padding(.top, 16)
+        .padding([.top, .horizontal])
         .padding(.bottom, 10)
         
     }
@@ -615,114 +763,6 @@ private struct Compliments: View {
                 }
                 
             }
-            .frame(width: UIScreen.screenWidth)
-            
-        }
-        
-    }
-    
-}
-
-private struct VideoControls: View {
-    
-    @Binding var player: AVPlayer
-    @Binding var isPlaying: Bool
-    @Binding var progress: Float
-    @Binding var fullscreen: Bool
-    
-    var body: some View {
-        
-        ZStack {
-            
-            VStack {
-                
-                HStack {
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                        player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
-                        progress = 0
-                        
-                    } label: {
-                        
-                        Image(systemName: "backward.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 26))
-                        
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                        if !isPlaying {
-                            
-                            if progress == 1 {
-                                
-                                player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
-                                
-                            }
-                            
-                            player.play()
-                            isPlaying = true
-                            
-                        } else {
-                            
-                            player.pause()
-                            isPlaying = false
-                            
-                        }
-                        
-                    } label: {
-                        
-                        if progress == 1 {
-                            
-                            Image(systemName: "gobackward")
-                                .foregroundColor(.white)
-                                .font(.system(size: 36, weight: .bold))
-                            
-                        } else {
-                            
-                            Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                                .foregroundColor(.white)
-                                .font(.system(size: 42))
-                            
-                        }
-                        
-                    }
-                    .frame(width: 45)
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                        player.seek(to: player.currentItem!.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
-                        
-                    } label: {
-                        
-                        Image(systemName: "forward.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 26))
-                        
-                    }
-                    
-                    Spacer()
-                    
-                }
-                
-            }
-            
-            VStack {
-                
-                Spacer()
-                
-                ProgressBar(value: $progress, player: $player, isplaying: $isPlaying)
-                    .padding(.horizontal, fullscreen ? 34 : 20)
-                    .padding(.bottom, fullscreen ? 26: 16)
-                
-            }
             
         }
         
@@ -749,13 +789,5 @@ private struct VideoPlayer: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) { }
-    
-}
-
-private struct SheetOffsetPreferenceKey: PreferenceKey {
-    
-    static var defaultValue: CGFloat = .zero
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
     
 }
