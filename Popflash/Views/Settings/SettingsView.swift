@@ -13,13 +13,22 @@ struct SettingsView: View {
     
     var body: some View {
         
-        ScrollView {
+        List {
             
-            Header()
+            Group {
+                
+                Header()
+                
+                Profile()
 
-            MainSettings()
+                Settings()
+                
+            }
+            .listRowInsets(.some(EdgeInsets()))
+            .listRowSeparator(.hidden)
             
         }
+        .listStyle(.plain)
         .onAppear {
             
             UITableView.appearance().separatorStyle = .none
@@ -36,27 +45,272 @@ private struct Header: View {
     
     var body: some View {
         
-        VStack {
-            
+        LazyVStack(alignment: .leading, spacing: 0) {
+
             Spacer()
-                .frame(height: 48)
-            
-            HStack {
-                
-                Text("Settings")
+                .frame(height: 52)
+
+            HStack() {
+
+                Text("Profile")
                     .font(.system(size: 32))
                     .fontWeight(.bold)
-                    .padding(.leading)
+                    .padding(.leading, 16)
+
+            }
+
+            Divider()
+                .padding(.top, 6)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+
+        }
+        
+    }
+    
+}
+
+private struct Profile: View {
+    
+    var body: some View {
+        
+        Button {
+            
+            print("Test")
+            
+        } label: {
+            
+            HStack(spacing: 16) {
+                
+                Color.gray
+                    .frame(width: 65, height: 65)
+                    .clipShape(Circle())
+                
+                VStack(alignment: .leading) {
+                    
+                    Text("Forename Surname")
+                        .foregroundStyle(.primary)
+                        .font(.headline)
+                    
+                    Text("Skill Group")
+                        .foregroundStyle(.secondary)
+                    
+                }
                 
                 Spacer()
                 
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.secondary)
+                
             }
+            .padding()
+            .background(Color("Background"))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            
+        }
+        .buttonStyle(.plain)
+        .shadow(radius: 6, y: 5)
+        .padding([.horizontal, .bottom])
+        
+    }
+    
+}
+
+private struct AltProfile: View {
+    
+    var body: some View {
+        
+        Button {
+            
+            print("Test")
+            
+        } label: {
+            
+            LazyVStack(spacing: 16) {
+                
+                Color.gray
+                    .frame(width: 65, height: 65)
+                    .clipShape(Circle())
+                
+                Image("Skill_Group_0")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 95)
+                    
+                Text("Forename Surname")
+                    .foregroundStyle(.primary)
+                    .font(.headline)
+                
+//                Text("Skill Group")
+//                    .foregroundStyle(.secondary)
+
+                
+            }
+            .padding()
+            .background(Color("Background"))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            
+//            HStack(spacing: 16) {
+//
+//                Color.gray
+//                    .frame(width: 65, height: 65)
+//                    .clipShape(Circle())
+//
+//
+//
+//                Spacer()
+//
+//                Image(systemName: "chevron.right")
+//                    .foregroundStyle(.secondary)
+//
+//            }
+
+            
+        }
+        .buttonStyle(.plain)
+        .shadow(radius: 6, y: 5)
+        .padding([.horizontal, .bottom])
+        
+    }
+    
+}
+
+private struct Settings: View {
+    
+    var body: some View {
+            
+        VStack {
+            
+            AutoPlayVideoRow()
             
             Divider()
-                .padding(.horizontal)
-                .padding(.top, 2)
-                .padding(.bottom, 8)
+                .padding(.leading, 54)
             
+            PlayAudioSilencedRow()
+            
+            Divider()
+                .padding(.leading, 54)
+            
+            NotificationsRow()
+            
+            Divider()
+                .padding(.leading, 54)
+            
+            CompactMapsViewRow()
+            
+        }
+        .padding(.vertical, 12)
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding(.horizontal, 16)
+        .shadow(radius: 6, y: 5)
+        
+    }
+    
+}
+
+private struct AutoPlayVideoRow: View {
+    
+    @AppStorage("settings.autoPlayVideo") var autoPlayVideo = false
+    
+    var body: some View {
+        
+        HStack {
+            
+            SettingIcon(color: Color("Light_Blue"), icon: "play.fill")
+
+            Toggle("Auto-Play Videos", isOn: $autoPlayVideo)
+                .padding(.trailing)
+            
+        }
+        
+        if autoPlayVideo {
+            
+            Divider()
+                .padding(.leading, 54)
+            
+            AutoPlayAudioRow()
+            
+        }
+        
+    }
+    
+}
+
+private struct AutoPlayAudioRow: View {
+    
+    @AppStorage("settings.autoPlayAudio") var autoPlayAudio = true
+    
+    var body: some View {
+        
+        HStack {
+            
+            SettingIcon(color: Color("Fuscia_Pink"), icon: "speaker.wave.3.fill")
+
+            Toggle("Auto-Play Audio", isOn: $autoPlayAudio)
+                .padding(.trailing)
+            
+        }
+        
+    }
+    
+}
+
+private struct PlayAudioSilencedRow: View {
+    
+    @AppStorage("settings.playAudioSilenced") var playAudioSilenced = true
+    
+    var body: some View {
+        
+        HStack {
+            
+            SettingIcon(color: Color("Fuscia_Pink"), icon: "bell.and.waveform.fill")
+
+            Toggle("Silenced Audio Playback", isOn: $playAudioSilenced)
+                .padding(.trailing)
+            
+        }
+        
+    }
+    
+}
+
+private struct NotificationsRow: View {
+    
+    var body: some View {
+        
+        HStack {
+            
+            SettingIcon(color: .red, icon: "app.badge")
+            
+            Text("Notifications")
+                .frame(height: 43)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.secondary)
+                .padding(.trailing)
+            
+        }
+        
+    }
+    
+}
+
+private struct CompactMapsViewRow: View {
+    
+    @AppStorage("settings.compactMapsView") var compactMapView = false
+    
+    var body: some View {
+        
+        HStack {
+
+            SettingIcon(color: .green, icon: "rectangle.arrowtriangle.2.inward")
+
+            Toggle("Compact Maps View", isOn: $compactMapView)
+                .padding(.trailing)
+
         }
         
     }
@@ -86,66 +340,12 @@ private struct SettingIcon: View {
     
 }
 
-private struct MainSettings: View {
-    
-    @AppStorage("settings.compactMapsView") var compactMapView = false
-    
-    var body: some View {
-        
-        ZStack {
-            
-            VStack {
-                
-                HStack {
-                    
-                    SettingIcon(color: .red, icon: "app.badge")
-                    
-                    Button {
-                        
-                    } label: {
-                        
-                        HStack {
-                            
-                            Text("Notifications")
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .padding(.trailing)
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-                Divider()
-                    .padding(.leading, 54)
-                
-                HStack {
-                    
-                    SettingIcon(color: .green, icon: "rectangle.arrowtriangle.2.inward")
-                    
-                    Toggle("Compact Maps View", isOn: $compactMapView)
-                        .padding(.trailing)
-                    
-                }
-                
-            }
-            .padding(.vertical, 12)
-            
-        }
-        .background(Color("Background"))
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding(.horizontal, 16)
-        .shadow(radius: 6, y: 5)
-        
-    }
-    
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//private struct Reset: View {
+//
+//    var body: some View {
+//
+//
+//
+//    }
+//
+//}
