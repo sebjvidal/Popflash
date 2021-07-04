@@ -11,9 +11,10 @@ import FirebaseFirestore
 
 struct MapsView: View {
     
-    @State var statusOpacity = 0.0
-    
     @StateObject var mapsViewModel = MapsViewModel()
+    
+    @State private var statusOpacity = 0.0
+    @State private var hideNavBar = true
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     @AppStorage("maps.listFilter") var listFilter = "Popularity"
@@ -37,20 +38,31 @@ struct MapsView: View {
             }
             .listStyle(.plain)
             .navigationBarTitle("Maps", displayMode: .inline)
-            .navigationBarHidden(true)
-            .onAppear() {
-
-                if mapsViewModel.maps.isEmpty {
-
-                    mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
-
-                }
-
-                tabSelection = 1
-
-            }
+            .navigationBarHidden(hideNavBar)
+            .onAppear(perform: onAppear)
+            .onDisappear(perform: onDisappear)
 
         }
+        
+    }
+    
+    func onAppear() {
+        
+        if mapsViewModel.maps.isEmpty {
+
+            mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+
+        }
+
+        tabSelection = 1
+        
+        hideNavBar = true
+        
+    }
+    
+    func onDisappear() {
+        
+        hideNavBar = false
         
     }
     

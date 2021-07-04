@@ -61,32 +61,7 @@ struct MapsDetailView: View {
         }
         .listStyle(.plain)
         .toolbar {
-            
-//            ToolbarItem(placement: .principal) {
-//
-//                Button { } label: {
-//
-//                    GeometryReader { geo in
-//
-//                        KFImage(URL(string: map.icon))
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .onAppear {
-//
-//                                print(geo.frame(in: .global).maxY)
-//
-//                            }
-//
-//                    }
-//                    .frame(width: 45, height: 45)
-//                    .edgesIgnoringSafeArea(.top)
-//                    .padding(.bottom, 14)
-//
-//                }
-//                .disabled(true)
-//
-//            }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
                 
                 Button {
@@ -104,7 +79,8 @@ struct MapsDetailView: View {
             FavouriteToolbarItem(mapName: map.name)
             
         }
-        .navigationBarTitle(showingNavigationBarTitle ? map.name : "", displayMode: .inline)
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarHidden(false)
         .bottomSheet(isPresented: $showingBottomSheet, detents: [.medium(), .large()], prefersGrabberVisible: true) {
             
             FilterView()

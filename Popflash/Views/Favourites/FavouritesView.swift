@@ -20,31 +20,28 @@ struct FavouritesView: View {
     var body: some View {
         
         NavigationView {
-            
-            ZStack {
+
+            ScrollView {
                 
-                ScrollView {
+                VStack {
                     
-                    VStack {
-                        
-                        Header()
-                        
-                        FavouriteMaps(isShowing: $isShowing)
-                        
-                        FavouriteNades(selectedNade: $selectedNade)
-                        
-                    }
+                    Header()
+                    
+                    FavouriteMaps(isShowing: $isShowing)
+                    
+                    FavouriteNades(selectedNade: $selectedNade)
                     
                 }
-                .onAppear {
-                    
-                    standard.set(2, forKey: "tabSelection")
-                    
-                }
-                .navigationBarTitle("Favourites", displayMode: .inline)
-                .navigationBarHidden(true)
                 
-            }.sheet(item: self.$selectedNade) { item in
+            }
+            .onAppear {
+                
+                standard.set(2, forKey: "tabSelection")
+                
+            }
+            .navigationBarTitle("Favourites", displayMode: .inline)
+            .navigationBarHidden(true)
+            .sheet(item: self.$selectedNade) { item in
                 
                 NadeView(nade: item)
                 
@@ -55,7 +52,6 @@ struct FavouritesView: View {
                     .interactiveDismissDisabled()
                 
             }
-            .navigationBarTitle("", displayMode: .inline)
             
         }
         
@@ -65,9 +61,9 @@ struct FavouritesView: View {
 
 private struct FavouriteMaps: View {
     
-    @Binding var isShowing: Bool
-    
     @ObservedObject var mapsViewModel = MapsViewModel()
+    
+    @Binding var isShowing: Bool
     
     @State private var showingFavouriteMapsEdittingView = false
     

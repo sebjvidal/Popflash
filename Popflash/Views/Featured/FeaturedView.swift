@@ -18,6 +18,7 @@ struct FeaturedView: View {
     @State private var statusOppacity = 0.0
     @State private var selectedNade: Nade?
     @State private var nadeViewIsPresented = false
+    @State private var hideNavBar = true
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -52,23 +53,14 @@ struct FeaturedView: View {
                 }
                 .listStyle(.plain)
                 .navigationBarTitle("Featured", displayMode: .inline)
-                .navigationBarHidden(true)
+                .navigationBarHidden(hideNavBar)
                 .refreshable {
                     
                     fetchFeaturedData()
                     
                 }
-                .onAppear {
-                    
-                    if featuredNadeViewModel.nades.isEmpty {
-                        
-                        fetchFeaturedData()
-                        
-                    }
-                    
-                    tabSelection = 0
-                                                            
-                }
+                .onAppear(perform: onAppear)
+                .onDisappear(perform: onDisappear)
             
         }
         
@@ -86,6 +78,26 @@ struct FeaturedView: View {
         
         featuredNadeViewModel.fetchData(ref: nadeRef)
         featuredMapViewModel.fetchData(ref: mapRef)
+        
+    }
+    
+    func onAppear() {
+        
+        if featuredNadeViewModel.nades.isEmpty {
+            
+            fetchFeaturedData()
+            
+        }
+        
+        tabSelection = 0
+        
+        hideNavBar = true
+        
+    }
+    
+    func onDisappear() {
+        
+        hideNavBar = false
         
     }
     
