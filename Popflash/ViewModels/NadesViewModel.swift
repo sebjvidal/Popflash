@@ -38,6 +38,7 @@ class NadesViewModel: ObservableObject {
                     
                     let data = document.data()
                     
+                    let documentID = document.documentID
                     let id = data["id"] as? String ?? ""
                     let name = data["name"] as? String ?? ""
                     let map = data["map"] as? String ?? ""
@@ -59,7 +60,8 @@ class NadesViewModel: ObservableObject {
                     let player = data["player"] as? Array ?? [CGFloat]()
                     let grenade = data["grenade"] as? Array ?? [CGFloat]()
                     
-                    let nade = Nade(id: id,
+                    let nade = Nade(documentID: documentID,
+                                    id: id,
                                     name: name,
                                     map: map,
                                     type: type,

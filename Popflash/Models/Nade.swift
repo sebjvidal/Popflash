@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Nade: Hashable, Codable, Identifiable {
     
+    var documentID: String
     var id: String
     var name: String
     var map: String
