@@ -9,6 +9,10 @@ import SwiftUI
 
 struct FilterView: View {
     
+    var map: Map
+    
+    @State var isShowing = false
+    
     var body: some View {
         
         SwiftUI.ScrollView(showsIndicators: false) {
@@ -17,7 +21,7 @@ struct FilterView: View {
                 
                 Header()
                 
-                QuickActions()
+                QuickActions(isShowing: $isShowing)
                 
                 Divider()
                     .padding(.top, 8)
@@ -57,6 +61,11 @@ struct FilterView: View {
                 
             }
             .padding(.horizontal)
+            
+        }
+        .sheet(isPresented: $isShowing) {
+            
+            OverviewView(map: map)
             
         }
         
@@ -100,6 +109,8 @@ private struct Header: View {
 }
 
 private struct QuickActions: View {
+    
+    @Binding var isShowing: Bool
     
     var body: some View {
         
@@ -148,6 +159,8 @@ private struct QuickActions: View {
             }
             
             Button {
+                
+                isShowing.toggle()
                 
             } label: {
                 
