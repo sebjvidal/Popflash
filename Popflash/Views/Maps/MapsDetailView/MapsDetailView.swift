@@ -62,28 +62,18 @@ struct MapsDetailView: View {
         .listStyle(.plain)
         .toolbar {
 
-            ToolbarItem(placement: .navigationBarTrailing) {
-                
-                Button {
-
-                    showingBottomSheet.toggle()
-
-                } label: {
-
-                    Image(systemName: "ellipsis")
-
-                }
-                
-            }
+            MoreToolbarItem(showingBottomSheet: $showingBottomSheet)
             
             FavouriteToolbarItem(mapName: map.name)
             
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarHidden(false)
-        .bottomSheet(isPresented: $showingBottomSheet, detents: [.medium(), .large()], prefersGrabberVisible: true) {
+        .bottomSheet(isPresented: $showingBottomSheet,
+                     detents: [.medium(), .large()],
+                     prefersGrabberVisible: true) {
             
-            FilterView()
+            FilterView(map: map)
             
         }
         
@@ -163,42 +153,59 @@ private struct FavouriteToolbarItem: ToolbarContent {
         
         ToolbarItem(placement: .navigationBarTrailing) {
             
-            Button {
-                
-                if favouriteMaps.contains(mapName) {
-                    
-                    if let index = favouriteMaps.firstIndex(of: mapName) {
-                        
-                        favouriteMaps.remove(at: index)
-                    }
-                    
-                } else {
-                    
-                    favouriteMaps.insert(mapName, at: 0)
-                    
-                }
-                
-            } label: {
+            Button(action: favourite, label: {
                 
                 Image(systemName: favouriteMaps.contains(mapName) ? "heart.fill" : "heart")
                 
-//                if favouriteMaps.contains(mapName) {
-//
-//                    Image(systemName: "heart.fill")
-//                        .foregroundColor(Color("Heart"))
-//
-//                } else {
-//
-//                    Image(systemName: "heart")
-//
-//                }
-                
-            }
+            })
             
         }
         
     }
     
+    func favourite() {
+        
+        if favouriteMaps.contains(mapName) {
+            
+            if let index = favouriteMaps.firstIndex(of: mapName) {
+                
+                favouriteMaps.remove(at: index)
+            }
+            
+        } else {
+            
+            favouriteMaps.insert(mapName, at: 0)
+            
+        }
+        
+    }
+    
+}
+
+private struct MoreToolbarItem: ToolbarContent {
+    
+    @Binding var showingBottomSheet: Bool
+
+    var body: some ToolbarContent {
+
+        ToolbarItem(placement: .navigationBarTrailing) {
+
+            Button(action: seeMore, label: {
+
+                Image(systemName: "ellipsis")
+                
+            })
+
+        }
+
+    }
+
+    func seeMore() {
+
+        showingBottomSheet.toggle()
+
+    }
+
 }
 
 private struct NadeList: View {
