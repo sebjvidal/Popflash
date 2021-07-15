@@ -358,7 +358,7 @@ private struct Top5: View {
                 .padding(.leading, 17)
                 .padding(.bottom, 2)
             
-            ScrollView(axes: .horizontal, showsIndicators: false) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack {
                     
@@ -423,7 +423,7 @@ private struct Compliments: View {
     
     var body: some View {
         
-        ScrollView(axes: .horizontal, showsIndicators: false) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
             VStack(alignment: .leading) {
                 
