@@ -20,6 +20,8 @@ struct SettingsView: View {
                 Header()
                 
                 Profile()
+                
+                RecentlyViewed()
 
                 Settings()
                 
@@ -209,6 +211,62 @@ private struct Settings: View {
     
 }
 
+private struct SettingIcon: View {
+    
+    var color: Color
+    var icon: Image
+    var size: Font? = .body
+    var edges: Edge.Set? = .all
+    var length: CGFloat? = 0
+    
+    var body: some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 6.5, style: .continuous)
+                .frame(width: 29, height: 29)
+                .foregroundColor(color)
+            
+            icon
+                .font(size)
+                .foregroundColor(.white)
+                .padding(edges!, length)
+            
+        }
+        .padding(.leading)
+        
+    }
+    
+}
+
+private struct RecentlyViewed: View {
+    
+    var body: some View {
+        
+        HStack {
+            
+            SettingIcon(color: .orange, icon: Image(systemName: "gobackward"), edges: .bottom, length: 2.5)
+            
+            Text("Recently Viewed")
+                .frame(height: 43)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.secondary)
+                .padding(.trailing)
+            
+        }
+        .padding(.vertical, 6)
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding([.horizontal, .bottom], 16)
+        .shadow(radius: 6, y: 5)
+        
+    }
+    
+}
+
 private struct AutoPlayVideoRow: View {
     
     @AppStorage("settings.autoPlayVideo") var autoPlayVideo = false
@@ -217,7 +275,7 @@ private struct AutoPlayVideoRow: View {
         
         HStack {
             
-            SettingIcon(color: Color("Light_Blue"), icon: "play.fill")
+            SettingIcon(color: Color("Light_Blue"), icon: Image(systemName: "play.fill"))
 
             Toggle("Auto-Play Videos", isOn: $autoPlayVideo)
                 .padding(.trailing)
@@ -245,7 +303,7 @@ private struct AutoPlayAudioRow: View {
         
         HStack {
             
-            SettingIcon(color: Color("Fuscia_Pink"), icon: "speaker.wave.3.fill")
+            SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "speaker.wave.3.fill"), size: .subheadline)
 
             Toggle("Auto-Play Audio", isOn: $autoPlayAudio)
                 .padding(.trailing)
@@ -264,7 +322,7 @@ private struct PlayAudioSilencedRow: View {
         
         HStack {
             
-            SettingIcon(color: Color("Fuscia_Pink"), icon: "bell.and.waveform.fill")
+            SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "bell.and.waveform.fill"))
 
             Toggle("Silenced Audio Playback", isOn: $playAudioSilenced)
                 .padding(.trailing)
@@ -281,7 +339,7 @@ private struct NotificationsRow: View {
         
         HStack {
             
-            SettingIcon(color: .red, icon: "app.badge")
+            SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
             
             Text("Notifications")
                 .frame(height: 43)
@@ -306,35 +364,12 @@ private struct CompactMapsViewRow: View {
         
         HStack {
 
-            SettingIcon(color: .green, icon: "rectangle.arrowtriangle.2.inward")
+            SettingIcon(color: .green, icon: Image(systemName: "rectangle.arrowtriangle.2.inward"))
 
             Toggle("Compact Maps View", isOn: $compactMapView)
                 .padding(.trailing)
 
         }
-        
-    }
-    
-}
-
-private struct SettingIcon: View {
-    
-    var color: Color
-    var icon: String
-    
-    var body: some View {
-        
-        ZStack {
-            
-            RoundedRectangle(cornerRadius: 6.5, style: .continuous)
-                .frame(width: 29, height: 29)
-                .foregroundColor(color)
-            
-            Image(systemName: icon)
-                .foregroundColor(.white)
-            
-        }
-        .padding(.leading)
         
     }
     

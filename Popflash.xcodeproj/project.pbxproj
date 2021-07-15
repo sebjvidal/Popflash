@@ -38,7 +38,6 @@
 		C25005482681D7FF004F3A59 /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25005472681D7FF004F3A59 /* SegmentedPicker.swift */; };
 		C250054B2681F010004F3A59 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C250054A2681F010004F3A59 /* FilterView.swift */; };
 		C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267B579261CD19800958E01 /* CustomButtonStyle.swift */; };
-		C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495425DE7D8300692E01 /* ScrollView.swift */; };
 		C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E495E25DE7DD800692E01 /* ScreenSize.swift */; };
 		C27E496925DEC78F00692E01 /* ArrayAppStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */; };
 		C2A8CD2E2628C344007F55B3 /* MapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8CD2D2628C344007F55B3 /* MapCell.swift */; };
@@ -48,6 +47,7 @@
 		C2D21B2C260129C100FA7368 /* EditFavouriteMapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D21B2B260129C000FA7368 /* EditFavouriteMapsView.swift */; };
 		C2D4067E2643270C00CDCB2B /* PinchToZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D4067D2643270C00CDCB2B /* PinchToZoom.swift */; };
 		C2D4068026454B6B00CDCB2B /* ComplimentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */; };
+		C2D70557269232D6005A0D3B /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D70556269232D6005A0D3B /* OverviewView.swift */; };
 		C2F92E2525CC7A3C00AEECD0 /* MapsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */; };
 /* End PBXBuildFile section */
 
@@ -101,7 +101,6 @@
 		C25005472681D7FF004F3A59 /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
 		C250054A2681F010004F3A59 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		C267B579261CD19800958E01 /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
-		C27E495425DE7D8300692E01 /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		C27E495E25DE7DD800692E01 /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayAppStorage.swift; sourceTree = "<group>"; };
 		C2A8CD2D2628C344007F55B3 /* MapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCell.swift; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 		C2D21B2B260129C000FA7368 /* EditFavouriteMapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavouriteMapsView.swift; sourceTree = "<group>"; };
 		C2D4067D2643270C00CDCB2B /* PinchToZoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchToZoom.swift; sourceTree = "<group>"; };
 		C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplimentCell.swift; sourceTree = "<group>"; };
+		C2D70556269232D6005A0D3B /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -222,7 +222,6 @@
 				C2C5EEFA267209DA002ACAE1 /* SearchBar.swift */,
 				C25005472681D7FF004F3A59 /* SegmentedPicker.swift */,
 				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
-				C27E495425DE7D8300692E01 /* ScrollView.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -316,6 +315,7 @@
 			children = (
 				C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */,
 				C250054A2681F010004F3A59 /* FilterView.swift */,
+				C2D70556269232D6005A0D3B /* OverviewView.swift */,
 			);
 			path = MapsDetailView;
 			sourceTree = "<group>";
@@ -482,7 +482,6 @@
 				C2D21B2C260129C100FA7368 /* EditFavouriteMapsView.swift in Sources */,
 				C23C6D5525D41FCF008D283F /* MapsViewModel.swift in Sources */,
 				C227A49F25DB0869003F6822 /* NadesViewModel.swift in Sources */,
-				C27E495525DE7D8300692E01 /* ScrollView.swift in Sources */,
 				C250054B2681F010004F3A59 /* FilterView.swift in Sources */,
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
@@ -503,6 +502,7 @@
 				C2462B842607766600FFBE8E /* HasNotch.swift in Sources */,
 				C2D21AD725FBE38F00FA7368 /* ProgressBar.swift in Sources */,
 				C27E495F25DE7DD800692E01 /* ScreenSize.swift in Sources */,
+				C2D70557269232D6005A0D3B /* OverviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +670,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Popflash/Preview Content\"";
 				DEVELOPMENT_TEAM = DY2GQFY855;
@@ -681,6 +682,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sebvidal.Popflash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -691,6 +693,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Popflash/Preview Content\"";
 				DEVELOPMENT_TEAM = DY2GQFY855;
@@ -702,6 +705,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sebvidal.Popflash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
