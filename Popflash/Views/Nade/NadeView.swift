@@ -22,53 +22,41 @@ struct NadeView: View {
     
     var body: some View {
                         
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: 0) {
 
             NadeContent(nade: nade,
                         player: player,
                         contentSelection: selection,
                         fullscreen: $fullscreen)
-                    
+
             SegmentedControl(selection: $selection)
             
             SwiftUI.ScrollView {
                 
                 ScrollViewReader { value in
                     
-                    Group {
-                        
-                        Details(nade: nade)
-                            .id(0)
-                        
-                        Compliments(nade: $nade, player: $player)
-                        
-                    }
-                    .onChange(of: nade) { _ in
-                        value.scrollTo(0, anchor: .top)
-                    }
+                    Details(nade: nade)
+                        .id(0)
+                        .onChange(of: nade) { _ in
+                            value.scrollTo(0, anchor: .top)
+                        }
+                    
+                    Compliments(nade: $nade, player: $player)
+                    
                     
                 }
                 
             }
             
         }
+        .animation(.easeInOut(duration: 0.25), value: fullscreen)
         .background {
             
             Color.black
                 .opacity(fullscreen ? 1 : 0)
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut(duration: 0.25), value: fullscreen)
-            
-        }
-        .onAppear {
-            
-            print("Should work")
-            
-        }
-        .onAppear {
-            
-            print("Breaker")
-            
+
         }
         .onChange(of: nade) { _ in
             
@@ -154,7 +142,6 @@ private struct NadeContent: View {
             
         }
         .padding(.top, fullscreen ? 78 : 0)
-        .animation(.easeInOut, value: fullscreen)
         .zIndex(1)
         
     }
@@ -195,9 +182,10 @@ private struct VideoView: View {
             
         }
         .frame(width: width(), height: height())
-        .animation(.easeInOut(duration: 0.25), value: fullscreen)
         .onPreferenceChange(SheetOffsetPreferenceKey.self) {
-                
+            
+            fullscreen = $0 == 0
+            
             if $0 <= 57 && $0 > 0 {
                 
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.allButUpsideDown
@@ -207,11 +195,6 @@ private struct VideoView: View {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 
             }
-            
-        }
-        .onRotate { orientation in
-            
-            handleRotation(orientation: orientation)
             
         }
         
@@ -273,29 +256,27 @@ private struct VideoView: View {
         
     }
     
-    func handleRotation(orientation: UIDeviceOrientation) {
-        
-        if orientation == .portrait {
-            
-            fullscreen = false
-            
-        } else {
-            
-            if orientation == .landscapeLeft {
-                        
-                fullscreen = true
-                
-            } else if orientation == .landscapeRight {
-
-                fullscreen = true
-                
-            }
-            
-        }
-        
-        
-        
-    }
+//    func handleRotation(orientation: UIDeviceOrientation) {
+//
+//        if orientation == .portrait {
+//
+//            fullscreen = false
+//
+//        } else {
+//
+//            if orientation == .landscapeLeft {
+//
+//                fullscreen = true
+//
+//            } else if orientation == .landscapeRight {
+//
+//                fullscreen = true
+//
+//            }
+//
+//        }
+//
+//    }
     
 }
 
@@ -451,6 +432,7 @@ struct SegmentedControl: View {
             }
             
         }
+        .frame(maxWidth: UIScreen.screenWidth)
         .pickerStyle(SegmentedPickerStyle())
         .padding([.top, .horizontal])
         .padding(.bottom, 10)
@@ -580,7 +562,7 @@ struct VideoInfo: View {
 
     var body: some View {
     
-        ScrollView(axes: .horizontal, showsIndicators: false) {
+        ScrollView(.horizontal, showsIndicators: false) {
         
             VStack {
             
@@ -705,7 +687,7 @@ private struct Compliments: View {
         
         if !nade.compliments.isEmpty {
             
-            ScrollView(axes: .horizontal, showsIndicators: false) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
                 VStack(alignment: .leading) {
                     
