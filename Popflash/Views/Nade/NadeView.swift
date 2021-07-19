@@ -58,11 +58,9 @@ struct NadeView: View {
                 .animation(.easeInOut(duration: 0.25), value: fullscreen)
 
         }
-        .onChange(of: nade) { _ in
+        .onAppear() {
             
             print("Test")
-            
-//            incrementViews()
             
         }
         
@@ -473,12 +471,11 @@ private struct Details: View {
                 
                 FavouriteButton(id: nade.id)
                     .padding()
-                    .padding(.bottom, 8)
                 
             }
             
             VideoInfo(nade: nade)
-                .padding(.top, 4)
+                .padding(.top, 12)
                 .padding(.bottom, 12)
             
             if !nade.warning.isEmpty {
@@ -516,41 +513,49 @@ private struct FavouriteButton: View {
     @AppStorage("favourites.nades") var favouriteNades: Array = [String()]
     
     var body: some View {
+        
+        Button(action: favourite) {
             
-        Button {
-            
-            if favouriteNades.contains(id) {
-                
-                if let index = favouriteNades.firstIndex(of: id) {
-                    
-                    favouriteNades.remove(at: index)
-                }
-                
-            } else {
-                
-                favouriteNades.append(id)
-                
-            }
-            
-        } label: {
-            
-            if favouriteNades.contains(id) {
-                
-                Image(systemName: "heart.fill")
-                    .font(.system(size: 21))
-                    .foregroundColor(Color("Heart"))
-                
-            } else {
-                
-                Image(systemName: "heart")
-                    .font(.system(size: 21))
-                
-            }
+            Image(systemName: isFavourite() ? "heart.fill" : "heart")
+                .font(.system(size: 21))
+                .foregroundColor(isFavourite() ? Color("Heart") : .blue)
+                .offset(y: 0.5)
             
         }
         .frame(width: 40, height: 40)
         .background(.regularMaterial)
         .clipShape(Circle())
+        
+    }
+    
+    func favourite() {
+        
+        if favouriteNades.contains(id) {
+            
+            if let index = favouriteNades.firstIndex(of: id) {
+                
+                favouriteNades.remove(at: index)
+            }
+            
+        } else {
+            
+            favouriteNades.append(id)
+            
+        }
+        
+    }
+    
+    func isFavourite() -> Bool {
+        
+        if favouriteNades.contains(id) {
+            
+            return true
+            
+        } else {
+            
+            return false
+            
+        }
         
     }
     
@@ -695,13 +700,7 @@ private struct Compliments: View {
                         .frame(minWidth: UIScreen.screenWidth - 32)
                         .padding(.horizontal)
                         .padding(.bottom, 4)
-                        .onAppear() {
-                            
-                            self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                        .whereField("id", in: nade.compliments))
-
-                            
-                        }
+                        .onAppear(perform: loadCompliments)
                         .onChange(of: nade) { _ in
                             
                             self.complimentsViewModel.nades.removeAll()
@@ -747,6 +746,14 @@ private struct Compliments: View {
             }
             
         }
+        
+    }
+    
+    func loadCompliments() {
+        
+        self.complimentsViewModel.nades.removeAll()
+        self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                    .whereField("id", in: nade.compliments))
         
     }
     

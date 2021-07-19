@@ -183,7 +183,7 @@ private struct FeaturedNade: View {
                 } label: {
                     
                     FeaturedCell(nade: nade)
-                        .shadow(radius: 6, y: 5)
+                        .cellShadow()
                         .padding(.horizontal)
                         .padding(.bottom, 8)
                     
@@ -230,7 +230,7 @@ private struct FeaturedCell: View {
                     .padding([.horizontal])
                 
                 VideoInfo(nade: nade)
-                    .padding(.top, 4)
+                    .padding(.top, 10)
                     .padding(.bottom, 12)
                 
                 Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
@@ -320,9 +320,9 @@ private struct MoreFrom: View {
                     } label: {
                         
                         MapCell(map: map)
-                            .shadow(radius: 6, y: 5)
+                            .cellShadow()
                             .padding(.horizontal, 16)
-                            .padding(.bottom, 16)
+                            .padding(.bottom, 12)
                         
                     }
                     
@@ -356,7 +356,7 @@ private struct Top5: View {
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
                 .padding(.leading, 17)
-                .padding(.bottom, 2)
+                .padding(.bottom, 10)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
@@ -491,7 +491,7 @@ private struct Compliments: View {
                         .buttonStyle(PlainButtonStyle())
                         
                     }
-                    .shadow(radius: 6, y: 5)
+                    .cellShadow()
                     
                     Spacer()
                         .frame(width: 8)

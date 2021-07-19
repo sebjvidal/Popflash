@@ -10,10 +10,11 @@ import SwiftUI
 struct SegmentedPicker: View {
     
     var items: [String]
+    var defaultsKey: String
     var wildcard: String = "All"
     var style: SegmentedPickerStyle = .default
     
-    @State var selectedItems = ["All"]
+    @Binding var selectedItems: String
     
     enum SegmentedPickerStyle {
         case `default`
@@ -26,7 +27,7 @@ struct SegmentedPicker: View {
             
             Button {
                 
-                selectedItems = [wildcard]
+                selectedItems = wildcard
                 
             } label: {
                 
@@ -48,9 +49,9 @@ struct SegmentedPicker: View {
                         .foregroundStyle(isSelected(item: item) ? Color.blue : Color("Picker_Background"))
                         .overlay {
                             
-                            if UIImage(named: item) != nil {
+                            if UIImage(named: "\(item)_Icon") != nil {
                                 
-                                Image(item)
+                                Image("\(item)_Icon")
                                     .renderingMode(.template)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
@@ -74,13 +75,14 @@ struct SegmentedPicker: View {
             
         }
         .frame(height: 60)
+        .buttonStyle(.plain)
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         
     }
     
     func isSelected(item: String) -> Bool {
         
-        if selectedItems.contains(item) {
+        if selectedItems == item {
             
             return true
             
@@ -94,38 +96,9 @@ struct SegmentedPicker: View {
     
     func segmentAction(item: String) {
         
-        if style == .default {
+        if style == .single {
             
-            if selectedItems.contains(item) {
-                
-                if let index = selectedItems.firstIndex(of: item) {
-            
-                    selectedItems.remove(at: index)
-                    
-                    
-                }
-                
-                if selectedItems.isEmpty {
-                    
-                    selectedItems.append(wildcard)
-                    
-                }
-                
-            } else {
-                
-                if let index = selectedItems.firstIndex(of: wildcard) {
-                    
-                    selectedItems.remove(at: index)
-                    
-                }
-                
-                selectedItems.append(item)
-                
-            }
-            
-        } else if style == .single {
-            
-            selectedItems = [item]
+            selectedItems = item
             
         }
         

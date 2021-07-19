@@ -21,6 +21,7 @@ struct OverviewView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: UIScreen.screenWidth,
                        height: UIScreen.screenWidth)
+                .zIndex(1)
             
             List {
 
@@ -31,10 +32,11 @@ struct OverviewView: View {
                 }
 
             }
-            .edgesIgnoringSafeArea(.all )
+            .edgesIgnoringSafeArea(.all)
+            .padding(.top, -14)
             
         }
-        
+        .preferredColorScheme(.dark)
     }
     
 }

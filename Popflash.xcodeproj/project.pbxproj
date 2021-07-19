@@ -48,6 +48,8 @@
 		C2D4067E2643270C00CDCB2B /* PinchToZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D4067D2643270C00CDCB2B /* PinchToZoom.swift */; };
 		C2D4068026454B6B00CDCB2B /* ComplimentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */; };
 		C2D70557269232D6005A0D3B /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D70556269232D6005A0D3B /* OverviewView.swift */; };
+		C2E7A6AE26A1C4630057B5ED /* RecentlyViewedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E7A6AD26A1C4630057B5ED /* RecentlyViewedView.swift */; };
+		C2E7A6B126A33EFA0057B5ED /* CellShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E7A6B026A33EFA0057B5ED /* CellShadow.swift */; };
 		C2F92E2525CC7A3C00AEECD0 /* MapsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +113,8 @@
 		C2D4067D2643270C00CDCB2B /* PinchToZoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchToZoom.swift; sourceTree = "<group>"; };
 		C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplimentCell.swift; sourceTree = "<group>"; };
 		C2D70556269232D6005A0D3B /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
+		C2E7A6AD26A1C4630057B5ED /* RecentlyViewedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyViewedView.swift; sourceTree = "<group>"; };
+		C2E7A6B026A33EFA0057B5ED /* CellShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellShadow.swift; sourceTree = "<group>"; };
 		C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */,
+				C2E7A6B026A33EFA0057B5ED /* CellShadow.swift */,
 				C267B579261CD19800958E01 /* CustomButtonStyle.swift */,
 				C2462B832607766600FFBE8E /* HasNotch.swift */,
 				C2D21ADE25FD28DE00FA7368 /* OnRotation.swift */,
@@ -264,6 +269,7 @@
 		C227A49525D82822003F6822 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				C2E7A6AF26A1C4690057B5ED /* RecentlyViewed */,
 				C227A49925D828C2003F6822 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -314,8 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				C2F92E2425CC7A3C00AEECD0 /* MapsDetailView.swift */,
-				C250054A2681F010004F3A59 /* FilterView.swift */,
-				C2D70556269232D6005A0D3B /* OverviewView.swift */,
+				C2E7A6AB26A1C37E0057B5ED /* Filter */,
 			);
 			path = MapsDetailView;
 			sourceTree = "<group>";
@@ -327,6 +332,23 @@
 				C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */,
 			);
 			path = Nade;
+			sourceTree = "<group>";
+		};
+		C2E7A6AB26A1C37E0057B5ED /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				C250054A2681F010004F3A59 /* FilterView.swift */,
+				C2D70556269232D6005A0D3B /* OverviewView.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		C2E7A6AF26A1C4690057B5ED /* RecentlyViewed */ = {
+			isa = PBXGroup;
+			children = (
+				C2E7A6AD26A1C4630057B5ED /* RecentlyViewedView.swift */,
+			);
+			path = RecentlyViewed;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -485,6 +507,7 @@
 				C250054B2681F010004F3A59 /* FilterView.swift in Sources */,
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
+				C2E7A6B126A33EFA0057B5ED /* CellShadow.swift in Sources */,
 				C2069AFC25CAE8D500ACFD15 /* FeaturedView.swift in Sources */,
 				C2D4067E2643270C00CDCB2B /* PinchToZoom.swift in Sources */,
 				C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */,
@@ -496,6 +519,7 @@
 				C2069ACB25CAE8B300ACFD15 /* SceneDelegate.swift in Sources */,
 				C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */,
 				C227A48B25D82074003F6822 /* FavouritesView.swift in Sources */,
+				C2E7A6AE26A1C4630057B5ED /* RecentlyViewedView.swift in Sources */,
 				C25005482681D7FF004F3A59 /* SegmentedPicker.swift in Sources */,
 				C23C6D1F25D3F9B6008D283F /* AuthenticationService.swift in Sources */,
 				C2A8CD2E2628C344007F55B3 /* MapCell.swift in Sources */,

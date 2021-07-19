@@ -62,15 +62,15 @@ struct SearchBar: View {
                     .animation(.easeInOut(duration: 0.25), value: [isEditing, isFocused])
                     .submitLabel(.search)
                     .focused($isFocused)
-                    .onFocus { focused in
+                    .onChange(of: isFocused, perform: { focused in
                         
                         if focused {
                             
                             isEditing = true
                             
                         }
-                        
-                    }
+                                                
+                    })
 
             }
             

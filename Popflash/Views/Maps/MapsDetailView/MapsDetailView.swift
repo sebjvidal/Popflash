@@ -9,13 +9,17 @@ struct MapsDetailView: View {
     var map: Map
     
     @StateObject private var viewModel = NadesViewModel()
-    @StateObject private var searchViewModel = NadesViewModel()
     
     @State private var selectedNade: Nade?
     @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
     @State private var showingBottomSheet = false
     @State private var showingNavigationBarTitle = false
+    
+    @AppStorage("maps.filter.type") private var selectedType: String = "All"
+    @AppStorage("maps.filter.tick") private var selectedTick: String = "All"
+    @AppStorage("maps.filter.side") private var selectedSide: String = "All"
+    @AppStorage("maps.filter.bind") private var selectedBind: String = "All"
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -30,36 +34,36 @@ struct MapsDetailView: View {
                        group: map.group,
                        scenario: map.scenario)
                 
-                SearchBar(placeholder: "Search \(map.name)", query: $searchQuery)
+                SearchBar(placeholder: "Search \(map.name)",
+                          query: $searchQuery)
                     .padding(.bottom, 6)
-                    .onChange(of: searchQuery) {
-                        
-                        handleSearch(query: $0)
+                    .onChange(of: searchQuery) { _ in
+
+                        handleSearch()
                         
                     }
                 
-                NadeList(nades: searchQuery != "" ? $searchViewModel.nades : $viewModel.nades, selectedNade: $selectedNade)
-                
-                ActivityIndicator()
-                    .onAppear {
+                NadeList(nades: $viewModel.nades, selectedNade: $selectedNade)
+                    .onChange(of: [selectedType, selectedTick, selectedSide, selectedBind]) { _ in
                         
+                        viewModel.nades.removeAll()
                         loadNades()
                         
                     }
+                
+                ActivityIndicator()
+                    .onAppear(perform: loadNades)
                 
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 8)
             .listRowSeparator(.hidden)
             .listRowInsets(.some(EdgeInsets()))
-            .sheet(item: self.$selectedNade) { item in
-                
-                NadeView(nade: item)
-                                
-            }
             
         }
         .listStyle(.plain)
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarHidden(false)
         .toolbar {
 
             MoreToolbarItem(showingBottomSheet: $showingBottomSheet)
@@ -67,45 +71,72 @@ struct MapsDetailView: View {
             FavouriteToolbarItem(mapName: map.name)
             
         }
-        .navigationBarTitle("", displayMode: .inline)
-        .navigationBarHidden(false)
+        .sheet(item: self.$selectedNade) { item in
+            
+            NadeView(nade: item)
+                            
+        }
         .bottomSheet(isPresented: $showingBottomSheet,
                      detents: [.medium(), .large()],
                      prefersGrabberVisible: true) {
             
-            FilterView(map: map)
+            FilterView(map: map,
+                       selectedType: $selectedType,
+                       selectedTick: $selectedTick,
+                       selectedSide: $selectedSide,
+                       selectedBind: $selectedBind)
             
         }
-        
-    }
-    
-    func loadNades() {
-            
-        self.viewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                    .whereField("map", isEqualTo: map.name)
-                                    .limit(to: 10))
 
     }
     
-    func handleSearch(query: String) {
+    func loadNades() {
+
+        if searchQuery.isEmpty {
+            
+            let ref = filteredRef(ref: Firestore.firestore().collection("nades")
+                                    .whereField("map", isEqualTo: map.name))
+            
+            viewModel.fetchData(ref: ref.limit(to: 10))
         
-        if query != "" {
+        } else {
             
-            let queryArray = searchQuery.lowercased().split(separator: " ")
+            let ref = filteredRef(ref: Firestore.firestore().collection("nades")
+                                    .whereField("map", isEqualTo: map.name)
+                                    .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
             
-            if queryArray.count > 0 {
+            viewModel.fetchData(ref: ref.limit(to: 10))
+        
+        }
+
+    }
+
+    func handleSearch() {
+
+        viewModel.nades.removeAll()
+        loadNades()
+
+    }
+    
+    func filteredRef(ref: Query) -> Query {
+        
+        var filteredRef = ref
+        let filters = ["type": selectedType,
+                       "tick": selectedTick,
+                       "side": selectedSide,
+                       "bind": selectedBind]
+        
+        for filter in filters {
+            
+            if filter.value != "All" {
                 
-                self.searchViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                .whereField("map", isEqualTo: map.name)
-                                                .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+                filteredRef = filteredRef.whereField(filter.key, isEqualTo: filter.value.replacingOccurrences(of: "\n", with: ""))
                 
             }
             
-        } else {
-            
-            self.searchViewModel.nades.removeAll()
-            
         }
+        
+        return filteredRef
         
     }
     
@@ -192,7 +223,7 @@ private struct MoreToolbarItem: ToolbarContent {
 
             Button(action: seeMore, label: {
 
-                Image(systemName: "ellipsis")
+                Image(systemName: "ellipsis.circle")
                 
             })
 
@@ -227,7 +258,7 @@ private struct NadeList: View {
                 
                 NadeCell(nade: nade)
                     .equatable()
-                    .shadow(radius: 6, y: 5)
+                    .cellShadow()
                     .padding(.bottom, 8)
                 
             }
@@ -235,15 +266,25 @@ private struct NadeList: View {
             .swipeActions {
                 
                 Button {
-                    
+
                     favouriteButtonAction(nade: nade.id)
-                    
+
                 } label: {
 
                     Label("", image: isFavourite(nadeID: nade.id) ? "Unfavourite_Swipe_Action" : "Favourite_Swipe_Action")
 
                 }
-                .frame(width: 20)
+                .tint(Color("True_Background"))
+                
+                Button {
+                    
+                    print("Tapped!")
+                    
+                } label: {
+
+                    Label("", image: "Share_Swipe_Action")
+                    
+                }
                 .tint(Color("True_Background"))
                 
             }
@@ -270,14 +311,15 @@ private struct NadeList: View {
         
         if isFavourite(nadeID: nade) {
             
-            favouriteNades.insert(nade, at: 0)
-            
-        } else {
-            
             if let index = favouriteNades.firstIndex(of: nade) {
                 
                 favouriteNades.remove(at: index)
+                
             }
+            
+        } else {
+            
+            favouriteNades.append(nade)
             
         }
         

@@ -176,7 +176,7 @@ private struct MapsList: View {
                 } label: {
 
                     MapCell(map: map)
-                        .shadow(radius: 6, y: 5)
+                        .cellShadow()
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)
 

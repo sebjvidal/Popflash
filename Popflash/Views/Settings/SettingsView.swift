@@ -64,7 +64,7 @@ private struct Header: View {
             Divider()
                 .padding(.top, 6)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 16)
+                .padding(.bottom, 8)
 
         }
         
@@ -111,67 +111,10 @@ private struct Profile: View {
             
         }
         .buttonStyle(.plain)
-        .shadow(radius: 6, y: 5)
-        .padding([.horizontal, .bottom])
-        
-    }
-    
-}
-
-private struct AltProfile: View {
-    
-    var body: some View {
-        
-        Button {
-            
-            print("Test")
-            
-        } label: {
-            
-            LazyVStack(spacing: 16) {
-                
-                Color.gray
-                    .frame(width: 65, height: 65)
-                    .clipShape(Circle())
-                
-                Image("Skill_Group_0")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 95)
-                    
-                Text("Forename Surname")
-                    .foregroundStyle(.primary)
-                    .font(.headline)
-                
-//                Text("Skill Group")
-//                    .foregroundStyle(.secondary)
-
-                
-            }
-            .padding()
-            .background(Color("Background"))
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            
-//            HStack(spacing: 16) {
-//
-//                Color.gray
-//                    .frame(width: 65, height: 65)
-//                    .clipShape(Circle())
-//
-//
-//
-//                Spacer()
-//
-//                Image(systemName: "chevron.right")
-//                    .foregroundStyle(.secondary)
-//
-//            }
-
-            
-        }
-        .buttonStyle(.plain)
-        .shadow(radius: 6, y: 5)
-        .padding([.horizontal, .bottom])
+        .cellShadow()
+        .padding(.top, 8)
+        .padding(.horizontal)
+        .padding(.bottom, 8)
         
     }
     
@@ -204,8 +147,9 @@ private struct Settings: View {
         .padding(.vertical, 12)
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding(.horizontal, 16)
-        .shadow(radius: 6, y: 5)
+        .padding(.top, 8)
+        .padding(.horizontal)
+        .cellShadow()
         
     }
     
@@ -260,8 +204,10 @@ private struct RecentlyViewed: View {
         .padding(.vertical, 6)
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding([.horizontal, .bottom], 16)
-        .shadow(radius: 6, y: 5)
+        .padding(.top, 8)
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+        .cellShadow()
         
     }
     

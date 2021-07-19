@@ -52,7 +52,7 @@ struct ComplimentCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .shadow(radius: 6, y: 5)
+        .cellShadow()
         .padding(.trailing, 8)
         
     }

@@ -103,7 +103,6 @@ private struct FavouriteMaps: View {
             VStack(alignment: .leading, spacing: 0) {
                 
                 Divider()
-//                    .frame(minWidth: UIScreen.screenWidth - 32)
                     .padding(.horizontal)
                     .padding(.bottom, 10)
                 
@@ -120,17 +119,19 @@ private struct FavouriteMaps: View {
 
                     if !mapsViewModel.maps.isEmpty {
                         
-                        ForEach(favouriteMaps.filter({ $0 != "" }), id: \.self) { favouriteMap in
+                        ForEach(favouriteMaps, id: \.self) { favouriteMap in
                             
-                            let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap })!
-                            
-                            NavigationLink(destination: MapsDetailView(map: map)) {
+                            if let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap }) {
                                 
-                                FavouriteMapCell(map: map)
-                                    .contentShape(Rectangle())
+                                NavigationLink(destination: MapsDetailView(map: map)) {
+                                    
+                                    FavouriteMapCell(map: map)
+                                        .contentShape(Rectangle())
+                                    
+                                }
+                                .buttonStyle(FavouriteMapCellButtonStyle())
                                 
                             }
-                            .buttonStyle(FavouriteMapCellButtonStyle())
                             
                         }
                         
@@ -187,7 +188,7 @@ private struct FavouriteMapCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .shadow(radius: 5, y: 4)
+        .cellShadow()
         .padding(.leading, 8)
         .padding(.bottom, 16)
         
@@ -223,7 +224,7 @@ private struct EditFavouritesButton: View {
                 
             }
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .shadow(color: Color.black.opacity(0.15), radius: 5, y: 4)
+            .shadow(color: .black.opacity(0.1), radius: 6, y: 5)
             .padding(.leading, 8)
             .padding(.bottom, 16)
             
@@ -243,46 +244,59 @@ private struct FavouriteNades: View {
     @State var nadeViewIsPresented = false
     
     var body: some View {
-        
-        VStack {
+
+        HStack {
             
-            HStack {
-                
-                Text("Grenades")
-                    .font(.system(size: 20))
-                    .fontWeight(.semibold)
-                    .padding(.top, 10)
-                    .padding(.leading, 2)
-                
-                Spacer()
-                
-            }
+            Text("Grenades")
+                .font(.system(size: 20))
+                .fontWeight(.semibold)
+                .padding(.top, 10)
+                .padding(.leading, 2)
             
-            ForEach(favouritesViewModel.nades, id: \.self) { nade in
-                    
-                Button {
-                    
-                    self.selectedNade = nade
-                    nadeViewIsPresented.toggle()
-                    
-                } label: {
-                    
-                    FavouriteNadeCell(nade: nade)
-                        .padding(.bottom, 8)
-                    
-                }
-                .buttonStyle(FavouriteNadeCellButtonStyle())
-                
-            }
-            
-            Spacer(minLength: 12)
+            Spacer()
             
         }
         .padding(.horizontal)
         .onAppear(perform: updateNades)
         .onChange(of: favouriteNades) { newValue in
-            print(newValue)
             updateNades()
+        }
+        
+        ForEach(favouritesViewModel.nades, id: \.self) { nade in
+                
+            Button {
+                
+                self.selectedNade = nade
+                nadeViewIsPresented.toggle()
+                
+            } label: {
+                
+                FavouriteNadeCell(nade: nade)
+                    .padding(.top, 6)
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
+                
+            }
+            .buttonStyle(FavouriteNadeCellButtonStyle())
+            .swipeActions {
+                Button {
+                    
+                    print("Tapped!")
+                    
+                    if let nadeIndex = favouriteNades.firstIndex(of: nade.id) {
+                        
+                        favouriteNades.remove(at: nadeIndex)
+                        
+                    }
+                    
+                } label: {
+                    
+                    Label("Unfavourite", image: "Test")
+                    
+                }
+                .tint(Color("Heart"))
+            }
+            
         }
         
     }
@@ -338,17 +352,16 @@ private struct FavouriteNadeCell: View {
                 .clipped()
             
             ZStack(alignment: .topLeading) {
-                
+
                 KFImage(URL(string: nade.thumbnail))
                     .setProcessor(processor)
                     .resizable()
                     .frame(height: 106)
                     .overlay(.regularMaterial)
-                
+
                 VStack(alignment: .leading, spacing: 0) {
 
                     Text(nade.map)
-//                        .foregroundColor(.gray)
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(.top, 8)
@@ -374,7 +387,8 @@ private struct FavouriteNadeCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .shadow(radius: 6, y: 4)
+        .drawingGroup()
+        .cellShadow()
         
     }
     
