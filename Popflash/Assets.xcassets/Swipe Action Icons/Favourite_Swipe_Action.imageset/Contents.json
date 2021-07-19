@@ -3,6 +3,16 @@
     {
       "filename" : "Favourite_Swipe_Action.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Favourite_Swipe_Action_Dark.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

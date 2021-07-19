@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Unfavourite_Swipe_Action.png",
+      "filename" : "Share_Swipe_Action.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Unavourite_Swipe_Action_Dark.png",
+      "filename" : "Share_Swipe_Action_Dark.png",
       "idiom" : "universal"
     }
   ],
