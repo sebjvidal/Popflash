@@ -75,6 +75,7 @@ private struct Header: View {
                     .font(.system(size: 32))
                     .fontWeight(.bold)
                     .padding(.leading, 16)
+                    .padding(.bottom, 5)
 
             }
 
