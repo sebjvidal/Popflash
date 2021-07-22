@@ -347,9 +347,21 @@ private struct VideoControls: View {
                 
                 Spacer()
                 
-                ProgressBar(value: $progress, player: $player, isplaying: $isPlaying)
-                    .padding(.horizontal, fullscreen ? 34 : 20)
-                    .padding(.bottom, fullscreen ? 26: 16)
+                HStack(spacing: 16) {
+                    
+                    ProgressBar(value: $progress, player: $player, isplaying: $isPlaying)
+                    
+                    Button(action: manualFullscreen) {
+                        
+                        Image(fullscreen ? "minimise" : "maximise")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                        
+                    }
+                
+                }
+                .padding(.horizontal, fullscreen ? 34 : 20)
+                .padding(.bottom, fullscreen ? 26: 16)
                 
             }
             
@@ -408,6 +420,20 @@ private struct VideoControls: View {
         
         player.seek(to: player.currentItem!.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
         progress = 1
+        
+    }
+    
+    func manualFullscreen() {
+        
+        if fullscreen {
+            
+            UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
+            
+        } else {
+            
+            UIDevice.current.setValue(UIDeviceOrientation.landscapeRight.rawValue, forKey: "orientation")
+            
+        }
         
     }
     
