@@ -117,6 +117,8 @@ private struct Features: View {
             
             Spacer()
             
+            Spacer()
+            
         }
         .padding(.horizontal, 32)
         
@@ -262,6 +264,15 @@ struct LoginPage: View {
             
             Spacer()
             
+            AccountFeatures()
+            
+            Spacer()
+            
+            AccountPrivacy()
+            
+            Spacer()
+            Spacer()
+            
             SignInWithApple()
                 .padding(.bottom, notNow ? 19 : 58)
             
@@ -273,6 +284,78 @@ struct LoginPage: View {
             }
             
         }
+        
+    }
+    
+}
+
+private struct AccountFeatures: View {
+    
+    var body: some View {
+        
+        VStack {
+            
+            Image(systemName: "person.fill")
+                .foregroundStyle(.blue)
+                .font(.system(size: 44))
+                .padding()
+            
+            Text("Create a Popflash account to:\n    • Add maps and grenades to favourites.\n    • See recently viewed grenades.\n    • Enable and manage push notifications.")
+                .foregroundStyle(.secondary)
+                .font(.callout)
+            
+        }
+        .padding(.horizontal, 32)
+        
+    }
+    
+}
+
+private struct AccountPrivacy: View {
+    
+    var body: some View {
+        
+        VStack {
+            
+            Image(systemName: "hand.raised.fill")
+                .foregroundStyle(.blue)
+                .font(.system(size: 44))
+                .padding()
+            
+            VStack(alignment: .leading) {
+                
+                Text("Your data remains private:")
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("Sign In with Apple ensures you are authenticated securely and anonymously.")
+                    
+                }
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("Your account is anonymised and cannot be linked back to you.")
+                    
+                }
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("Your data is kept private and not sold or distributed to third parties.")
+                    
+                }
+                
+            }
+            .foregroundStyle(.secondary)
+            .font(.callout)
+
+        }
+        .padding(.horizontal, 32)
         
     }
     
