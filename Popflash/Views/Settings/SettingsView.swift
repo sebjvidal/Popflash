@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct SettingsView: View {
     
+    @AppStorage("loggedInStatus") var loggedInStatus = false
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
@@ -24,6 +26,12 @@ struct SettingsView: View {
                 RecentlyViewed()
 
                 Settings()
+                
+                if loggedInStatus {
+                    
+                    SignOut()
+                    
+                }
                 
             }
             .listRowInsets(.some(EdgeInsets()))
@@ -74,28 +82,32 @@ private struct Header: View {
 
 private struct Profile: View {
     
+    @State var showingSignIn = false
+    
+    @AppStorage("loggedInStatus") var signedIn = false
+    
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         
-        Button {
+        Button(action: profileAction) {
             
-            print("Test")
-            
-        } label: {
-            
-            HStack(spacing: 16) {
+            HStack(spacing: 8) {
                 
-                Color.gray
-                    .frame(width: 65, height: 65)
-                    .clipShape(Circle())
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: 65))
+                    .foregroundColor(.gray)
+                    .padding([.top, .leading, .bottom], 10)
                 
                 VStack(alignment: .leading) {
                     
-                    Text("Forename Surname")
-                        .foregroundStyle(.primary)
+                    Text(signedIn ? displayName() : "Sign in to Popflash")
+                        .foregroundStyle(signedIn ? AnyShapeStyle(.primary) : AnyShapeStyle(.blue))
                         .font(.headline)
                     
-                    Text("Skill Group")
+                    Text(signedIn ? "Skill Group" : "Add grenades to favourites, see recently viewed.")
                         .foregroundStyle(.secondary)
+                        .font(.callout)
                     
                 }
                 
@@ -103,18 +115,85 @@ private struct Profile: View {
                 
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.secondary)
+                    .padding(.trailing)
                 
             }
-            .padding()
             .background(Color("Background"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             
         }
         .buttonStyle(.plain)
         .cellShadow()
-        .padding(.top, 8)
+        .padding(.vertical, 8)
         .padding(.horizontal)
-        .padding(.bottom, 8)
+        .sheet(isPresented: $showingSignIn) { LoginSheet() }
+        
+    }
+    
+    func profileAction() {
+        
+        if signedIn {
+            
+            print("Tapped!")
+            
+        } else {
+            
+            showingSignIn = true
+            
+        }
+        
+    }
+    
+    func displayName() -> String {
+        
+        let name = Auth.auth().currentUser?.displayName ?? ""
+        
+        return name
+        
+    }
+    
+}
+
+private struct LoginSheet: View {
+    
+    @AppStorage("loggedInStatus") var loggedInStatus = false
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        
+        NavigationView {
+            
+            LoginPage(popflash: true,
+                      notNow: false,
+                      presentationMode: presentationMode)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarItems(
+                    leading:
+                        Button(action: {
+
+                            presentationMode.wrappedValue.dismiss()
+                            
+                        }) {
+                            
+                            Text("Cancel")
+                            
+                        }
+                        
+                )
+                .edgesIgnoringSafeArea(.top)
+                .interactiveDismissDisabled()
+            
+        }
+        .onChange(of: loggedInStatus) { loggedIn in
+            
+            if loggedIn {
+                
+                presentationMode.wrappedValue.dismiss()
+                
+            }
+            
+        }
         
     }
     
@@ -149,6 +228,7 @@ private struct Settings: View {
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .padding(.top, 8)
         .padding(.horizontal)
+        .padding(.bottom, 8)
         .cellShadow()
         
     }
@@ -321,12 +401,64 @@ private struct CompactMapsViewRow: View {
     
 }
 
-//private struct Reset: View {
-//
-//    var body: some View {
-//
-//
-//
-//    }
-//
-//}
+private struct SignOut: View {
+    
+    @State private var showingActionSheet = false
+    
+    @AppStorage("loggedInStatus") var loggedInStatus = false
+    
+    var body: some View {
+        
+        Button(action: signOutAction) {
+            
+            HStack {
+                
+                Spacer()
+                
+                Text("Sign Out")
+                    .foregroundColor(.red)
+                
+                Spacer()
+                
+            }
+            .padding(.vertical, 14)
+            
+        }
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding(.vertical, 8)
+        .padding(.horizontal)
+        .buttonStyle(.borderless)
+        .cellShadow()
+        .actionSheet(isPresented: $showingActionSheet) {
+            
+            ActionSheet(title: Text("Sign Out"), message: Text("Are you sure you want to sign out of Popflash?"), buttons: [
+                .destructive(Text("Sign Out")) { signOut() },
+                .cancel()
+            ])
+            
+        }
+        
+    }
+    
+    func signOutAction() {
+        
+        showingActionSheet = true
+        
+    }
+    
+    func signOut() {
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            try? Auth.auth().signOut()
+            
+        }
+        
+        loggedInStatus = false
+        
+        authenticateAnonymously()
+        
+    }
+        
+}
