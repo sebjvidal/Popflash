@@ -6,56 +6,91 @@
 //
 
 import SwiftUI
+import CryptoKit
+import AuthenticationServices
 
 struct WelcomeView: View {
     
-    @Environment(\.colorScheme) var colorScheme
+    @State var selection = 0
+    
+    @AppStorage("loggedInStatus") var loggedInStatus = false
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .top) {
             
-            PlayerView()
-                .edgesIgnoringSafeArea(.all)
-            
-//            Rectangle()
-//                .foregroundColor(.black)
-//                .edgesIgnoringSafeArea(.all)
-//                .opacity(0.2)
-            
-            VStack(alignment: .center) {
+            TabView(selection: $selection) {
                 
-                Text("Welcome to")
-                    .foregroundColor(Color("Description"))
-                    .font(.system(size: 25))
-                    .fontWeight(.semibold)
-                    .shadow(radius: 3)
-                    .padding(.top, 64)
+                FeaturesPage(selection: $selection)
+                    .tag(0)
                 
-                Text("Popflash")
-                    .foregroundColor(.white)
-                    .font(.system(size: 50))
-                    .fontWeight(.bold)
-                    .shadow(radius: 5)
-                
-//                Features()
-//                    .padding(.top, 46)
-//                    .shadow(radius: 3)
-                
-                Spacer()
-                
-                GetStarted()
-                    .padding(.bottom, 58)
-                    .onTapGesture {
-                        
-                        standard.setValue(true, forKey: "hasLaunchedBefore")
-                        
-                    }
+                LoginPage(popflash: false,
+                          notNow: true,
+                          presentationMode: presentationMode)
+                    .tag(1)
                 
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .animation(.easeInOut(duration: 0.15), value: selection)
+            
+            Text("Popflash")
+                .font(.system(size: 50))
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .padding(.top, 94)
             
         }
+        .onChange(of: loggedInStatus) { status in
+            
+            if status { dismiss() }
+            
+        }
+        
     }
+    
+}
+
+private struct FeaturesPage: View {
+    
+    @Binding var selection: Int
+    
+    var body: some View {
+        
+        VStack(alignment: .center) {
+            
+            Text("Welcome to")
+                .font(.system(size: 25))
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .padding(.top, 64)
+            
+            Text("Popflash")
+                .font(.system(size: 50))
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .hidden()
+            
+            Spacer()
+            
+            Features()
+            
+            Spacer()
+            
+            GetStarted(selection: $selection)
+                .padding(.bottom, 58)
+                .onTapGesture {
+                    
+                    standard.setValue(true, forKey: "hasLaunchedBefore")
+                    
+                }
+            
+        }
+        
+    }
+    
 }
 
 private struct Features: View {
@@ -64,80 +99,110 @@ private struct Features: View {
         
         VStack(alignment: .leading) {
             
-            HStack {
+            Spacer()
+            
+            Spacer()
+            
+            Featured()
+            
+            Spacer()
+            
+            Maps()
+            
+            Spacer()
+            
+            Favourites()
+            
+            Spacer()
+            
+            Spacer()
+            
+        }
+        .padding(.horizontal, 32)
+        
+    }
+    
+}
+
+private struct Featured: View {
+    
+    var body: some View {
+        
+        HStack {
+            
+            Image(systemName: "star.fill")
+                .foregroundColor(.yellow)
+                .font(.system(size: 38))
+            
+            VStack(alignment: .leading) {
                 
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-                    .font(.system(size: 38))
+                Text("Featured")
+                    .fontWeight(.bold)
+                    .font(.system(size: 15))
+                    .foregroundColor(.primary)
                 
-                VStack(alignment: .leading) {
-                    
-                    Text("Featured")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                    Text("Discover new grenade line-ups to give\nyou a competitiveadvantage in-game.")
-                        .foregroundColor(Color("Description"))
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                }
+                Text("Discover new grenade line-ups to give you a competitive advantage in-game.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
                 
             }
             
-            Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 1, height: 32)
+        }
+        
+    }
+    
+}
+
+private struct Maps: View {
+    
+    var body: some View {
+        
+        HStack {
             
-            HStack {
+            Image(systemName: "map.fill")
+                .foregroundColor(.green)
+                .font(.system(size: 38))
+            
+            VStack(alignment: .leading) {
                 
-                Image(systemName: "map.fill")
-                    .foregroundColor(.green)
-                    .font(.system(size: 38))
+                Text("Maps")
+                    .fontWeight(.bold)
+                    .font(.system(size: 15))
+                    .foregroundColor(.primary)
                 
-                VStack(alignment: .leading) {
-                    
-                    Text("Maps")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                    Text("Search for grenade line-ups by map,\nfrom Active Duty and Reserves Groups.")
-                        .foregroundColor(Color("Description"))
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                }
+                Text("Search for grenade line-ups by map, from Active Duty and Reserves Groups.")
+                    .font(.system(size: 15))
+                    .foregroundColor(.secondary)
                 
             }
             
-            Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 1, height: 32)
+        }
+        
+    }
+    
+}
+
+private struct Favourites: View {
+    
+    var body: some View {
+        
+        HStack {
             
-            HStack {
+            Image(systemName: "heart.fill")
+                .foregroundColor(Color("Heart"))
+                .font(.system(size: 38))
+            
+            VStack(alignment: .leading) {
                 
-                Image(systemName: "heart.fill")
-                    .foregroundColor(Color("Heart"))
-                    .font(.system(size: 38))
+                Text("Favourite")
+                    .fontWeight(.bold)
+                    .font(.system(size: 15))
+                    .foregroundColor(.primary)
                 
-                VStack(alignment: .leading) {
-                    
-                    Text("Favourite")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                    Text("Save your favourite maps and line-ups\nfor quick access during your next match.")
-                        .foregroundColor(Color("Description"))
-                        .font(.system(size: 15))
-                        .shadow(radius: 3)
-                    
-                }
+                
+                Text("Save your favourite maps and line-ups for quick access during your next match.")
+                    .font(.system(size: 15))
+                    .foregroundColor(.secondary)
                 
             }
             
@@ -149,40 +214,140 @@ private struct Features: View {
 
 private struct GetStarted: View {
     
-    @AppStorage("hasLaunchedBefore") var hasLaunchedBefore: Bool = false
+    @Binding var selection: Int
     
     var body: some View {
         
         Button {
             
-            print("Tapped")
-            hasLaunchedBefore = true
+            selection = 1
             
         } label: {
             
             Text("Get Started")
                 .fontWeight(.semibold)
-                .frame(width: UIScreen.screenWidth - 90, height: 52)
+                .foregroundColor(.white)
             
         }
-        .background(
-            
-            Rectangle()
-                .background(.regularMaterial)
-            
-        )
-        .clipShape(
-        
-            RoundedRectangle(cornerRadius: 15, style: .continuous)
-            
-        )
+        .frame(width: UIScreen.screenWidth - 90, height: 52)
+        .background(.blue)
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         
     }
     
 }
 
-struct WelcomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        WelcomeView()
+struct LoginPage: View {
+    
+    var popflash: Bool
+    var notNow: Bool
+    
+    @Binding var presentationMode: PresentationMode
+    
+    var body: some View {
+        
+        VStack(alignment: .center) {
+            
+            Text("Sign in to")
+                .font(.system(size: 25))
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .padding(.top, 64)
+            
+            Text("Popflash")
+                .font(.system(size: 50))
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .opacity(popflash ? 1 : 0)
+            
+            Spacer()
+            
+            SignInWithApple()
+                .padding(.bottom, notNow ? 19 : 58)
+            
+            if notNow {
+                
+                NotNow(presentationMode: $presentationMode)
+                    .padding(.bottom, 7)
+                
+            }
+            
+        }
+        
     }
+    
+}
+
+private struct SignInWithApple: View {
+    
+    @StateObject var loginData = LoginViewModel()
+    
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        
+        SignInWithAppleButton { (request) in
+            
+            loginData.nonce = randomNonceString()
+            
+            request.requestedScopes = [.fullName]
+            request.nonce = sha256(loginData.nonce)
+            
+        } onCompletion: { (result) in
+            
+            handleCompletion(result: result)
+            
+        }
+        .signInWithAppleButtonStyle(colorScheme == .light ? .black : .white)
+        .frame(width: UIScreen.screenWidth - 90, height: 52)
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        
+    }
+    
+    func handleCompletion(result: Result<ASAuthorization, Error>) {
+        
+        switch result {
+            
+        case .success(let user):
+            
+            guard let credential = user.credential as? ASAuthorizationAppleIDCredential else {
+                
+                print("Firebase error.")
+                
+                return
+                
+            }
+            
+            loginData.authenticate(credential: credential)
+            
+        case .failure(let error):
+            
+            print("Failed to sign in with Apple:\n\(error.localizedDescription).")
+            
+        }
+        
+    }
+    
+}
+
+private struct NotNow: View {
+    
+    @Binding var presentationMode: PresentationMode
+    
+    var body: some View {
+        
+        Button(action: notNow) {
+            
+            Text("Not Now")
+            
+        }
+        
+    }
+    
+    func notNow() {
+        
+        $presentationMode.wrappedValue.dismiss()
+        
+    }
+
 }
