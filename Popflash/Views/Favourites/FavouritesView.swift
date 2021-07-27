@@ -99,58 +99,62 @@ private struct FavouriteMaps: View {
     
     var body: some View {
 
-        ScrollView(.horizontal, showsIndicators: false) {
+        ZStack(alignment: .topLeading) {
             
-            VStack(alignment: .leading, spacing: 0) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
-                Divider()
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-                
-                Text("Maps")
-                    .font(.system(size: 20))
-                    .fontWeight(.semibold)
-                    .padding(.leading, 18)
-                    .padding(.bottom, 12)
-
-                HStack {
+                VStack(alignment: .leading, spacing: 0) {
                     
-                    Spacer()
-                        .frame(width: 8)
+                    Divider()
+                        .padding(.horizontal)
+                        .padding(.bottom, 47)
 
-                    if !mapsViewModel.maps.isEmpty {
+                    HStack {
                         
-                        ForEach(favouriteMaps, id: \.self) { favouriteMap in
+                        Spacer()
+                            .frame(width: 8)
+
+                        if !mapsViewModel.maps.isEmpty {
                             
-                            if let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap }) {
+                            ForEach(favouriteMaps, id: \.self) { favouriteMap in
                                 
-                                NavigationLink(destination: MapsDetailView(map: map)) {
+                                if let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap }) {
                                     
-                                    FavouriteMapCell(map: map)
-                                        .contentShape(Rectangle())
+                                    NavigationLink(destination: MapsDetailView(map: map)) {
+                                        
+                                        FavouriteMapCell(map: map)
+                                            .contentShape(Rectangle())
+                                        
+                                    }
+                                    .buttonStyle(FavouriteMapCellButtonStyle())
                                     
                                 }
-                                .buttonStyle(FavouriteMapCellButtonStyle())
                                 
                             }
                             
                         }
                         
+                        EditFavouritesButton(isShowing: $isShowing)
+                        
+                        Spacer()
+                            .frame(minWidth: 16)
+                        
                     }
+                    .frame(minWidth: UIScreen.screenWidth)
+                    .buttonStyle(FavouriteMapCellButtonStyle())
                     
-                    EditFavouritesButton(isShowing: $isShowing)
-                    
-                    Spacer()
-                        .frame(minWidth: 16)
+                    Divider()
+                        .padding(.horizontal)
                     
                 }
-                .frame(minWidth: UIScreen.screenWidth)
-                .buttonStyle(FavouriteMapCellButtonStyle())
-                
-                Divider()
-                    .padding(.horizontal)
                 
             }
+            
+            Text("Maps")
+                .font(.system(size: 20))
+                .fontWeight(.semibold)
+                .padding(.top, 12)
+                .padding(.leading, 18)
             
         }
         .onAppear() {
@@ -246,15 +250,29 @@ private struct FavouriteNades: View {
     
     var body: some View {
 
-        HStack {
+        HStack(alignment: .bottom) {
             
             Text("Grenades")
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
-                .padding(.top, 10)
+                .padding(.top, 2)
                 .padding(.leading, 2)
             
             Spacer()
+            
+            Menu {
+                
+                Button("Map") {}
+                Button("Date Added: Oldest") {}
+                Button("Date Added: Newest") {}
+                
+            } label: {
+                
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .font(.title3)
+                
+            }
+            .buttonStyle(.borderless)
             
         }
         .padding(.horizontal)
@@ -273,30 +291,29 @@ private struct FavouriteNades: View {
             } label: {
                 
                 FavouriteNadeCell(nade: nade)
-                    .padding(.top, 6)
                     .padding(.horizontal)
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 16)
                 
             }
             .buttonStyle(FavouriteNadeCellButtonStyle())
-            .swipeActions {
-                Button {
-                    
-                    print("Tapped!")
-                    
-                    if let nadeIndex = favouriteNades.firstIndex(of: nade.id) {
-                        
-                        favouriteNades.remove(at: nadeIndex)
-                        
-                    }
-                    
-                } label: {
-                    
-                    Label("Unfavourite", image: "Test")
-                    
-                }
-                .tint(Color("Heart"))
-            }
+//            .swipeActions {
+//                Button {
+//
+//                    print("Tapped!")
+//
+//                    if let nadeIndex = favouriteNades.firstIndex(of: nade.id) {
+//
+//                        favouriteNades.remove(at: nadeIndex)
+//
+//                    }
+//
+//                } label: {
+//
+//                    Label("Unfavourite", image: "Test")
+//
+//                }
+//                .tint(Color("Heart"))
+//            }
             
         }
         
