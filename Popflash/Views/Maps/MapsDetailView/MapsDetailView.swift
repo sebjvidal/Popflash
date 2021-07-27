@@ -263,31 +263,32 @@ private struct NadeList: View {
                 
             }
             .buttonStyle(NadeCellButtonStyle())
-            .swipeActions {
-                
-                Button {
-
-                    favouriteButtonAction(nade: nade.id)
-
-                } label: {
-
-                    Label("", image: isFavourite(nadeID: nade.id) ? "Unfavourite_Swipe_Action" : "Favourite_Swipe_Action")
-
-                }
-                .tint(Color("True_Background"))
-                
-                Button {
-                    
-                    print("Tapped!")
-                    
-                } label: {
-
-                    Label("", image: "Share_Swipe_Action")
-                    
-                }
-                .tint(Color("True_Background"))
-                
-            }
+            .contentShape(Circle())
+//            .swipeActions {
+//                
+//                Button {
+//
+//                    favouriteButtonAction(nade: nade.id)
+//
+//                } label: {
+//
+//                    Label("", image: isFavourite(nadeID: nade.id) ? "Unfavourite_Swipe_Action" : "Favourite_Swipe_Action")
+//
+//                }
+//                .tint(Color("True_Background"))
+//                
+//                Button {
+//                    
+//                    print("Tapped!")
+//                    
+//                } label: {
+//
+//                    Label("", image: "Share_Swipe_Action")
+//                    
+//                }
+//                .tint(Color("True_Background"))
+//                
+//            }
             
         }
         
