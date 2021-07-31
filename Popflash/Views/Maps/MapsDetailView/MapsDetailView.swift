@@ -78,14 +78,15 @@ struct MapsDetailView: View {
         }
         .bottomSheet(isPresented: $showingBottomSheet,
                      detents: [.medium(), .large()],
-                     prefersGrabberVisible: true) {
-            
+                     prefersGrabberVisible: true,
+                     uiApplication: UIApplication.shared) {
+
             FilterView(map: map,
                        selectedType: $selectedType,
                        selectedTick: $selectedTick,
                        selectedSide: $selectedSide,
                        selectedBind: $selectedBind)
-            
+
         }
 
     }
