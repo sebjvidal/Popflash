@@ -1,0 +1,411 @@
+//
+//  SkillGroupView.swift
+//  SkillGroupView
+//
+//  Created by Seb Vidal on 29/07/2021.
+//
+
+import SwiftUI
+import Kingfisher
+import FirebaseFirestore
+import FirebaseAuth
+
+struct EditProfile: View {
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    @State var rankSelection: String
+    @State var displayName: String
+    
+    var body: some View {
+        
+        NavigationView {
+            
+            ScrollView {
+                
+                DisplayNameEditor(displayName: $displayName)
+                
+                Divider()
+                    .padding(.horizontal)
+                
+                RankGrid(selectedIndex: $rankSelection)
+                
+            }
+            .navigationBarTitle("Edit Profile", displayMode: .inline)
+            .navigationBarItems(
+                
+                leading:
+                    
+                    CancelButton(presentationMode: presentationMode),
+                
+                trailing:
+                    
+                    SaveButton(presentationMode: presentationMode,
+                               rankSelection: $rankSelection,
+                               displayName: $displayName)
+                
+            )
+            
+        }
+        .interactiveDismissDisabled()
+        
+    }
+    
+}
+
+private struct CancelButton: View {
+    
+    @Binding var presentationMode: PresentationMode
+    
+    var body: some View {
+        
+        Button(action: cancel) {
+            
+            Text("Cancel")
+                .foregroundStyle(.blue)
+            
+        }
+        
+    }
+    
+    func cancel() {
+        
+        $presentationMode.wrappedValue.dismiss()
+        
+    }
+    
+}
+
+private struct SaveButton: View {
+    
+    @Binding var presentationMode: PresentationMode
+    
+    @Binding var rankSelection: String
+    @Binding var displayName: String
+    
+    @State var showingAlert = false
+    @State var alertID = 0
+    
+    var body: some View {
+            
+        Button(action: save) {
+            
+            Text("Save")
+                .fontWeight(.bold)
+                .foregroundStyle(.blue)
+            
+        }
+        .alert(isPresented: $showingAlert) {
+            switch alertID {
+            case 1:
+                
+                return Alert(title: Text("Cannot Save Profile"),
+                             message: Text("Please enter your preferred display name and select your in-game rank."),
+                             dismissButton: .default(Text("OK")))
+            
+            case 2:
+                
+                return Alert(title: Text("Cannot Save Profile"),
+                             message: Text("Please select your in-game rank."),
+                             dismissButton: .default(Text("OK")))
+            
+            case 3:
+                
+                return Alert(title: Text("Cannot Save Profile"),
+                             message: Text("Please enter your preferred display name."),
+                             dismissButton: .default(Text("OK")))
+            
+            default:
+                
+                fatalError()
+            
+            }
+        }
+        
+    }
+    
+    func save() {
+        
+        print(rankSelection, displayName)
+        
+        if rankSelection == "Unknown" && displayName == "" {
+            
+            alertID = 1
+            showingAlert = true
+            
+        } else if rankSelection == "Unknown" {
+            
+            alertID = 2
+            showingAlert = true
+            
+        } else if displayName == "" {
+            
+            alertID = 3
+            showingAlert = true
+            
+        } else {
+            
+            saveData()
+            $presentationMode.wrappedValue.dismiss()
+            
+        }
+        
+    }
+    
+    func saveData() {
+        
+        if let user = Auth.auth().currentUser {
+            
+            let db = Firestore.firestore()
+            let ref = db.collection("users").document(user.uid)
+            
+            ref.setData(
+                ["displayName": displayName,
+                 "skillGroup": rankSelection],
+                merge: true
+            )
+            
+            print("Data saved!")
+            
+        }
+        
+    }
+    
+}
+
+private struct DisplayNameEditor: View {
+    
+    @Binding var displayName: String
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            Text("Display Name")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.top, 12)
+                .padding(.leading, 18)
+            
+            Text("Enter your display name.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.leading, 18)
+            
+            DisplayNameTextField(displayName: $displayName)
+                .padding(.horizontal)
+                .padding(.top, 10)
+                .padding(.bottom, 8)
+            
+        }
+        
+    }
+    
+}
+
+private struct DisplayNameTextField: View {
+    
+    @Binding var displayName: String
+    
+    @State var isFocused = false
+    
+    var body: some View {
+        
+        ZStack(alignment: .leading) {
+            
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .frame(height: 36)
+                .foregroundColor(Color("Secondary_Search_Bar"))
+            
+            HStack(spacing: 0) {
+                
+                Text("Display Name")
+                    .padding(.leading, 12)
+                    .opacity(displayName.isEmpty ? 1 : 0)
+                
+                Spacer()
+                
+                if !displayName.isEmpty {
+                    
+                    Button {
+                        
+                        print("tapped")
+                        
+                        clear()
+                        
+                    } label: {
+                        
+                        Image(systemName: "multiply.circle.fill")
+                        
+                    }
+                    .padding(.trailing, 6)
+                    
+                }
+                
+            }
+            .foregroundColor(Color("Search_Bar_Icons"))
+            
+            TextField("", text: $displayName)
+                .padding(.leading, 12)
+                .padding(.trailing, displayName.isEmpty ? 0 : 31)
+                .submitLabel(.done)
+            
+        }
+        
+    }
+    
+    func clear() {
+        
+        displayName = ""
+        
+    }
+    
+}
+
+private struct RankGrid: View {
+    
+    @StateObject var skillGroupViewModel = SkillGroupViewModel()
+    
+    @Binding var selectedIndex: String
+    
+    let columns = [
+        
+        GridItem(.adaptive(minimum: 132))
+        
+    ]
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            Text("Rank")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.top, 2)
+                .padding(.leading, 18)
+            
+            Text("Select your in-game rank.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.leading, 18)
+            
+            LazyVGrid(columns: columns, spacing: 16) {
+                
+                ForEach(sortedSkillGroups(skills: skillGroupViewModel.skillGroups), id: \.self) { skillGroup in
+                    
+                    SkillGroupCell(skill: skillGroup,
+                                   selectedIndex: $selectedIndex)
+                    
+                }
+                
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 16)
+            
+        }
+        .onAppear(perform: onAppear)
+        
+    }
+    
+    func sortedSkillGroups(skills: [SkillGroup]) -> [SkillGroup] {
+        
+        let filteredSkills = skills.filter {
+            
+            $0.skillGroup != "Unknown"
+            
+        }
+        
+        let sortedSkills = filteredSkills.sorted(by: {
+            
+            $0.id < $1.id
+            
+        })
+        
+        return sortedSkills
+        
+    }
+    
+    func onAppear() {
+        
+        if skillGroupViewModel.skillGroups.isEmpty {
+            
+            skillGroupViewModel.fetchData()
+            
+        }
+        
+    }
+    
+}
+
+private struct SkillGroupCell: View {
+    
+    var skill: SkillGroup
+    
+    @Binding var selectedIndex: String
+    
+    var body: some View {
+        
+        Button {
+            
+            selectedIndex = skill.skillGroup
+            
+        } label: {
+            
+            ZStack(alignment: .top) {
+                
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .frame(height: 162)
+                    .foregroundColor(selected() ? Color("Selected_Blue") : Color("Secondary_Background"))
+                    .cellShadow()
+                    .animation(.easeInOut, value: selectedIndex)
+                
+                VStack {
+                    
+                    KFImage(URL(string: skill.icon))
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 100)
+                    
+                    Text(skill.skillGroup)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(4)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 8)
+                        .foregroundColor(Color("Headline"))
+                    
+                    Spacer()
+                    
+                    Text("\(skill.id) of 18")
+                        .foregroundStyle(.secondary)
+                    
+                    
+                }
+                .padding(.vertical, 16)
+                
+            }
+            
+        }
+        .padding(.horizontal, 4)
+        .scaleEffect(selected() ? 1.085 : 1)
+        .animation(.easeInOut(duration: 0.2), value: selectedIndex)
+        .buttonStyle(.plain)
+        
+    }
+    
+    func selected() -> Bool {
+        
+        if selectedIndex == skill.skillGroup {
+            
+            return true
+            
+        } else {
+            
+            return false
+            
+        }
+        
+    }
+    
+}

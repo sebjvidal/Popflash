@@ -40,9 +40,7 @@ struct SettingsView: View {
         }
         .listStyle(.plain)
         .onAppear {
-            
-            UITableView.appearance().separatorStyle = .none
-            
+
             tabSelection = 3
             
         }
@@ -82,7 +80,10 @@ private struct Header: View {
 
 private struct Profile: View {
     
+    @StateObject var userViewModel = UserViewModel()
+    
     @State var showingSignIn = false
+    @State var showingProfileEditor = false
     
     @AppStorage("loggedInStatus") var signedIn = false
     
@@ -100,12 +101,12 @@ private struct Profile: View {
                     .padding([.top, .leading, .bottom], 10)
                 
                 VStack(alignment: .leading) {
-                    
-                    Text(signedIn ? displayName() : "Sign in to Popflash")
+
+                    Text(signedIn ? userViewModel.displayName : "Sign in to Popflash")
                         .foregroundStyle(signedIn ? AnyShapeStyle(.primary) : AnyShapeStyle(.blue))
                         .font(.headline)
                     
-                    Text(signedIn ? "Skill Group" : "Add grenades to favourites, see recently viewed.")
+                    Text(signedIn ? userViewModel.skillGroup : "Add grenades to favourites, see recently viewed.")
                         .foregroundStyle(.secondary)
                         .font(.callout)
                     
@@ -122,11 +123,28 @@ private struct Profile: View {
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             
         }
-        .buttonStyle(.plain)
         .cellShadow()
+        .buttonStyle(.plain)
         .padding(.vertical, 8)
         .padding(.horizontal)
-        .sheet(isPresented: $showingSignIn) { LoginSheet() }
+        .onAppear(perform: onAppear)
+        .sheet(isPresented: $showingSignIn) {
+            
+            LoginSheet()
+            
+        }
+        .sheet(isPresented: $showingProfileEditor) {
+            
+            EditProfile(rankSelection: userViewModel.skillGroup,
+                        displayName: userViewModel.displayName)
+            
+        }
+        
+    }
+    
+    func onAppear() {
+        
+        initStateDidChangeListener()
         
     }
     
@@ -134,7 +152,7 @@ private struct Profile: View {
         
         if signedIn {
             
-            print("Tapped!")
+            showingProfileEditor = true
             
         } else {
             
@@ -144,11 +162,29 @@ private struct Profile: View {
         
     }
     
-    func displayName() -> String {
+    func initStateDidChangeListener() {
         
-        let name = Auth.auth().currentUser?.displayName ?? ""
-        
-        return name
+        Auth.auth().addStateDidChangeListener { auth, user in
+            
+            guard let user = user else {
+                
+                return
+                
+            }
+            
+            if !user.isAnonymous {
+                
+                signedIn = true
+                userViewModel.fetchData(forUser: user.uid)
+                
+            } else {
+                
+                signedIn = false
+                userViewModel.clearData()
+                
+            }
+            
+        }
         
     }
     
