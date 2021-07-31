@@ -21,11 +21,11 @@
       },
       {
         "package": "BottomSheet",
-        "repositoryURL": "https://github.com/adamfootdev/BottomSheet.git",
+        "repositoryURL": "https://github.com/adamfootdev/BottomSheet",
         "state": {
           "branch": null,
-          "revision": "40b8fbdd676b0d6b76643feccbeb645e97df9fb4",
-          "version": "0.1.6"
+          "revision": "d1352bd493a9073443571036c9a105ca83673a9d",
+          "version": "0.2.1"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/google/GoogleUtilities.git",
         "state": {
           "branch": null,
-          "revision": "5b9fc55628b94740b9666a558570f3a89a626c3d",
-          "version": "7.4.2"
+          "revision": "beb713a16b50a4df3162b3f3ecdeffa16b74b773",
+          "version": "7.5.0"
         }
       },
       {
@@ -78,17 +78,17 @@
         "repositoryURL": "https://github.com/google/gtm-session-fetcher.git",
         "state": {
           "branch": null,
-          "revision": "91ed3d188eb95705fef3c249453b81f32dc557d1",
-          "version": "1.5.0"
+          "revision": "424886f9336a71891aa81852d0c2c08d807d21aa",
+          "version": "1.6.1"
         }
       },
       {
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
         "state": {
-          "branch": null,
-          "revision": "44450a8f564d7c0165f736ba2250649ff8d3e556",
-          "version": "6.3.0"
+          "branch": "master",
+          "revision": "ac0cbd99b3b7501f5a86402f749de1fa38449d3b",
+          "version": null
         }
       },
       {
