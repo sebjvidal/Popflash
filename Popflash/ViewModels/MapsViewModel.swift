@@ -7,18 +7,14 @@
 
 import SwiftUI
 import FirebaseFirestore
-import Kingfisher
 
 class MapsViewModel: ObservableObject {
     
     @Published var maps = [Map]()
-    @Published var loading = false
     
     private var db = Firestore.firestore()
     
     func fetchData(ref: Query) {
-        
-        self.loading = true
         
         var dbRef = ref
         
@@ -59,8 +55,6 @@ class MapsViewModel: ObservableObject {
             }
             
         }
-        
-        self.loading = false
         
     }
     
