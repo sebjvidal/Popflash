@@ -6,13 +6,17 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 public var standard = UserDefaults.standard
 
 struct ContentView: View {
     
-    @State var firstLaunch = false
+    @State var showWelcomeView = false
     @State var tabSelection = standard.integer(forKey: "tabSelection")
+    
+    @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("loggedInStatus") var loggedIn = false
     
     var body: some View {
         
@@ -55,13 +59,48 @@ struct ContentView: View {
                 .tag(3)
             
         }
-        .onAppear() {
+        .onAppear(perform: onAppear)
+        .sheet(isPresented: $showWelcomeView) {
+            
+            WelcomeView()
+                .interactiveDismissDisabled()
+            
+        }
+        
+    }
+    
+    func onAppear() {
+        
+        displayWelcomeView()
+        initStateDidChangeListener()
+        
+    }
+    
+    func displayWelcomeView() {
+        
+        if firstLaunch && !loggedIn {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 
-                firstLaunch = standard.bool(forKey: "firstLaunch")
+                showWelcomeView = true
                 
             }
+            
+        }
+        
+    }
+    
+    func initStateDidChangeListener() {
+        
+        Auth.auth().addStateDidChangeListener { auth, user in
+            
+            guard let user = user else {
+                
+                return
+                
+            }
+            
+            print("User \(user.uid) logged in. Anonymous: \(user.isAnonymous)")
             
         }
         
