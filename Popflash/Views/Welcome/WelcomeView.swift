@@ -293,16 +293,44 @@ private struct AccountFeatures: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 0) {
             
             Image(systemName: "person.fill")
                 .foregroundStyle(.blue)
                 .font(.system(size: 44))
                 .padding()
             
-            Text("Create a Popflash account to:\n    • Add maps and grenades to favourites.\n    • See recently viewed grenades.\n    • Enable and manage push notifications.")
-                .foregroundStyle(.secondary)
-                .font(.callout)
+            VStack(alignment: .leading) {
+                
+                Text("Create a Popflash account to:")
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("Add maps and grenades to favourites.")
+                    
+                }
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("See recently viewed grenades.")
+                    
+                }
+                
+                HStack(alignment: .top) {
+                    
+                    Text("    •")
+                    
+                    Text("Enable and manage push notifications.")
+                    
+                }
+                
+            }
+            .foregroundStyle(.secondary)
+            .font(.callout)
             
         }
         .padding(.horizontal, 32)
@@ -322,7 +350,7 @@ private struct AccountPrivacy: View {
                 .font(.system(size: 44))
                 .padding()
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 
                 Text("Your data remains private:")
                 
@@ -330,7 +358,7 @@ private struct AccountPrivacy: View {
                     
                     Text("    •")
                     
-                    Text("Sign In with Apple ensures you are authenticated securely and anonymously.")
+                    Text("Sign In with Apple ensures you are authenticated securely.")
                     
                 }
                 
@@ -338,16 +366,16 @@ private struct AccountPrivacy: View {
                     
                     Text("    •")
                     
-                    Text("Your account is anonymised and cannot be linked back to you.")
+                    Text("Your data is kept private and not distributed to third parties.")
                     
                 }
                 
                 HStack(alignment: .top) {
-                    
+
                     Text("    •")
-                    
-                    Text("Your data is kept private and not sold or distributed to third parties.")
-                    
+
+                    Text("Popflash does not track you across apps and websites.")
+
                 }
                 
             }
