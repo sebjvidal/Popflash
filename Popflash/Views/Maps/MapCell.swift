@@ -22,7 +22,6 @@ struct MapCell: View {
                 
                 KFImage(URL(string: map.background)!)
                     .resizable()
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fill)
                     .foregroundColor(Color("Loading"))
                     .background(Color("Loading"))
@@ -37,7 +36,6 @@ struct MapCell: View {
                 KFImage(URL(string: map.background)!)
                     .resizable()
                     .setProcessor(processor)
-                    .loadImmediately()
                     .opacity(compactMapsView ? 0 : 1)
                     .frame(height: 80)
                     .overlay(.regularMaterial)
@@ -46,7 +44,6 @@ struct MapCell: View {
                     
                     KFImage(URL(string: map.icon))
                         .resizable()
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 55)
                         .padding(.leading, 12)
