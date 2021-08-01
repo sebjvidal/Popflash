@@ -9,19 +9,28 @@ import SwiftUI
 import Kingfisher
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
 
 struct EditProfile: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State var rankSelection: String
     @State var displayName: String
+    @State var rankSelection: String
+    @State var profilePicture: String
+    @State var inputImage: UIImage?
     
     var body: some View {
         
         NavigationView {
             
             ScrollView {
+                
+                ProfilePictureEditor(avatarURL: profilePicture,
+                                     inputImage: $inputImage)
+                
+                Divider()
+                    .padding(.horizontal)
                 
                 DisplayNameEditor(displayName: $displayName)
                 
@@ -42,7 +51,8 @@ struct EditProfile: View {
                     
                     SaveButton(presentationMode: presentationMode,
                                rankSelection: $rankSelection,
-                               displayName: $displayName)
+                               displayName: $displayName,
+                               inputImage: $inputImage)
                 
             )
             
@@ -82,6 +92,7 @@ private struct SaveButton: View {
     
     @Binding var rankSelection: String
     @Binding var displayName: String
+    @Binding var inputImage: UIImage?
     
     @State var showingAlert = false
     @State var alertID = 0
@@ -165,9 +176,186 @@ private struct SaveButton: View {
                 merge: true
             )
             
-            print("Data saved!")
+            uploadImage()
             
         }
+        
+    }
+    
+    func uploadImage() {
+
+        if let user = Auth.auth().currentUser {
+            
+            let storage = Storage.storage()
+            let ref = storage.reference().child("Avatars/\(user.uid).png")
+            
+            guard let selectedImage = inputImage else {
+                
+                return
+                
+            }
+            
+            let resizedImage = selectedImage.imageResized(to: CGSize(width: 65, height: 65))
+            
+            guard let data = resizedImage.pngData() else {
+                
+                return
+                
+            }
+            
+            ref.putData(data, metadata: nil) { (_, error) in
+                
+                ref.downloadURL { (url, error) in
+                    
+                    guard let downloadURL = url else {
+                        
+                        return
+                        
+                    }
+                    
+                    updateAvatarURL(url: downloadURL, user: user.uid)
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    func updateAvatarURL(url: URL, user: String) {
+        
+        let urlString = url.absoluteString
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user)
+            
+        ref.setData(
+            ["avatar": urlString],
+            merge: true
+        )
+        
+    }
+    
+}
+
+private struct ProfilePictureEditor: View {
+    
+    @State var avatarURL: String
+    
+    @Binding var inputImage: UIImage?
+    
+    @State private var image: Image?
+    @State private var showingImagePicker = false
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            Text("Profile Picture")
+                .font(.title3)
+                .fontWeight(.semibold)
+            
+            Text("Choose an image to upload as your profile picture.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 0) {
+                
+                ZStack {
+                    
+                    Circle()
+                        .frame(width: 65, height: 65)
+                        .foregroundColor(.gray)
+                    
+                    Image(systemName: "camera.fill")
+                        .font(.system(size: 28))
+                        .foregroundColor(.white)
+                        .padding(.bottom, 2)
+                    
+                    if avatarURL != "" {
+                        
+                        KFImage(URL(string: avatarURL))
+                            .resizable()
+                            .frame(width: 65, height: 65)
+                            
+                        
+                    }
+                    
+                    if let image = image {
+                        
+                        image
+                            .resizable()
+                            .frame(width: 65, height: 65)
+                            .clipShape(Circle())
+                        
+                    }
+                    
+                }
+                .clipShape(Circle())
+                .contentShape(Circle())
+                .contextMenu {
+                    
+                    Button {
+                        
+                        
+                    } label: {
+                        
+                        Label("Upload Image", systemImage: "photo")
+                        
+                    }
+                    
+                    Button(role: .destructive) {
+                        
+                        
+                    } label: {
+                        
+                        Label("Remove Picture", systemImage: "trash")
+                        
+                    }
+                    
+                }
+                .padding(.top, 12)
+                .padding(.trailing, 16)
+                
+                Button(action: pickImage) {
+                    
+                    Text("Upload Image")
+                    
+                }
+                .foregroundColor(.blue)
+                .padding(.top, 8)
+                
+                Spacer()
+                
+            }
+            
+        }
+        .padding(.leading, 16)
+        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+            
+            ImagePicker(image: $inputImage)
+                .edgesIgnoringSafeArea(.bottom)
+            
+        }
+        
+    }
+    
+    func pickImage() {
+        
+        showingImagePicker = true
+        
+    }
+    
+    func loadImage() {
+        
+        guard let inputImage = inputImage else {
+            
+            return
+            
+        }
+        
+        image = Image(uiImage: inputImage)
         
     }
     
@@ -184,7 +372,6 @@ private struct DisplayNameEditor: View {
             Text("Display Name")
                 .font(.title3)
                 .fontWeight(.semibold)
-                .padding(.top, 12)
                 .padding(.leading, 18)
             
             Text("Enter your display name.")

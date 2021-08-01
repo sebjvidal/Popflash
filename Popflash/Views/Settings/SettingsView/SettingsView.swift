@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import Kingfisher
 
 struct SettingsView: View {
     
@@ -95,10 +96,23 @@ private struct Profile: View {
             
             HStack(spacing: 8) {
                 
-                Image(systemName: "person.crop.circle.fill")
-                    .font(.system(size: 65))
-                    .foregroundColor(.gray)
-                    .padding([.top, .leading, .bottom], 10)
+                ZStack {
+                    
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 65))
+                        .foregroundColor(.gray)
+                    
+                    if userViewModel.avatar != "" && signedIn {
+                        
+                        KFImage(URL(string: userViewModel.avatar))
+                            .resizable()
+                            .frame(width: 65, height: 65)
+                            .clipShape(Circle())
+                        
+                    }
+                    
+                }
+                .padding([.top, .leading, .bottom], 10)
                 
                 VStack(alignment: .leading) {
 
@@ -135,8 +149,9 @@ private struct Profile: View {
         }
         .sheet(isPresented: $showingProfileEditor) {
             
-            EditProfile(rankSelection: userViewModel.skillGroup,
-                        displayName: userViewModel.displayName)
+            EditProfile(displayName: userViewModel.displayName,
+                        rankSelection: userViewModel.skillGroup,
+                        profilePicture: userViewModel.avatar)
             
         }
         
