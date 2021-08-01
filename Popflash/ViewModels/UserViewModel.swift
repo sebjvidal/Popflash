@@ -14,6 +14,7 @@ class UserViewModel: ObservableObject {
     @Published var id = String()
     @Published var displayName = String()
     @Published var skillGroup = String()
+    @Published var avatar = String()
     
     func fetchData(forUser: String) {
         
@@ -37,6 +38,7 @@ class UserViewModel: ObservableObject {
             self.id = document.documentID
             self.displayName = data["displayName"] as? String ?? "Display Name"
             self.skillGroup = data["skillGroup"] as? String ?? "Unknown"
+            self.avatar = data["avatar"] as? String ?? ""
             
         }
         
@@ -47,6 +49,7 @@ class UserViewModel: ObservableObject {
         self.id = String()
         self.displayName = String()
         self.skillGroup = String()
+        self.avatar = String()
         
     }
     
