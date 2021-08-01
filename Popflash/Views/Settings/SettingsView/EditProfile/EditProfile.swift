@@ -346,9 +346,13 @@ private struct ProfilePictureEditor: View {
                         
                     }
                     
-                    Button(role: .destructive, action: removeImage) {
+                    if avatarURL != "" || image != nil {
                         
-                        Label("Remove Picture", systemImage: "trash")
+                        Button(role: .destructive, action: removeImage) {
+                            
+                            Label("Remove Picture", systemImage: "trash")
+                            
+                        }
                         
                     }
                     
