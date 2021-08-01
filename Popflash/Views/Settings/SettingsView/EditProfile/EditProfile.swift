@@ -19,6 +19,7 @@ struct EditProfile: View {
     @State var rankSelection: String
     @State var profilePicture: String
     @State var inputImage: UIImage?
+    @State var deleteAvatar = false
     
     var body: some View {
         
@@ -27,7 +28,8 @@ struct EditProfile: View {
             ScrollView {
                 
                 ProfilePictureEditor(avatarURL: profilePicture,
-                                     inputImage: $inputImage)
+                                     inputImage: $inputImage,
+                                     deleteAvatarOnDismiss: $deleteAvatar)
                 
                 Divider()
                     .padding(.horizontal)
@@ -137,8 +139,6 @@ private struct SaveButton: View {
     
     func save() {
         
-        print(rankSelection, displayName)
-        
         if rankSelection == "Unknown" && displayName == "" {
             
             alertID = 1
@@ -157,6 +157,7 @@ private struct SaveButton: View {
         } else {
             
             saveData()
+            removeImage()
             $presentationMode.wrappedValue.dismiss()
             
         }
@@ -237,13 +238,55 @@ private struct SaveButton: View {
         
     }
     
+    func removeImage() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        let uid = user.uid
+        
+        let storage = Storage.storage()
+        let storageRef = storage.reference().child("Avatars/\(uid).png")
+        
+        storageRef.delete { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
+        
+        let db = Firestore.firestore()
+        let dbRef = db.collection("users").document("\(uid)")
+        
+        dbRef.updateData(
+            
+            ["avatar": FieldValue.delete()]
+            
+        ) { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
+        
+    }
+    
 }
 
 private struct ProfilePictureEditor: View {
     
     @State var avatarURL: String
-    
     @Binding var inputImage: UIImage?
+    @Binding var deleteAvatarOnDismiss: Bool
     
     @State private var image: Image?
     @State private var showingImagePicker = false
@@ -296,19 +339,14 @@ private struct ProfilePictureEditor: View {
                 .contentShape(Circle())
                 .contextMenu {
                     
-                    Button {
+                    Button(action: pickImage) {
                         
-                        
-                    } label: {
                         
                         Label("Upload Image", systemImage: "photo")
                         
                     }
                     
-                    Button(role: .destructive) {
-                        
-                        
-                    } label: {
+                    Button(role: .destructive, action: removeImage) {
                         
                         Label("Remove Picture", systemImage: "trash")
                         
@@ -356,6 +394,14 @@ private struct ProfilePictureEditor: View {
         }
         
         image = Image(uiImage: inputImage)
+        
+    }
+    
+    func removeImage() {
+        
+        deleteAvatarOnDismiss = true
+        avatarURL = String()
+        image = nil
         
     }
     
