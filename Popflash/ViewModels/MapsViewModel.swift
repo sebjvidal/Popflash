@@ -16,9 +16,7 @@ class MapsViewModel: ObservableObject {
     
     func fetchData(ref: Query) {
         
-        var dbRef = ref
-        
-        dbRef.getDocuments { (querySnapshot, error) in
+        ref.getDocuments { (querySnapshot, error) in
             
             guard let documents = querySnapshot?.documents else {
                 
