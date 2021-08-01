@@ -228,6 +228,7 @@ private struct LoginSheet: View {
                         }) {
                             
                             Text("Cancel")
+                                .foregroundColor(.blue)
                             
                         }
                         
