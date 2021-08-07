@@ -7,7 +7,9 @@
 
 import SwiftUI
 import Kingfisher
+import FirebaseAuth
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 import AVKit
 
 struct NadeView: View {
@@ -57,11 +59,6 @@ struct NadeView: View {
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut(duration: 0.25), value: fullscreen)
 
-        }
-        .onAppear() {
-            
-            print("Test")
-            
         }
         
     }
@@ -495,7 +492,7 @@ private struct Details: View {
                 
                 Spacer()
                 
-                FavouriteButton(id: nade.id)
+                FavouriteButton(nade: nade)
                     .padding()
                 
             }
@@ -533,55 +530,157 @@ private struct Details: View {
 }
 
 private struct FavouriteButton: View {
+
+    var nade: Nade
     
-    var id: String
-    
-    @AppStorage("favourites.nades") var favouriteNades: Array = [String()]
+    @State var loading = true
+    @State var isFavourite = false
     
     var body: some View {
         
-        Button(action: favourite) {
+        Button(action: favouriteAction) {
             
-            Image(systemName: isFavourite() ? "heart.fill" : "heart")
-                .font(.system(size: 21))
-                .foregroundColor(isFavourite() ? Color("Heart") : .blue)
-                .offset(y: 0.5)
+            if loading {
+                
+                ProgressView()
+                    .progressViewStyle(.circular)
+                
+            } else {
+                
+                Image(systemName: isFavourite ? "heart.fill" : "heart")
+                    .font(.system(size: 21))
+                    .foregroundColor(isFavourite ? Color("Heart") : .blue)
+                    .offset(y: 0.5)
+                
+            }
             
         }
         .frame(width: 40, height: 40)
         .background(.regularMaterial)
         .clipShape(Circle())
+        .onAppear(perform: getFavourite)
         
     }
+
     
-    func favourite() {
+    func getFavourite() {
         
-        if favouriteNades.contains(id) {
+        guard let user = Auth.auth().currentUser else { return }
+        
+        if user.isAnonymous { return }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        
+        ref.getDocument { document, error in
             
-            if let index = favouriteNades.firstIndex(of: id) {
+            guard let document = document else { return }
+            
+            if document.exists {
                 
-                favouriteNades.remove(at: index)
+                isFavourite = true
+                
             }
             
-        } else {
-            
-            favouriteNades.append(id)
+            loading = false
             
         }
         
     }
     
-    func isFavourite() -> Bool {
+    func favouriteAction() {
         
-        if favouriteNades.contains(id) {
+        if loading { return }
+        
+        if isFavourite {
             
-            return true
+            removeFromFavourites()
             
         } else {
             
-            return false
+            addToFavourites()
             
         }
+        
+    }
+    
+    func addToFavourites() {
+        
+        guard let user = Auth.auth().currentUser else { return }
+        
+        if user.isAnonymous { return }
+        
+        loading = true
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        
+        var favouriteNade = nade
+        
+        favouriteNade.dateAdded = favouriteDate()
+        
+        do {
+            
+            try ref.setData(from: favouriteNade, completion: { error in
+                
+                if let error = error {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+                
+                isFavourite = true
+                loading = false
+                
+            })
+            
+        } catch let error {
+            
+            print(error.localizedDescription)
+            
+        }
+        
+    }
+    
+    func removeFromFavourites() {
+        
+        guard let user = Auth.auth().currentUser else { return }
+        
+        if user.isAnonymous { return }
+        
+        loading = true
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        
+        ref.delete { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+            isFavourite = false
+            loading = false
+            
+        }
+        
+    }
+    
+    func favouriteDate() -> Double {
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        
+        formatter.dateFormat = "yyyyMMddHHmmss"
+        
+        let dateString = formatter.string(from: date)
+        let dateDouble = Double(dateString) ?? 0
+        
+        print(dateDouble)
+        
+        return dateDouble
         
     }
     
