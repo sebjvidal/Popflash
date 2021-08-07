@@ -35,6 +35,8 @@ class UserViewModel: ObservableObject {
                 
             }
             
+            print(data)
+            
             self.id = document.documentID
             self.displayName = data["displayName"] as? String ?? "Display Name"
             self.skillGroup = data["skillGroup"] as? String ?? "Unknown"
