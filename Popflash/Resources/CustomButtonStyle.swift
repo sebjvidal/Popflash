@@ -112,3 +112,23 @@ struct FavouriteNadeCellButtonStyle: ButtonStyle {
     }
     
 }
+
+struct RoundedTableCell: ButtonStyle {
+    
+    var buttonOverlay: some View {
+        
+        Rectangle()
+            .foregroundColor(.primary)
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        
+        configuration
+            .label
+            .overlay(configuration.isPressed ? buttonOverlay.opacity(0.05) : buttonOverlay.opacity(0))
+        
+    }
+    
+}
