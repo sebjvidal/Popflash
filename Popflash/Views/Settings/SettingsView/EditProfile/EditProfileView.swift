@@ -11,7 +11,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
 
-struct EditProfile: View {
+struct EditProfileView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -298,6 +298,7 @@ private struct ProfilePictureEditor: View {
             Text("Profile Picture")
                 .font(.title3)
                 .fontWeight(.semibold)
+                .padding(.top)
             
             Text("Choose an image to upload as your profile picture.")
                 .font(.subheadline)
@@ -350,7 +351,7 @@ private struct ProfilePictureEditor: View {
                         
                         Button(role: .destructive, action: removeImage) {
                             
-                            Label("Remove Picture", systemImage: "trash")
+                            Label("Remove Image", systemImage: "trash")
                             
                         }
                         
