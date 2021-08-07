@@ -208,9 +208,10 @@ private struct FeaturedCell: View {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-                .frame(width: UIScreen.screenWidth - 32,
-                       height: (UIScreen.screenWidth - 32 ) / 1.777)
-                .aspectRatio(contentMode: .fill)
+//                .frame(width: UIScreen.screenWidth - 32,
+//                       height: (UIScreen.screenWidth - 32 ) / 1.777)
+//                .aspectRatio(contentMode: .fill)
+                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -226,6 +227,7 @@ private struct FeaturedCell: View {
                     .padding(.horizontal)
                 
                 Text(nade.shortDescription)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 8)
                     .padding([.horizontal])
                 
@@ -321,10 +323,11 @@ private struct MoreFrom: View {
                         
                         MapCell(map: map)
                             .cellShadow()
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 12)
+                            .padding(.horizontal)
+                            .padding(.bottom)
                         
                     }
+                    .buttonStyle(MapCellButtonStyle())
                     
                 }
                 
@@ -333,7 +336,6 @@ private struct MoreFrom: View {
             }
             
         }
-        .buttonStyle(MapCellButtonStyle())
         
     }
     
@@ -355,6 +357,7 @@ private struct Top5: View {
             Text("Top 5 on \(map)")
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
+                .padding(.top, -4)
                 .padding(.leading, 17)
                 .padding(.bottom, 10)
             
