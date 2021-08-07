@@ -22,10 +22,7 @@ struct MapCell: View {
                 
                 KFImage(URL(string: map.background)!)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .foregroundColor(Color("Loading"))
-                    .background(Color("Loading"))
-                    .frame(height: UIScreen.screenWidth / 1.777 - 32)
+                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
                 
             }
             
