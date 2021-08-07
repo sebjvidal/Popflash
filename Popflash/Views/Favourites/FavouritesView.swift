@@ -241,12 +241,12 @@ private struct EditFavouritesButton: View {
 
 private struct FavouriteNades: View {
     
-    @StateObject var favouritesViewModel = NadesViewModel()
-    
-    @AppStorage("favourites.nades") var favouriteNades = [String]()
-    
     @Binding var selectedNade: Nade?
     @State var nadeViewIsPresented = false
+    
+    @StateObject var favouritesViewModel = FavouritesViewModel()
+    
+    @AppStorage("favourites.nades") var favouriteNades = [String]()
     
     var body: some View {
 
@@ -276,10 +276,7 @@ private struct FavouriteNades: View {
             
         }
         .padding(.horizontal)
-        .onAppear(perform: updateNades)
-        .onChange(of: favouriteNades) { newValue in
-            updateNades()
-        }
+        .onAppear(perform: onAppear)
         
         ForEach(favouritesViewModel.nades, id: \.self) { nade in
                 
@@ -296,58 +293,14 @@ private struct FavouriteNades: View {
                 
             }
             .buttonStyle(FavouriteNadeCellButtonStyle())
-//            .swipeActions {
-//                Button {
-//
-//                    print("Tapped!")
-//
-//                    if let nadeIndex = favouriteNades.firstIndex(of: nade.id) {
-//
-//                        favouriteNades.remove(at: nadeIndex)
-//
-//                    }
-//
-//                } label: {
-//
-//                    Label("Unfavourite", image: "Test")
-//
-//                }
-//                .tint(Color("Heart"))
-//            }
             
         }
         
     }
     
-    func shouldUpdate() -> Bool {
-        
-        var loaded = [String]()
-        let favourites = favouriteNades.filter { $0 != "" }
+    func onAppear() {
 
-        for nade in favouritesViewModel.nades {
-            
-            loaded.append(nade.id)
-            
-        }
-
-        if loaded.sorted() != favourites.sorted() {
-
-            return true
-            
-        }
-
-        return false
-        
-    }
-    
-    func updateNades() {
-        
-        if shouldUpdate() {
-            
-            favouritesViewModel.nades.removeAll()
-            favouritesViewModel.fetchData(ref: Firestore.firestore().collection("nades").whereField("id", in: favouriteNades))
-            
-        }
+        favouritesViewModel.fetchData()
         
     }
     
