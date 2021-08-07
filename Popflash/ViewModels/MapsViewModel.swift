@@ -11,6 +11,7 @@ import FirebaseFirestore
 class MapsViewModel: ObservableObject {
     
     @Published var maps = [Map]()
+    @Published var dragging: Map?
     
     private var db = Firestore.firestore()
     
