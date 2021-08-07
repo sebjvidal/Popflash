@@ -16,36 +16,43 @@ struct SettingsView: View {
     
     var body: some View {
         
-        List {
+        NavigationView {
             
-            Group {
+            List {
                 
-                Header()
-                
-                Profile()
-                
-                RecentlyViewed()
-
-                Settings()
-                
-                if loggedInStatus {
+                Group {
                     
-                    SignOut()
+                    Header()
+                    
+                    Profile()
+                    
+                    RecentlyViewed()
+                    
+                    Settings()
+                    
+                    if loggedInStatus {
+                        
+                        SignOut()
+                        
+                    }
                     
                 }
+                .listRowInsets(.some(EdgeInsets()))
+                .listRowSeparator(.hidden)
                 
             }
-            .listRowInsets(.some(EdgeInsets()))
-            .listRowSeparator(.hidden)
-            
-        }
-        .listStyle(.plain)
-        .onAppear {
-
-            tabSelection = 3
+            .listStyle(.plain)
+            .onAppear(perform: onAppear)
+            .navigationBarTitle("Profile", displayMode: .inline)
+            .navigationBarHidden(true)
             
         }
         
+    }
+    
+    func onAppear() {
+        
+        tabSelection = 3
     }
     
 }
@@ -138,7 +145,7 @@ private struct Profile: View {
             
         }
         .cellShadow()
-        .buttonStyle(.plain)
+        .buttonStyle(RoundedTableCell())
         .padding(.vertical, 8)
         .padding(.horizontal)
         .onAppear(perform: onAppear)
@@ -149,9 +156,9 @@ private struct Profile: View {
         }
         .sheet(isPresented: $showingProfileEditor) {
             
-            EditProfile(displayName: userViewModel.displayName,
-                        rankSelection: userViewModel.skillGroup,
-                        profilePicture: userViewModel.avatar)
+            EditProfileView(displayName: userViewModel.displayName,
+                            rankSelection: userViewModel.skillGroup,
+                            profilePicture: userViewModel.avatar)
             
         }
         
@@ -317,29 +324,54 @@ private struct SettingIcon: View {
 
 private struct RecentlyViewed: View {
     
+    @State private var action: Int? = 0
+    
     var body: some View {
         
-        HStack {
+        ZStack {
             
-            SettingIcon(color: .orange, icon: Image(systemName: "gobackward"), edges: .bottom, length: 2.5)
+            NavigationLink(destination: RecentlyViewedView(), tag: 1, selection: $action) {
+                
+                EmptyView()
+                
+            }
+            .hidden()
+            .disabled(true)
             
-            Text("Recently Viewed")
-                .frame(height: 43)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
-                .padding(.trailing)
+            Button(action: showRecent) {
+                
+                HStack {
+                    
+                    SettingIcon(color: .orange, icon: Image(systemName: "gobackward"), edges: .bottom, length: 2.5)
+                    
+                    Text("Recently Viewed")
+                        .frame(height: 43)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing)
+                    
+                }
+                .padding(.vertical, 6)
+                .background(Color("Background"))
+                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                
+            }
+            .cellShadow()
+            .buttonStyle(RoundedTableCell())
+            .padding(.top, 8)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
             
         }
-        .padding(.vertical, 6)
-        .background(Color("Background"))
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding(.top, 8)
-        .padding(.horizontal)
-        .padding(.bottom, 8)
-        .cellShadow()
+        
+    }
+    
+    func showRecent() {
+        
+        action = 1
         
     }
     
@@ -462,25 +494,18 @@ private struct SignOut: View {
     var body: some View {
         
         Button(action: signOutAction) {
-            
-            HStack {
-                
-                Spacer()
-                
-                Text("Sign Out")
-                    .foregroundColor(.red)
-                
-                Spacer()
-                
-            }
-            .padding(.vertical, 14)
+
+            Text("Sign Out")
+                .foregroundColor(.red)
+                .padding(.vertical, 14)
+                .frame(width: UIScreen.screenWidth - 32)
+                .background(Color("Background"))    
             
         }
-        .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .buttonStyle(RoundedTableCell())
         .padding(.vertical, 8)
         .padding(.horizontal)
-        .buttonStyle(.borderless)
         .cellShadow()
         .actionSheet(isPresented: $showingActionSheet) {
             
