@@ -5,43 +5,43 @@
   <path id="artboard" d="M0 0 L3300 0 3300 2200 0 2200 Z" fill="#ffffff" fill-opacity="1" stroke="none"/>
   <path id="Path" d="M263 292 L3036 292" fill="none" stroke="#000000" stroke-width="0.5" stroke-opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
   <defs>
-   <text id="string" transform="matrix(1.0 0.0 0.0 1.0 262.0 310.0)" font-size="13" text-decoration="none" y="12.0" x="1.0" font-family="SFPro-Regular, SF Pro">Weight/Scale Variations</text>
+   <text id="string" transform="matrix(1.0 0.0 0.0 1.0 262.0 310.0)" x="1.0" font-size="13" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro">Weight/Scale Variations</text>
   </defs>
   <use id="Weight/Scale-Variations" xlink:href="#string" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-1" transform="matrix(1.0 0.0 0.0 1.0 529.0 310.0)" x="1.124267578125" y="12.0" font-family="SFPro-Regular, SF Pro" text-decoration="none" font-size="13">Ultralight</text>
+   <text id="string-1" transform="matrix(1.0 0.0 0.0 1.0 529.0 310.0)" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.0" font-size="13">Ultralight</text>
   </defs>
   <use id="Ultralight" xlink:href="#string-1" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-2" transform="matrix(1.0 0.0 0.0 1.0 838.5 310.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0" x="1.8095703125" font-size="13">Thin</text>
+   <text id="string-2" transform="matrix(1.0 0.0 0.0 1.0 839.0 310.0)" font-family="SFPro-Regular, SF Pro" text-decoration="none" x="1.0" y="12.0" font-size="13">Thin</text>
   </defs>
   <use id="Thin" xlink:href="#string-2" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-3" transform="matrix(1.0 0.0 0.0 1.0 1140.5 310.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.74658203125" y="12.0" font-size="13">Light</text>
+   <text id="string-3" transform="matrix(1.0 0.0 0.0 1.0 1141.0 310.0)" x="1.0" font-family="SFPro-Regular, SF Pro" y="12.0" font-size="13" text-decoration="none">Light</text>
   </defs>
   <use id="Light" xlink:href="#string-3" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-4" transform="matrix(1.0 0.0 0.0 1.0 1424.5 310.0)" font-size="13" text-decoration="none" x="1.942138671875" font-family="SFPro-Regular, SF Pro" y="12.0">Regular</text>
+   <text id="string-4" transform="matrix(1.0 0.0 0.0 1.0 1425.0 310.0)" x="1.0" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none">Regular</text>
   </defs>
   <use id="Regular" xlink:href="#string-4" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-5" transform="matrix(1.0 0.0 0.0 1.0 1718.5 310.0)" font-family="SFPro-Regular, SF Pro" x="1.786865234375" y="12.0" font-size="13" text-decoration="none">Medium</text>
+   <text id="string-5" transform="matrix(1.0 0.0 0.0 1.0 1719.0 310.0)" x="1.0" font-size="13" font-family="SFPro-Regular, SF Pro" y="12.0" text-decoration="none">Medium</text>
   </defs>
   <use id="Medium" xlink:href="#string-5" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-6" transform="matrix(1.0 0.0 0.0 1.0 2011.5 310.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.718017578125" font-size="13" y="12.0">Semibold</text>
+   <text id="string-6" transform="matrix(1.0 0.0 0.0 1.0 2012.0 310.0)" y="12.0" x="1.0" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none">Semibold</text>
   </defs>
   <use id="Semibold" xlink:href="#string-6" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-7" transform="matrix(1.0 0.0 0.0 1.0 2323.0 310.0)" x="1.4033203125" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" font-size="13">Bold</text>
+   <text id="string-7" transform="matrix(1.0 0.0 0.0 1.0 2323.0 310.0)" font-family="SFPro-Regular, SF Pro" font-size="13" y="12.0" x="1.0" text-decoration="none">Bold</text>
   </defs>
   <use id="Bold" xlink:href="#string-7" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-8" transform="matrix(1.0 0.0 0.0 1.0 2619.0 310.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.14111328125" y="12.0" font-size="13">Heavy</text>
+   <text id="string-8" transform="matrix(1.0 0.0 0.0 1.0 2619.0 310.0)" font-size="13" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.0">Heavy</text>
   </defs>
   <use id="Heavy" xlink:href="#string-8" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-9" transform="matrix(1.0 0.0 0.0 1.0 2920.5 310.0)" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.521484375" font-size="13">Black</text>
+   <text id="string-9" transform="matrix(1.0 0.0 0.0 1.0 2921.0 310.0)" x="1.0" font-size="13" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0">Black</text>
   </defs>
   <use id="Black" xlink:href="#string-9" fill="#000000" fill-opacity="1" stroke="none"/>
   <path id="Path-1" d="M263 1903 L3036 1903" fill="none" stroke="#000000" stroke-width="0.5" stroke-opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
@@ -55,19 +55,19 @@
    <path id="Path-4" d="M320.617 1938.664 Q322.706 1938.664 324.606 1938.015 326.505 1937.365 328.097 1936.193 329.689 1935.021 330.866 1933.43 332.042 1931.838 332.692 1929.934 333.341 1928.029 333.341 1925.949 333.341 1923.859 332.692 1921.96 332.042 1920.061 330.866 1918.469 329.689 1916.877 328.097 1915.7 326.505 1914.523 324.601 1913.874 322.697 1913.225 320.607 1913.225 318.517 1913.225 316.618 1913.874 314.718 1914.523 313.131 1915.7 311.544 1916.877 310.368 1918.469 309.191 1920.061 308.546 1921.96 307.902 1923.859 307.902 1925.949 307.902 1928.029 308.551 1929.934 309.201 1931.838 310.373 1933.43 311.544 1935.021 313.136 1936.193 314.728 1937.365 316.627 1938.015 318.527 1938.664 320.617 1938.664 Z M320.617 1936.848 Q318.81 1936.848 317.174 1936.296 315.539 1935.744 314.181 1934.748 312.824 1933.752 311.823 1932.39 310.822 1931.027 310.275 1929.392 309.728 1927.756 309.728 1925.949 309.728 1924.133 310.275 1922.497 310.822 1920.861 311.818 1919.499 312.814 1918.137 314.171 1917.141 315.529 1916.145 317.165 1915.598 318.8 1915.051 320.607 1915.051 322.423 1915.051 324.059 1915.598 325.695 1916.145 327.057 1917.141 328.419 1918.137 329.415 1919.499 330.412 1920.861 330.963 1922.497 331.515 1924.133 331.515 1925.949 331.525 1927.756 330.978 1929.392 330.431 1931.027 329.43 1932.39 328.429 1933.752 327.067 1934.748 325.705 1935.744 324.069 1936.296 322.433 1936.848 320.617 1936.848 Z M315.099 1925.959 Q315.099 1926.34 315.358 1926.589 315.617 1926.838 316.017 1926.838 L319.708 1926.838 319.708 1930.539 Q319.708 1930.939 319.957 1931.193 320.206 1931.447 320.587 1931.447 320.998 1931.447 321.251 1931.193 321.505 1930.939 321.505 1930.539 L321.505 1926.838 325.206 1926.838 Q325.607 1926.838 325.861 1926.589 326.115 1926.34 326.115 1925.959 326.115 1925.549 325.861 1925.295 325.607 1925.041 325.206 1925.041 L321.505 1925.041 321.505 1921.35 Q321.505 1920.939 321.251 1920.686 320.998 1920.432 320.587 1920.432 320.206 1920.432 319.957 1920.69 319.708 1920.949 319.708 1921.35 L319.708 1925.041 316.017 1925.041 Q315.607 1925.041 315.353 1925.295 315.099 1925.549 315.099 1925.959 Z" fill="#000000" fill-opacity="1" stroke="none"/>
   </g>
   <defs>
-   <text id="string-10" transform="matrix(1.0 0.0 0.0 1.0 262.0 1941.0)" y="12.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" font-size="13" x="1.0">Design Variations</text>
+   <text id="string-10" transform="matrix(1.0 0.0 0.0 1.0 262.0 1941.0)" font-family="SFPro-Regular, SF Pro" y="12.0" text-decoration="none" font-size="13" x="1.0">Design Variations</text>
   </defs>
   <use id="Design-Variations" xlink:href="#string-10" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-11" transform="matrix(1.0 0.0 0.0 1.0 262.0 1959.0)" x="1.0" text-decoration="none" font-size="13" font-family="SFPro-Regular, SF Pro" y="12.0">Symbols are supported in up to nine weights and three scales.</text>
+   <text id="string-11" transform="matrix(1.0 0.0 0.0 1.0 262.0 1959.0)" y="12.0" font-family="SFPro-Regular, SF Pro" text-decoration="none" font-size="13" x="1.0">Symbols are supported in up to nine weights and three scales.</text>
   </defs>
   <use id="Symbols-are-supported-in-up-to-nine-weights-and-three-scales." xlink:href="#string-11" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-12" transform="matrix(1.0 0.0 0.0 1.0 262.0 1977.0)" font-size="13" y="12.0" font-family="SFPro-Regular, SF Pro" text-decoration="none" x="1.0">For optimal layout with text and other symbols, vertically align</text>
+   <text id="string-12" transform="matrix(1.0 0.0 0.0 1.0 262.0 1977.0)" x="1.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0" font-size="13">For optimal layout with text and other symbols, vertically align</text>
   </defs>
   <use id="For-optimal-layout-with-text-and-other-symbols,-vertically-align" xlink:href="#string-12" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-13" transform="matrix(1.0 0.0 0.0 1.0 262.0 1995.0)" font-size="13" y="12.0" x="1.0" font-family="SFPro-Regular, SF Pro" text-decoration="none">symbols with the adjacent text.</text>
+   <text id="string-13" transform="matrix(1.0 0.0 0.0 1.0 262.0 1995.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0" font-size="13" x="1.0">symbols with the adjacent text.</text>
   </defs>
   <use id="symbols-with-the-adjacent-text." xlink:href="#string-13" fill="#000000" fill-opacity="1" stroke="none"/>
   <path id="Path-5" d="M776 1919 L776 1933" fill="none" stroke="#00aeef" stroke-width="0.5" stroke-opacity="1" stroke-linejoin="round" stroke-linecap="round"/>
@@ -80,62 +80,62 @@
   </defs>
   <use id="Margins" xlink:href="#string-14" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-15" transform="matrix(1.0 0.0 0.0 1.0 775.0 1959.0)" x="1.0" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none">Leading and trailing margins on the left and right side of each symbol</text>
+   <text id="string-15" transform="matrix(1.0 0.0 0.0 1.0 775.0 1959.0)" x="1.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0" font-size="13">Leading and trailing margins on the left and right side of each symbol</text>
   </defs>
   <use id="Leading-and-trailing-margins-on-the-left-and-right-side-of-each-symbol" xlink:href="#string-15" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-16" transform="matrix(1.0 0.0 0.0 1.0 775.0 1977.0)" font-family="SFPro-Regular, SF Pro" x="1.0" y="12.0" font-size="13" text-decoration="none">can be adjusted by modifying the x-location of the margin guidelines.</text>
+   <text id="string-16" transform="matrix(1.0 0.0 0.0 1.0 775.0 1977.0)" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" x="1.0" text-decoration="none">can be adjusted by modifying the x-location of the margin guidelines.</text>
   </defs>
   <use id="can-be-adjusted-by-modifying-the-x-location-of-the-margin-guidelines." xlink:href="#string-16" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-17" transform="matrix(1.0 0.0 0.0 1.0 775.0 1995.0)" x="1.0" font-family="SFPro-Regular, SF Pro" text-decoration="none" y="12.0" font-size="13">Modifications are automatically applied proportionally to all</text>
+   <text id="string-17" transform="matrix(1.0 0.0 0.0 1.0 775.0 1995.0)" x="1.0" text-decoration="none" font-family="SFPro-Regular, SF Pro" y="12.0" font-size="13">Modifications are automatically applied proportionally to all</text>
   </defs>
   <use id="Modifications-are-automatically-applied-proportionally-to-all" xlink:href="#string-17" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-18" transform="matrix(1.0 0.0 0.0 1.0 775.0 2013.0)" text-decoration="none" x="1.0" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13">scales and weights.</text>
+   <text id="string-18" transform="matrix(1.0 0.0 0.0 1.0 775.0 2013.0)" font-family="SFPro-Regular, SF Pro" text-decoration="none" font-size="13" x="1.0" y="12.0">scales and weights.</text>
   </defs>
   <use id="scales-and-weights." xlink:href="#string-18" fill="#000000" fill-opacity="1" stroke="none"/>
   <g id="group-4">
    <path id="Path-8" d="M1291.842 1934.865 L1293.541 1936.574 Q1294.186 1937.229 1294.903 1937.18 1295.621 1937.131 1296.314 1936.359 L1307.008 1924.572 1306.041 1923.596 1295.426 1935.275 Q1295.162 1935.578 1294.894 1935.617 1294.625 1935.656 1294.273 1935.305 L1293.102 1934.143 Q1292.75 1933.791 1292.794 1933.522 1292.838 1933.254 1293.141 1932.98 L1304.615 1922.18 1303.639 1921.213 1292.047 1932.102 Q1291.305 1932.785 1291.251 1933.498 1291.197 1934.211 1291.842 1934.865 Z M1298.258 1916.672 Q1297.945 1916.975 1297.906 1917.365 1297.867 1917.756 1298.043 1918.049 1298.219 1918.322 1298.556 1918.459 1298.893 1918.596 1299.381 1918.479 1300.475 1918.225 1301.598 1918.269 1302.721 1918.313 1303.795 1919.016 L1303.209 1920.471 Q1302.955 1921.096 1303.067 1921.56 1303.18 1922.023 1303.58 1922.434 L1305.875 1924.748 Q1306.236 1925.119 1306.578 1925.178 1306.92 1925.236 1307.34 1925.158 L1308.404 1924.963 1309.068 1925.637 1309.029 1926.193 Q1309 1926.564 1309.122 1926.877 1309.244 1927.189 1309.605 1927.551 L1310.367 1928.293 Q1310.729 1928.654 1311.153 1928.669 1311.578 1928.684 1311.93 1928.332 L1314.84 1925.412 Q1315.191 1925.061 1315.182 1924.646 1315.172 1924.23 1314.811 1923.869 L1314.039 1923.107 Q1313.688 1922.746 1313.38 1922.614 1313.072 1922.482 1312.711 1922.512 L1312.135 1922.561 1311.49 1921.926 1311.734 1920.803 Q1311.832 1920.383 1311.695 1920.017 1311.559 1919.65 1311.119 1919.211 L1308.922 1917.023 Q1307.672 1915.783 1306.261 1915.163 1304.85 1914.543 1303.419 1914.519 1301.988 1914.494 1300.665 1915.041 1299.342 1915.588 1298.258 1916.672 Z M1299.752 1917.043 Q1300.66 1916.379 1301.7 1916.096 1302.74 1915.813 1303.805 1915.915 1304.869 1916.018 1305.87 1916.486 1306.871 1916.955 1307.701 1917.795 L1310.133 1920.207 Q1310.309 1920.383 1310.353 1920.549 1310.396 1920.715 1310.338 1920.969 L1310.016 1922.453 1311.52 1923.938 1312.506 1923.879 Q1312.691 1923.869 1312.789 1923.903 1312.887 1923.938 1313.033 1924.084 L1313.609 1924.66 1311.168 1927.102 1310.592 1926.525 Q1310.445 1926.379 1310.406 1926.281 1310.367 1926.184 1310.377 1925.988 L1310.445 1925.012 1308.951 1923.527 1307.428 1923.781 Q1307.184 1923.83 1307.042 1923.796 1306.9 1923.762 1306.715 1923.586 L1304.713 1921.584 Q1304.518 1921.408 1304.493 1921.247 1304.469 1921.086 1304.586 1920.813 L1305.465 1918.723 Q1304.293 1917.629 1302.828 1917.209 1301.363 1916.789 1299.84 1917.238 1299.723 1917.268 1299.688 1917.194 1299.654 1917.121 1299.752 1917.043 Z" fill="#000000" fill-opacity="1" stroke="none"/>
   </g>
   <defs>
-   <text id="string-19" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1941.0)" font-family="SFPro-Regular, SF Pro" x="1.0" y="12.0" font-size="13" text-decoration="none">Exporting</text>
+   <text id="string-19" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1941.0)" font-family="SFPro-Regular, SF Pro" text-decoration="none" y="12.0" font-size="13" x="1.0">Exporting</text>
   </defs>
   <use id="Exporting" xlink:href="#string-19" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-20" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1959.0)" text-decoration="none" font-family="SFPro-Regular, SF Pro" font-size="13" y="12.0" x="1.0">Symbols should be outlined when exporting to ensure the</text>
+   <text id="string-20" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1959.0)" x="1.0" font-size="13" text-decoration="none" y="12.0" font-family="SFPro-Regular, SF Pro">Symbols should be outlined when exporting to ensure the</text>
   </defs>
   <use id="Symbols-should-be-outlined-when-exporting-to-ensure-the" xlink:href="#string-20" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-21" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1977.0)" font-family="SFPro-Regular, SF Pro" y="12.0" x="1.0" font-size="13" text-decoration="none">design is preserved when submitting to Xcode.</text>
+   <text id="string-21" transform="matrix(1.0 0.0 0.0 1.0 1288.0 1977.0)" x="1.0" font-size="13" text-decoration="none" y="12.0" font-family="SFPro-Regular, SF Pro">design is preserved when submitting to Xcode.</text>
   </defs>
   <use id="design-is-preserved-when-submitting-to-Xcode." xlink:href="#string-21" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-22" transform="matrix(1.0 0.0 0.0 1.0 2955.0 1921.0)" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none" y="12.0" x="1.43408203125">Template v.3.0</text>
+   <text id="string-22" transform="matrix(1.0 0.0 0.0 1.0 2955.0 1921.0)" text-decoration="none" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" x="1.0">Template v.3.0</text>
   </defs>
   <use id="Template-v.3.0" xlink:href="#string-22" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-23" transform="matrix(1.0 0.0 0.0 1.0 2864.0 1939.0)" font-size="13" text-decoration="none" font-family="SFPro-Regular, SF Pro" x="1.220703125" y="12.0">Requires Xcode 13 or greater</text>
+   <text id="string-23" transform="matrix(1.0 0.0 0.0 1.0 2864.0 1939.0)" font-family="SFPro-Regular, SF Pro" text-decoration="none" y="12.0" x="1.0" font-size="13">Requires Xcode 13 or greater</text>
   </defs>
   <use id="Requires-Xcode-13-or-greater" xlink:href="#string-23" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-24" transform="matrix(1.0 0.0 0.0 1.0 2886.0 1957.0)" font-family="SFPro-Regular, SF Pro" y="12.0" text-decoration="none" font-size="13" x="1.04443359375">Generated from rectangle</text>
+   <text id="string-24" transform="matrix(1.0 0.0 0.0 1.0 2886.0 1957.0)" x="1.0" font-size="13" text-decoration="none" y="12.0" font-family="SFPro-Regular, SF Pro">Generated from rectangle</text>
   </defs>
   <use id="Generated-from-rectangle" xlink:href="#string-24" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-25" transform="matrix(1.0 0.0 0.0 1.0 2911.0 1975.0)" x="1.72705078125" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none" y="12.0">Typeset at 100 points</text>
+   <text id="string-25" transform="matrix(1.0 0.0 0.0 1.0 2912.0 1975.0)" x="1.0" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none">Typeset at 100 points</text>
   </defs>
   <use id="Typeset-at-100-points" xlink:href="#string-25" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-26" transform="matrix(1.0 0.0 0.0 1.0 262.0 714.0)" font-family="SFPro-Regular, SF Pro" x="1.0" y="12.0" font-size="13" text-decoration="none">Small</text>
+   <text id="string-26" transform="matrix(1.0 0.0 0.0 1.0 262.0 714.0)" x="1.0" text-decoration="none" font-size="13" y="12.0" font-family="SFPro-Regular, SF Pro">Small</text>
   </defs>
   <use id="Small" xlink:href="#string-26" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-27" transform="matrix(1.0 0.0 0.0 1.0 262.0 1144.0)" font-family="SFPro-Regular, SF Pro" y="12.0" text-decoration="none" font-size="13" x="1.0">Medium</text>
+   <text id="string-27" transform="matrix(1.0 0.0 0.0 1.0 262.0 1144.0)" font-family="SFPro-Regular, SF Pro" y="12.0" x="1.0" font-size="13" text-decoration="none">Medium</text>
   </defs>
   <use id="Medium-1" xlink:href="#string-27" fill="#000000" fill-opacity="1" stroke="none"/>
   <defs>
-   <text id="string-28" transform="matrix(1.0 0.0 0.0 1.0 262.0 1574.0)" y="12.0" font-family="SFPro-Regular, SF Pro" font-size="13" text-decoration="none" x="1.0">Large</text>
+   <text id="string-28" transform="matrix(1.0 0.0 0.0 1.0 262.0 1574.0)" x="1.0" text-decoration="none" font-size="13" y="12.0" font-family="SFPro-Regular, SF Pro">Large</text>
   </defs>
   <use id="Large" xlink:href="#string-28" fill="#000000" fill-opacity="1" stroke="none"/>
  </g>
@@ -203,8 +203,10 @@
   </g>
   <g id="Regular-M">
    <path id="Path-26" d="M1407.603 1135.717 L1492.076 1135.717 Q1499.791 1135.717 1503.599 1131.933 1507.408 1128.148 1507.408 1120.629 L1507.408 1060.961 Q1507.408 1053.441 1503.599 1049.633 1499.791 1045.824 1492.076 1045.824 L1407.603 1045.824 Q1399.937 1045.824 1396.104 1049.608 1392.271 1053.393 1392.271 1060.961 L1392.271 1120.629 Q1392.271 1128.148 1396.104 1131.933 1399.937 1135.717 1407.603 1135.717 Z M1407.701 1127.855 Q1404.039 1127.855 1402.086 1125.927 1400.132 1123.998 1400.132 1120.189 L1400.132 1061.4 Q1400.132 1057.592 1402.086 1055.639 1404.039 1053.686 1407.701 1053.686 L1491.978 1053.686 Q1495.591 1053.686 1497.569 1055.639 1499.547 1057.592 1499.547 1061.4 L1499.547 1120.189 Q1499.547 1123.998 1497.569 1125.927 1495.591 1127.855 1491.978 1127.855 Z" fill="#000000" fill-opacity="1" stroke="none"/>
-   <path id="Path-copy-1-copy" d="M1447 1067.364 C1447 1066.108 1446.579 1065.067 1445.737 1064.24 1444.895 1063.413 1443.922 1063 1442.82 1063 1441.687 1063 1440.715 1063.429 1439.903 1064.286 1439.092 1065.144 1438.686 1066.108 1438.686 1067.18 L1438.686 1077.175 1438.328 1075.618 C1438.328 1075.618 1438.418 1077.678 1437.443 1078.657 1436.509 1079.596 1434.596 1079.668 1434.596 1079.668 L1412.091 1079.76 1413.106 1079.76 C1412.035 1079.76 1411.078 1080.165 1410.236 1080.977 1409.394 1081.788 1408.973 1082.745 1408.973 1083.848 1408.973 1084.95 1409.371 1085.922 1410.167 1086.764 1410.963 1087.606 1412.004 1088.027 1413.29 1088.027 L1442.499 1088.027 C1443.877 1088.027 1444.964 1087.614 1445.76 1086.787 1446.556 1085.96 1446.954 1084.889 1446.954 1083.572 Z" fill="#000000" fill-opacity="1" stroke="none"/>
-   <path id="Path-copy-3-copy" d="M1453 1114.636 C1453 1115.892 1453.421 1116.933 1454.263 1117.76 1455.105 1118.587 1456.078 1119 1457.18 1119 1458.313 1119 1459.285 1118.571 1460.097 1117.714 1460.908 1116.856 1461.314 1115.892 1461.314 1114.82 L1461.314 1104.825 1461.672 1106.382 C1461.672 1106.382 1461.582 1104.322 1462.557 1103.343 1463.491 1102.404 1465.404 1102.332 1465.404 1102.332 L1487.909 1102.24 1486.894 1102.24 C1487.965 1102.24 1488.922 1101.835 1489.764 1101.023 1490.606 1100.212 1491.027 1099.255 1491.027 1098.152 1491.027 1097.05 1490.629 1096.078 1489.833 1095.236 1489.037 1094.394 1487.996 1093.973 1486.71 1093.973 L1457.501 1093.973 C1456.123 1093.973 1455.036 1094.386 1454.24 1095.213 1453.444 1096.04 1453.046 1097.111 1453.046 1098.428 Z" fill="#000000" fill-opacity="1" stroke="none"/>
+   <path id="Path-copy-2-copy-1" d="M1454.973 1114.663 C1454.973 1115.919 1455.394 1116.96 1456.236 1117.787 1457.078 1118.614 1458.051 1119.027 1459.153 1119.027 1460.286 1119.027 1461.258 1118.598 1462.07 1117.741 1462.881 1116.883 1463.287 1115.919 1463.287 1114.847 L1463.287 1107.852 1463.645 1109.409 C1463.645 1109.409 1463.555 1107.349 1464.53 1106.37 1465.464 1105.431 1467.377 1105.359 1467.377 1105.359 L1486.882 1105.267 1485.867 1105.267 C1486.938 1105.267 1487.895 1104.862 1488.737 1104.05 1489.579 1103.239 1490 1102.282 1490 1101.179 1490 1100.077 1489.602 1099.105 1488.806 1098.263 1488.01 1097.421 1486.969 1097 1485.683 1097 L1459.474 1097 C1458.096 1097 1457.009 1097.413 1456.213 1098.24 1455.417 1099.067 1455.019 1100.138 1455.019 1101.455 Z" fill="#000000" fill-opacity="1" stroke="none"/>
+   <path id="Path-copy-4-copy-1" d="M1445.027 1068.337 C1445.027 1067.081 1444.606 1066.04 1443.764 1065.213 1442.922 1064.386 1441.949 1063.973 1440.847 1063.973 1439.714 1063.973 1438.742 1064.402 1437.93 1065.259 1437.119 1066.117 1436.713 1067.081 1436.713 1068.153 L1436.713 1076.148 1436.355 1074.591 C1436.355 1074.591 1436.445 1076.651 1435.47 1077.63 1434.536 1078.569 1432.623 1078.641 1432.623 1078.641 L1412.118 1078.733 1413.133 1078.733 C1412.062 1078.733 1411.105 1079.138 1410.263 1079.95 1409.421 1080.761 1409 1081.718 1409 1082.821 1409 1083.923 1409.398 1084.895 1410.194 1085.737 1410.99 1086.579 1412.031 1087 1413.317 1087 L1440.526 1087 C1441.904 1087 1442.991 1086.587 1443.787 1085.76 1444.583 1084.933 1444.981 1083.862 1444.981 1082.545 Z" fill="#000000" fill-opacity="1" stroke="none"/>
+   <path id="Path-copy-2-copy" d="M1445 1114.663 C1445 1115.919 1444.579 1116.96 1443.737 1117.787 1442.895 1118.614 1441.922 1119.027 1440.82 1119.027 1439.687 1119.027 1438.715 1118.598 1437.903 1117.741 1437.092 1116.883 1436.686 1115.919 1436.686 1114.847 L1436.686 1107.852 1436.328 1109.409 C1436.328 1109.409 1436.418 1107.349 1435.443 1106.37 1434.509 1105.431 1432.596 1105.359 1432.596 1105.359 L1412.091 1105.267 1413.106 1105.267 C1412.035 1105.267 1411.078 1104.862 1410.236 1104.05 1409.394 1103.239 1408.973 1102.282 1408.973 1101.179 1408.973 1100.077 1409.371 1099.105 1410.167 1098.263 1410.963 1097.421 1412.004 1097 1413.29 1097 L1440.499 1097 C1441.877 1097 1442.964 1097.413 1443.76 1098.24 1444.556 1099.067 1444.954 1100.138 1444.954 1101.455 Z" fill="#000000" fill-opacity="1" stroke="none"/>
+   <path id="Path-copy-4-copy" d="M1455 1068.337 C1455 1067.081 1455.421 1066.04 1456.263 1065.213 1457.105 1064.386 1458.078 1063.973 1459.18 1063.973 1460.313 1063.973 1461.285 1064.402 1462.097 1065.259 1462.908 1066.117 1463.314 1067.081 1463.314 1068.153 L1463.314 1076.148 1463.672 1074.591 C1463.672 1074.591 1463.582 1076.651 1464.557 1077.63 1465.491 1078.569 1467.404 1078.641 1467.404 1078.641 L1486.909 1078.733 1485.894 1078.733 C1486.965 1078.733 1487.922 1079.138 1488.764 1079.95 1489.606 1080.761 1490.027 1081.718 1490.027 1082.821 1490.027 1083.923 1489.629 1084.895 1488.833 1085.737 1488.037 1086.579 1486.996 1087 1485.71 1087 L1459.501 1087 C1458.123 1087 1457.036 1086.587 1456.24 1085.76 1455.444 1084.933 1455.046 1083.862 1455.046 1082.545 Z" fill="#000000" fill-opacity="1" stroke="none"/>
   </g>
   <g id="Light-M">
    <path id="Path-27" d="M1110.355 1134.984 L1195.902 1134.984 Q1203.08 1134.984 1206.693 1131.371 1210.307 1127.758 1210.307 1120.727 L1210.307 1060.814 Q1210.307 1053.783 1206.693 1050.17 1203.08 1046.557 1195.902 1046.557 L1110.355 1046.557 Q1103.178 1046.557 1099.564 1050.146 1095.951 1053.734 1095.951 1060.814 L1095.951 1120.727 Q1095.951 1127.807 1099.564 1131.396 1103.178 1134.984 1110.355 1134.984 Z M1110.453 1128.93 Q1106.303 1128.93 1104.154 1126.781 1102.006 1124.633 1102.006 1120.385 L1102.006 1061.156 Q1102.006 1056.908 1104.154 1054.76 1106.303 1052.611 1110.453 1052.611 L1195.805 1052.611 Q1199.809 1052.611 1202.03 1054.76 1204.252 1056.908 1204.252 1061.156 L1204.252 1120.385 Q1204.252 1124.633 1202.03 1126.781 1199.809 1128.93 1195.805 1128.93 Z" fill="#000000" fill-opacity="1" stroke="none"/>
