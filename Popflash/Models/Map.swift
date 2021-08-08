@@ -18,5 +18,7 @@ struct Map: Hashable, Identifiable {
     var icon: String
     var views: Int
     var lastAdded: String
+    var favourite: Bool
+    var position: Int
     
 }
