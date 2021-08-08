@@ -38,6 +38,8 @@ class MapsViewModel: ObservableObject {
                 let icon = data["icon"] as? String ?? ""
                 let views = data["views"] as? Int ?? 0
                 let lastAdded = data["lastAdded"] as? String ?? ""
+                let favourite = data["favourite"] as? Bool ?? false
+                let position = data["position"] as? Int ?? 0
 
                 let map = Map(id: id,
                               name: name,
@@ -47,7 +49,9 @@ class MapsViewModel: ObservableObject {
                               radar: radar,
                               icon: icon,
                               views: views,
-                              lastAdded: lastAdded)
+                              lastAdded: lastAdded,
+                              favourite: favourite,
+                              position: position)
                 
                 if !self.maps.contains(map) { self.maps.append(map) }
                 
