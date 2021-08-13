@@ -84,8 +84,6 @@ func createFirestoreAccount(user: String, credential: ASAuthorizationAppleIDCred
         db.collection("users").document(uid).setData([
             "displayName": "\(givenName) \(familyName)",
             "skillGroup": "Unknown",
-            "favourites": [],
-            "recentlyViewed": []
         ])
         
     }
