@@ -6,93 +6,43 @@
 //
 
 import SwiftUI
+import Kingfisher
 import FirebaseFirestore
 
 struct EditFavouriteMapsView: View {
     
-    @State var oldMapList = [String]()
-    
-    @StateObject var mapsViewModel = MapsViewModel()
-    
-    @AppStorage("favourites.maps") var favouriteMaps = [String]()
+    @State var maps = [Map]()
+    @State var selectedMaps = [Map]()
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    var body: some View {
- 
+    var body: some View { 
+        
         NavigationView {
-                
-            List {
-                
-                ForEach(mapsViewModel.maps, id: \.self) { map in
-                    
-                    Button {
-                        
-                        if !favouriteMaps.contains(map.name) {
+
+            MapCollectionView(maps: $maps, selectedMaps: $selectedMaps)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarTitle("Edit Favourite Maps", displayMode: .inline)
+                .navigationBarItems(
+                    leading:
+                        Button(action: {
                             
-                            favouriteMaps.append(map.name)
+                            self.presentationMode.wrappedValue.dismiss()
                             
-                        } else {
+                        }) {
+                            Text("Cancel")
+                                .fontWeight(.regular)
+                        },
+                    trailing:
+                        Button(action: {
                             
-                            if let mapIndex = favouriteMaps.firstIndex(of: map.name) {
-                                
-                                favouriteMaps.remove(at: mapIndex)
-                                
-                            }
+                            self.presentationMode.wrappedValue.dismiss()
                             
+                        }) {
+                            Text("Done")
+                                .fontWeight(.bold)
                         }
-                        
-                    } label: {
-                        
-                        HStack {
-                            
-                            Image(systemName: favouriteMaps.contains(map.name) ? "checkmark.circle.fill" : "circle")
-                                .font(.system(size: 24))
-                                .padding(.vertical, 4)
-                                .foregroundColor(Color.blue)
-                            
-                            Text("\(map.name)")
-                            
-                            Spacer()
-                            
-                        }
-                        
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    
-                }
-                
-            }
-            .navigationBarTitle("Favourite Maps", displayMode: .inline)
-            .navigationBarItems(
-                leading:
-                    Button(action: {
-                        
-                        favouriteMaps = oldMapList
-                        
-                        self.presentationMode.wrappedValue.dismiss()
-                        
-                    }) {
-                        Text("Cancel")
-                            .fontWeight(.regular)
-                    },
-                trailing:
-                    Button(action: {
-                        
-                        self.presentationMode.wrappedValue.dismiss()
-                        
-                    }) {
-                        Text("Done")
-                            .fontWeight(.bold)
-                    }
-            )
-            .onAppear() {
-                
-                self.mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
-                
-                oldMapList = favouriteMaps
-                
-            }
+                )
             
         }
         
@@ -100,24 +50,61 @@ struct EditFavouriteMapsView: View {
     
 }
 
-private struct DoneToolbarItem: ToolbarContent {
+private struct FavouriteMapCell: View {
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    var map: Map
     
-    var body: some ToolbarContent {
+    @Binding var selectedMaps: [String]
+    
+    @State var selected = false
+    
+    let processor = CroppingImageProcessor(size: CGSize(width: 400, height: 600))
+    
+    var body: some View {
         
-        ToolbarItem(placement: .navigationBarTrailing) {
+        Button(action: favouriteMap) {
             
-            Button {
+            ZStack {
                 
-                self.presentationMode.wrappedValue.dismiss()
+                KFImage(URL(string: map.background))
+                    .setProcessor(processor)
+                    .resizable()
+                    .aspectRatio(CGSize(width: 1, height: 1.5), contentMode: .fill)
                 
-            } label: {
-                
-                Text("Done")
-                    .fontWeight(.bold)
+                KFImage(URL(string: map.icon))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 65)
+                    .shadow(color: .black.opacity(0.5), radius: 10)
                 
             }
+            .drawingGroup()
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .stroke(selected ? .blue : .clear, lineWidth: 4)
+            )
+            .scaleEffect(selected ? 1.085 : 1)
+            .animation(.easeInOut(duration: 0.15), value: selected)
+            .cellShadow()
+            
+        }
+        .buttonStyle(.plain)
+        .contentShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        
+    }
+    
+    func favouriteMap() {
+        
+        if let index = selectedMaps.firstIndex(of: map.id) {
+            
+            selectedMaps.remove(at: index)
+            selected = false
+            
+        } else {
+            
+            selectedMaps.append(map.id)
+            selected = true
             
         }
         
