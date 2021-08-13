@@ -306,7 +306,7 @@ private struct FavouriteNades: View {
     
 }
 
-private struct FavouriteNadeCell: View {
+struct FavouriteNadeCell: View {
     
     var nade: Nade
     
