@@ -52,6 +52,7 @@ struct NadeView: View {
             
         }
         .animation(.easeInOut(duration: 0.25), value: fullscreen)
+        .onAppear(perform: onAppear)
         .background {
             
             Color.black
@@ -66,6 +67,7 @@ struct NadeView: View {
     func onAppear() {
         
         incrementViews()
+        addToRecentlyViewed()
         
     }
     
@@ -81,6 +83,91 @@ struct NadeView: View {
         ])
         
         print("+1")
+        
+    }
+    
+    func addToRecentlyViewed() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        removeDuplicateViews(forUser: user.uid)
+        
+    }
+    
+    func removeDuplicateViews(forUser user: String) {
+        
+        let dateBound = date(bound: .lower)
+        let dateString = dateString(from: dateBound)
+        
+        guard let dateDouble = Double(dateString) else { return }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user).collection("recentlyViewed").whereField("id", isEqualTo: nade.id).whereField("dateAdded", isGreaterThan: dateDouble)
+        
+        ref.getDocuments { snapshot, error in
+            
+            guard let documents = snapshot?.documents else { return }
+            
+            for document in documents {
+
+                db.collection("users").document(user).collection("recentlyViewed").document(document.documentID).delete()
+                
+            }
+            
+            addRecent(forUser: user)
+            
+        }
+        
+    }
+    
+    func addRecent(forUser user: String) {
+ 
+        var recentNade = nade
+        
+        recentNade.dateAdded = favouriteDate()
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user).collection("recentlyViewed").document()
+
+        do {
+            
+            try ref.setData(from: recentNade, completion: { error in
+                
+                if let error = error {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+                
+            })
+            
+        } catch let error {
+            
+            print(error.localizedDescription)
+            
+        }
+        
+    }
+    
+    func favouriteDate() -> Double {
+        
+        let date = Date()
+        let dateString = dateString(from: date)
+        let dateDouble = Double(dateString) ?? 0
+        
+        print(dateDouble)
+        
+        return dateDouble
         
     }
     
@@ -209,6 +296,8 @@ private struct VideoView: View {
     
     func setupPlayer() {
         
+        print("setupPlayer")
+        
         player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
         
         self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: .main) { (_) in
@@ -250,28 +339,6 @@ private struct VideoView: View {
         return Double(Double(self.progress) * (self.player.currentItem?.duration.seconds)!)
         
     }
-    
-//    func handleRotation(orientation: UIDeviceOrientation) {
-//
-//        if orientation == .portrait {
-//
-//            fullscreen = false
-//
-//        } else {
-//
-//            if orientation == .landscapeLeft {
-//
-//                fullscreen = true
-//
-//            } else if orientation == .landscapeRight {
-//
-//                fullscreen = true
-//
-//            }
-//
-//        }
-//
-//    }
     
 }
 
@@ -570,15 +637,21 @@ private struct FavouriteButton: View {
         if user.isAnonymous { return }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.id)
         
-        ref.getDocument { document, error in
+        ref.getDocuments { snapshot, error in
             
-            guard let document = document else { return }
+            guard let documents = snapshot?.documents else { return }
             
-            if document.exists {
+            for document in documents {
                 
-                isFavourite = true
+                let data = document.data()
+                
+                if data["id"] as! String == nade.id {
+                    
+                    isFavourite = true
+                    
+                }
                 
             }
             
@@ -613,7 +686,7 @@ private struct FavouriteButton: View {
         loading = true
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        let ref = db.collection("users").document(user.uid).collection("nades").document()
         
         var favouriteNade = nade
         
@@ -651,18 +724,28 @@ private struct FavouriteButton: View {
         loading = true
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("favourites").document(nade.documentID)
+        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.id)
         
-        ref.delete { error in
+        ref.getDocuments { snapshot, error in
             
-            if let error = error {
+            guard let documents = snapshot?.documents else { return }
+            
+            for document in documents {
                 
-                print(error.localizedDescription)
+                db.collection("users").document(user.uid).collection("nades").document(document.documentID).delete() { error in
+                    
+                    if let error = error {
+                        
+                        print(error.localizedDescription)
+                        
+                    }
+                    
+                    isFavourite = false
+                    loading = false
+                    
+                }
                 
             }
-            
-            isFavourite = false
-            loading = false
             
         }
         
