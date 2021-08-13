@@ -44,11 +44,6 @@ struct FeaturedView: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(.some(EdgeInsets()))
                     .buttonStyle(.plain)
-                    .sheet(item: self.$selectedNade) { item in
-                        
-                        NadeView(nade: item)
-                        
-                    }
                                     
                 }
                 .listStyle(.plain)
@@ -61,6 +56,11 @@ struct FeaturedView: View {
                 }
                 .onAppear(perform: onAppear)
                 .onDisappear(perform: onDisappear)
+            
+        }
+        .sheet(item: self.$selectedNade) { item in
+            
+            NadeView(nade: item)
             
         }
         
