@@ -76,7 +76,7 @@ struct FavouriteMapCellButtonStyle: ButtonStyle {
         
         Rectangle()
             .foregroundColor(Color("Button_Overlay"))
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .padding(.leading, 8)
             .padding(.bottom, 16)
         
@@ -99,7 +99,6 @@ struct FavouriteNadeCellButtonStyle: ButtonStyle {
         Rectangle()
             .foregroundColor(Color("Button_Overlay"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .padding(.bottom, 8)
         
     }
     
