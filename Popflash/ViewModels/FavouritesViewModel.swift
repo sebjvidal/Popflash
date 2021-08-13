@@ -31,7 +31,7 @@ class FavouritesViewModel: ObservableObject {
         if nades.isEmpty {
             
             let db = Firestore.firestore()
-            let ref = db.collection("users").document(user.uid).collection("favourites").order(by: "dateAdded", descending: true)
+            let ref = db.collection("users").document(user.uid).collection("nades").order(by: "dateAdded", descending: true)
             
             ref.addSnapshotListener { querySnapshot, error in
                 
