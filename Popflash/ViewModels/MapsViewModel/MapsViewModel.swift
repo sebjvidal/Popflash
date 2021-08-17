@@ -11,49 +11,33 @@ import FirebaseFirestore
 class MapsViewModel: ObservableObject {
     
     @Published var maps = [Map]()
-    @Published var dragging: Map?
     
     private var db = Firestore.firestore()
     
-    func fetchData(ref: Query) {
+    func fetchData() {
         
-        ref.getDocuments { (querySnapshot, error) in
+        let db = Firestore.firestore()
+        let ref = db.collection("maps")
+        
+        ref.getDocuments { snapshot, error in
             
-            guard let documents = querySnapshot?.documents else {
+            guard let documents = snapshot?.documents else {
                 
                 return
                 
             }
             
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
             for document in documents {
                 
-                let data = document.data()
+                let map = mapFrom(doc: document)
                 
-                let id = document.documentID
-                let name = data["name"] as? String ?? ""
-                let group = data["group"] as? String ?? ""
-                let scenario = data["scenario"] as? String ?? ""
-                let background = data["background"] as? String ?? ""
-                let radar = data["radar"] as? String ?? ""
-                let icon = data["icon"] as? String ?? ""
-                let views = data["views"] as? Int ?? 0
-                let lastAdded = data["lastAdded"] as? String ?? ""
-                let favourite = data["favourite"] as? Bool ?? false
-                let position = data["position"] as? Int ?? 0
-
-                let map = Map(id: id,
-                              name: name,
-                              group: group,
-                              scenario: scenario,
-                              background: background,
-                              radar: radar,
-                              icon: icon,
-                              views: views,
-                              lastAdded: lastAdded,
-                              favourite: favourite,
-                              position: position)
-                
-                if !self.maps.contains(map) { self.maps.append(map) }
+                self.maps.append(map)
                 
             }
             
