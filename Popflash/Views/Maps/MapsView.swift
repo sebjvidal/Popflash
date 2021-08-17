@@ -39,10 +39,10 @@ struct MapsView: View {
             .listStyle(.plain)
             .navigationBarTitle("Maps", displayMode: .inline)
             .navigationBarHidden(hideNavBar)
-            .onAppear(perform: onAppear)
-            .onDisappear(perform: onDisappear)
 
         }
+        .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
         
     }
     
@@ -50,7 +50,7 @@ struct MapsView: View {
         
         if mapsViewModel.maps.isEmpty {
 
-            mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+            mapsViewModel.fetchData()
 
         }
 
