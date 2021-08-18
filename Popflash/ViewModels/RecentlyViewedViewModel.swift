@@ -29,18 +29,62 @@ class RecentlyViewedViewModel: ObservableObject {
             
         }
         
-        // TODO: Implement order based off order enum
-        
-        let db = Firestore.firestore()
-        var ref = db.collection("users").document(user.uid).collection("recentlyViewed").order(by: "dateAdded", descending: true)
-
-        if !nades.isEmpty {
+        if !self.nades.isEmpty {
             
-            ref = ref.start(afterDocument: lastDocument)
+            return
             
         }
         
+        var recentIDs = [String: Double]()
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("recents").order(by: "dateAdded", descending: true)
+        
         ref.addSnapshotListener { snapshot, error in
+            
+            guard let documents = snapshot?.documents else { return }
+            
+            for document in documents {
+                
+                let data = document.data()
+                
+                let id = data["id"] as? String ?? ""
+                let dateAdded = data["dateAdded"] as? Double ?? 0
+                
+                recentIDs[id] = dateAdded
+                
+            }
+            
+            self.fetchNades(for: recentIDs)
+            
+        }
+        
+    }
+    
+    func fetchNades(for nades: [String: Double]) {
+        
+        if nades.isEmpty {
+            
+            return
+            
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("recents").whereField("id", in: Array(nades.keys)).order(by: "dateAdded", descending: true)
+        
+        ref.getDocuments { snapshot, error in
             
             guard let documents = snapshot?.documents else {
                 
@@ -54,15 +98,12 @@ class RecentlyViewedViewModel: ObservableObject {
                 
             }
             
-            self.nades.removeAll()
-            
             for document in documents {
                 
                 let nade = nadeFrom(doc: document)
                 
                 self.nades.append(nade)
-                self.lastDocument = document
-                
+                                
             }
             
         }
