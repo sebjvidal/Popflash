@@ -115,7 +115,7 @@ private struct NadeList: View {
 
                         }
                         .padding(.horizontal)
-                        .padding(.bottom, lastNade(nade: nade, inSection: section) ? 0 : 16)
+                        .padding(.bottom, lastNade(nade: nade, inSection: section) ? nade == recentNades.last ? 16 : 0 : 16)
                         
                     }
                     
