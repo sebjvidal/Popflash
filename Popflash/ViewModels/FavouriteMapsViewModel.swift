@@ -20,17 +20,15 @@ class FavouriteMapsViewModel: ObservableObject {
         if user.isAnonymous { return }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("maps").order(by: "favourite")
+        let ref = db.collection("users").document(user.uid).collection("maps").order(by: "position")
         
-        ref.getDocuments { snapshot, error in
+        ref.addSnapshotListener { snapshot, error in
             
             guard let documents = snapshot?.documents else { return }
             
-            for document in documents {
+            self.maps = documents.map { querySnapshot -> Map in
                 
-                let map = mapFrom(doc: document)
-                
-                self.maps.append(map)
+                return mapFrom(doc: querySnapshot)
                 
             }
             
