@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Map: Hashable, Identifiable {
+struct Map: Encodable, Hashable, Identifiable {
     
     var id: String
     var name: String
