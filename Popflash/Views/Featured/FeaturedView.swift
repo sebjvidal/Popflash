@@ -12,8 +12,7 @@ import FirebaseFirestoreSwift
 
 struct FeaturedView: View {
     
-    @StateObject var featuredNadeViewModel = NadesViewModel()
-    @StateObject var featuredMapViewModel = MapsViewModel()
+    @StateObject var featuredViewModel = FeaturedViewModel()
     
     @State private var statusOppacity = 0.0
     @State private var selectedNade: Nade?
@@ -32,11 +31,11 @@ struct FeaturedView: View {
                         
                         Header()
                         
-                        FeaturedNade(nades: $featuredNadeViewModel.nades,
+                        FeaturedNade(nades: $featuredViewModel.featuredNade,
                                      selectedNade: $selectedNade,
                                      nadeViewIsPresented: $nadeViewIsPresented)
 
-                        MoreFrom(maps: $featuredMapViewModel.maps,
+                        MoreFrom(maps: $featuredViewModel.featuredMap,
                                  selectedNade: $selectedNade,
                                  nadeViewIsPresented: $nadeViewIsPresented)
                         
@@ -67,23 +66,14 @@ struct FeaturedView: View {
     }
     
     func fetchFeaturedData() {
-        
-        let db = Firestore.firestore()
-        
-        let nadeRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "nade").limit(to: 1)
-        let mapRef = db.collection("featured").whereField(FieldPath.documentID(), isEqualTo: "map").limit(to: 1)
-        
-        featuredNadeViewModel.nades.removeAll()
-        featuredMapViewModel.maps.removeAll()
-        
-        featuredNadeViewModel.fetchData(ref: nadeRef)
-        featuredMapViewModel.fetchData(ref: mapRef)
+
+        featuredViewModel.fetchData()
         
     }
     
     func onAppear() {
         
-        if featuredNadeViewModel.nades.isEmpty {
+        if featuredViewModel.featuredNade.isEmpty {
             
             fetchFeaturedData()
             
