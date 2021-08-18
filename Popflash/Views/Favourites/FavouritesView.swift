@@ -15,10 +15,12 @@ struct FavouritesView: View {
     @State var isShowing = false
     @State var selectedNade: Nade?
     
+    @AppStorage("tabSelection") var tabSelection: Int = 0
+    
     var body: some View {
         
         NavigationView {
-
+            
             List {
                 
                 Group {
@@ -55,6 +57,13 @@ struct FavouritesView: View {
             }
             
         }
+        .onAppear(perform: onAppear)
+        
+    }
+    
+    func onAppear() {
+        
+        tabSelection = 2
         
     }
     
@@ -65,20 +74,20 @@ private struct Header: View {
     var body: some View {
         
         LazyVStack(alignment: .leading, spacing: 0) {
-
+            
             Spacer()
                 .frame(height: 52)
-
+            
             HStack() {
-
+                
                 Text("Favourites")
                     .font(.system(size: 32))
                     .fontWeight(.bold)
                     .padding(.leading, 16)
                     .padding(.bottom, 5)
-
+                
             }
-
+            
         }
         
     }
@@ -88,17 +97,14 @@ private struct Header: View {
 
 private struct FavouriteMaps: View {
     
-    @ObservedObject var mapsViewModel = MapsViewModel()
-    
     @Binding var isShowing: Bool
+    
+    @ObservedObject var mapsViewModel = FavouriteMapsViewModel()
     
     @State private var showingFavouriteMapsEdittingView = false
     
-    @AppStorage("tabSelection") var tabSelection: Int = 0
-    @AppStorage("favourites.maps") var favouriteMaps: Array = [String]()
-    
     var body: some View {
-
+        
         ZStack(alignment: .topLeading) {
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -108,27 +114,17 @@ private struct FavouriteMaps: View {
                     Divider()
                         .padding(.horizontal)
                         .padding(.bottom, 47)
-
+                    
                     HStack {
                         
                         Spacer()
                             .frame(width: 8)
-
-                        if !mapsViewModel.maps.isEmpty {
+                        
+                        ForEach(mapsViewModel.maps, id: \.self) { map in
                             
-                            ForEach(favouriteMaps, id: \.self) { favouriteMap in
+                            NavigationLink(destination: MapsDetailView(map: map)) {
                                 
-                                if let map = mapsViewModel.maps.first(where: { $0.name == favouriteMap }) {
-                                    
-                                    NavigationLink(destination: MapsDetailView(map: map)) {
-                                        
-                                        FavouriteMapCell(map: map)
-                                            .contentShape(Rectangle())
-                                        
-                                    }
-                                    .buttonStyle(FavouriteMapCellButtonStyle())
-                                    
-                                }
+                                FavouriteMapCell(map: map)
                                 
                             }
                             
@@ -159,9 +155,7 @@ private struct FavouriteMaps: View {
         }
         .onAppear() {
             
-            tabSelection = 2
-            
-            mapsViewModel.fetchData(ref: Firestore.firestore().collection("maps"))
+            mapsViewModel.fetchData()
             
         }
         
@@ -249,7 +243,7 @@ private struct FavouriteNades: View {
     @AppStorage("favourites.nades") var favouriteNades = [String]()
     
     var body: some View {
-
+        
         HStack(alignment: .bottom) {
             
             Text("Grenades")
@@ -279,7 +273,7 @@ private struct FavouriteNades: View {
         .onAppear(perform: onAppear)
         
         ForEach(favouritesViewModel.nades, id: \.self) { nade in
-                
+            
             Button {
                 
                 self.selectedNade = nade
@@ -299,7 +293,7 @@ private struct FavouriteNades: View {
     }
     
     func onAppear() {
-
+        
         favouritesViewModel.fetchData()
         
     }
@@ -323,15 +317,15 @@ struct FavouriteNadeCell: View {
                 .clipped()
             
             ZStack(alignment: .topLeading) {
-
+                
                 KFImage(URL(string: nade.thumbnail))
                     .setProcessor(processor)
                     .resizable()
                     .frame(height: 106)
-                    .overlay(.regularMaterial)
-
+                    .overlay(.thickMaterial)
+                
                 VStack(alignment: .leading, spacing: 0) {
-
+                    
                     Text(nade.map)
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
@@ -350,7 +344,7 @@ struct FavouriteNadeCell: View {
                         .padding(.top, 0)
                         .padding(.horizontal, 4)
                         .lineLimit(2)
-
+                    
                 }
                 .padding(.leading, 8)
                 
