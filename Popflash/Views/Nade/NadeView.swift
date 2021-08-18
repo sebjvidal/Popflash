@@ -112,7 +112,7 @@ struct NadeView: View {
         guard let dateDouble = Double(dateString) else { return }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user).collection("recentlyViewed").whereField("id", isEqualTo: nade.id).whereField("dateAdded", isGreaterThan: dateDouble)
+        let ref = db.collection("users").document(user).collection("recents").whereField("id", isEqualTo: nade.id).whereField("dateAdded", isGreaterThan: dateDouble)
         
         ref.getDocuments { snapshot, error in
             
@@ -120,7 +120,7 @@ struct NadeView: View {
             
             for document in documents {
 
-                db.collection("users").document(user).collection("recentlyViewed").document(document.documentID).delete()
+                db.collection("users").document(user).collection("recents").document(document.documentID).delete()
                 
             }
             
@@ -137,7 +137,7 @@ struct NadeView: View {
         recentNade.dateAdded = favouriteDate()
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user).collection("recentlyViewed").document()
+        let ref = db.collection("users").document(user).collection("recents").document()
 
         do {
             
@@ -699,6 +699,8 @@ private struct FavouriteButton: View {
                 if let error = error {
                     
                     print(error.localizedDescription)
+                    
+                    return
                     
                 }
                 
