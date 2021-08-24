@@ -103,6 +103,7 @@ class RecentlyViewedViewModel: ObservableObject {
                 let nade = nadeFrom(doc: document)
                 
                 self.nades.append(nade)
+                self.lastDocument = document
                                 
             }
             
