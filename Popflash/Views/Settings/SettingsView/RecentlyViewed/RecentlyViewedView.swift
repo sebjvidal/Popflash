@@ -24,6 +24,9 @@ struct RecentlyViewedView: View {
                 NadeList(recentNades: $recentlyViewed.nades,
                          selectedNade: $selectedNade)
                 
+                ActivityIndicator()
+                    .onAppear(perform: loadMore)
+                
             }
             .listRowInsets(.some(EdgeInsets()))
             .listRowSeparator(.hidden)
@@ -37,7 +40,21 @@ struct RecentlyViewedView: View {
     
     func onAppear() {
         
-        recentlyViewed.fetchData()
+        if recentlyViewed.nades.isEmpty {
+            
+            recentlyViewed.fetchData()
+            
+        }
+        
+    }
+    
+    func loadMore() {
+        
+        if !recentlyViewed.nades.isEmpty {
+            
+            recentlyViewed.fetchData()
+            
+        }
         
     }
     
