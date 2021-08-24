@@ -23,22 +23,20 @@ class RecentlyViewedViewModel: ObservableObject {
             
         }
         
-        if user.isAnonymous {
-            
-            return
-            
-        }
+        if user.isAnonymous { return }
         
-        if !self.nades.isEmpty {
-            
-            return
-            
-        }
+        if !self.nades.isEmpty { return }
         
         var recentIDs = [String: Double]()
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("recents").order(by: "dateAdded", descending: true)
+        var ref = db.collection("users").document(user.uid).collection("recents").order(by: "dateAdded", descending: true).limit(to: 10)
+        
+        if lastDocument != nil {
+            
+            ref = ref.start(afterDocument: lastDocument)
+            
+        }
         
         ref.addSnapshotListener { snapshot, error in
             
