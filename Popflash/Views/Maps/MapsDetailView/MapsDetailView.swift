@@ -4,7 +4,6 @@ import BottomSheet
 import FirebaseAuth
 import FirebaseFirestore
 
-
 struct MapsDetailView: View {
     
     var map: Map
@@ -128,7 +127,6 @@ struct MapsDetailView: View {
         
         var filteredRef = ref
         let filters = ["type": selectedType,
-                       "tick": selectedTick,
                        "side": selectedSide,
                        "bind": selectedBind]
         
@@ -138,6 +136,19 @@ struct MapsDetailView: View {
                 
                 filteredRef = filteredRef.whereField(filter.key, isEqualTo: filter.value.replacingOccurrences(of: "\n", with: ""))
                 
+            }
+            
+        }
+        
+        let tickExclusion = ["64": "128",
+                             "128": "64"]
+        
+        if selectedTick != "All" {
+            
+            if let exclusion = tickExclusion[selectedTick] {
+                
+                filteredRef = filteredRef.whereField("tick", isNotEqualTo: exclusion)
+                                
             }
             
         }
@@ -567,22 +578,6 @@ private struct NadeCellTypeIcon: View {
 
     }
 
-}
-
-private struct ActivityIndicator: View {
-    
-    var body: some View {
-        
-        LazyVStack {
-            
-            ProgressView()
-                .padding(.top, 12)
-                .padding(.bottom, 20)
-            
-        }
-        
-    }
-    
 }
 
 private struct HeaderOffsetPreferenceKey: PreferenceKey {
