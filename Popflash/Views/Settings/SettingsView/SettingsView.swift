@@ -28,6 +28,8 @@ struct SettingsView: View {
                     
                     RecentlyViewed()
                     
+                    NotificationsRow()
+                    
                     Settings()
                     
                     if loggedInStatus {
@@ -274,11 +276,6 @@ private struct Settings: View {
             Divider()
                 .padding(.leading, 54)
             
-            NotificationsRow()
-            
-            Divider()
-                .padding(.leading, 54)
-            
             CompactMapsViewRow()
             
         }
@@ -377,6 +374,61 @@ private struct RecentlyViewed: View {
     
 }
 
+private struct NotificationsRow: View {
+    
+    @State private var action: Int? = 0
+    
+    var body: some View {
+        
+        ZStack {
+            
+            NavigationLink(destination: NotificationsView(), tag: 1, selection: $action) {
+                
+                EmptyView()
+                
+            }
+            .hidden()
+            .disabled(true)
+            
+            Button(action: showNotifications) {
+                
+                HStack {
+                    
+                    SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
+                    
+                    Text("Notifications")
+                        .frame(height: 43)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing)
+                    
+                }
+                .padding(.vertical, 6)
+                .background(Color("Background"))
+                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                
+            }
+            .cellShadow()
+            .buttonStyle(RoundedTableCell())
+            .padding(.top, 8)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+            
+        }
+        
+    }
+    
+    func showNotifications() {
+        
+        action = 1
+        
+    }
+    
+}
+
 private struct AutoPlayVideoRow: View {
     
     @AppStorage("settings.autoPlayVideo") var autoPlayVideo = false
@@ -435,29 +487,6 @@ private struct PlayAudioSilencedRow: View {
             SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "bell.and.waveform.fill"))
 
             Toggle("Silenced Audio Playback", isOn: $playAudioSilenced)
-                .padding(.trailing)
-            
-        }
-        
-    }
-    
-}
-
-private struct NotificationsRow: View {
-    
-    var body: some View {
-        
-        HStack {
-            
-            SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
-            
-            Text("Notifications")
-                .frame(height: 43)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
                 .padding(.trailing)
             
         }
