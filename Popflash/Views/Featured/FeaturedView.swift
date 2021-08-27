@@ -24,6 +24,8 @@ struct FeaturedView: View {
     var body: some View {
         
         NavigationView {
+            
+            ZStack {
                 
                 List {
                     
@@ -34,7 +36,7 @@ struct FeaturedView: View {
                         FeaturedNade(nades: $featuredViewModel.featuredNade,
                                      selectedNade: $selectedNade,
                                      nadeViewIsPresented: $nadeViewIsPresented)
-
+                        
                         MoreFrom(maps: $featuredViewModel.featuredMap,
                                  selectedNade: $selectedNade,
                                  nadeViewIsPresented: $nadeViewIsPresented)
@@ -43,7 +45,7 @@ struct FeaturedView: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(.some(EdgeInsets()))
                     .buttonStyle(.plain)
-                                    
+                    
                 }
                 .listStyle(.plain)
                 .navigationBarTitle("Featured", displayMode: .inline)
@@ -55,6 +57,17 @@ struct FeaturedView: View {
                 }
                 .onAppear(perform: onAppear)
                 .onDisappear(perform: onDisappear)
+                
+                GeometryReader { geo in
+                    
+                    Rectangle()
+                        .foregroundColor(Color("True_Background"))
+                        .frame(width: geo.size.width, height: geo.safeAreaInsets.top, alignment: .center)
+                        .ignoresSafeArea()
+                    
+                }
+                
+            }
             
         }
         .sheet(item: self.$selectedNade) { item in
@@ -66,7 +79,7 @@ struct FeaturedView: View {
     }
     
     func fetchFeaturedData() {
-
+        
         featuredViewModel.fetchData()
         
     }
@@ -100,33 +113,33 @@ private struct Header: View {
     var body: some View {
         
         LazyVStack(alignment: .center, spacing: 0) {
-
+            
             Spacer()
                 .frame(height: 36)
-
+            
             HStack {
-
+                
                 VStack(alignment: .leading) {
-
+                    
                     Text(dateTimeString.uppercased())
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
                         .fontWeight(.semibold)
-
+                    
                     Text("Featured")
                         .font(.system(size: 32))
                         .fontWeight(.bold)
-
+                    
                 }
-
+                
                 Spacer()
-
+                
             }
-
+            
             Divider()
                 .padding(.top, 6)
                 .padding(.bottom, 16)
-
+            
         }
         .padding(.horizontal)
         .task {
@@ -193,14 +206,14 @@ private struct FeaturedCell: View {
     var nade: Nade
     
     var body: some View {
-            
+        
         VStack(spacing: 0) {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-//                .frame(width: UIScreen.screenWidth - 32,
-//                       height: (UIScreen.screenWidth - 32 ) / 1.777)
-//                .aspectRatio(contentMode: .fill)
+            //                .frame(width: UIScreen.screenWidth - 32,
+            //                       height: (UIScreen.screenWidth - 32 ) / 1.777)
+            //                .aspectRatio(contentMode: .fill)
                 .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
             
             VStack(alignment: .leading, spacing: 0) {
@@ -244,9 +257,9 @@ private struct FeaturedCell: View {
         }
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-    
-    }
         
+    }
+    
 }
 
 
@@ -271,7 +284,7 @@ private struct SeeMore: View {
 }
 
 private struct MoreFrom: View {
-        
+    
     @Binding var maps: [Map]
     @Binding var selectedNade: Nade?
     @Binding var nadeViewIsPresented: Bool
@@ -279,7 +292,7 @@ private struct MoreFrom: View {
     @State private var action: Int? = 0
     
     var body: some View {
-            
+        
         ForEach(maps, id: \.self) { map in
             
             VStack(alignment: .leading, spacing: 0) {
@@ -294,11 +307,11 @@ private struct MoreFrom: View {
                     .padding(.top, 10)
                     .padding(.leading, 17)
                     .padding(.bottom, 10)
-                    
+                
                 ZStack {
-                                            
-                    NavigationLink(destination: MapsDetailView(map: map), tag: 1, selection: $action) {
                     
+                    NavigationLink(destination: MapsDetailView(map: map), tag: 1, selection: $action) {
+                        
                         EmptyView()
                         
                     }
@@ -306,9 +319,9 @@ private struct MoreFrom: View {
                     .disabled(true)
                     
                     Button {
-
+                        
                         action = 1
-
+                        
                     } label: {
                         
                         MapCell(map: map)
@@ -359,7 +372,7 @@ private struct Top5: View {
                         .frame(width: 16)
                     
                     ForEach(top5Nades.nades, id: \.self) { nade in
-                                                
+                        
                         Button {
                             
                             print(nade.name)
@@ -374,7 +387,7 @@ private struct Top5: View {
                                 .fixedSize()
                             
                         }
-                                                
+                        
                     }
                     .buttonStyle(ComplimentsCellButtonStyle())
                     
@@ -399,9 +412,9 @@ private struct Top5: View {
         let db = Firestore.firestore()
         
         if top5Nades.nades.isEmpty {
-        
+            
             top5Nades.fetchData(ref: db.collection("nades").whereField("map", isEqualTo: map).order(by: "views", descending: true).limit(to: 5))
-        
+            
         }
         
     }
@@ -427,7 +440,7 @@ private struct Compliments: View {
                     .onAppear() {
                         
                         self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                     .whereField("id", in: nade.compliments))
+                                                                .whereField("id", in: nade.compliments))
                         
                     }
                 
