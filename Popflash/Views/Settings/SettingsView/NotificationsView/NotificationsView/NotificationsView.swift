@@ -114,61 +114,91 @@ private struct NotificationsSettingsView: View {
     
     var body: some View {
 
-        VStack(alignment: .leading) {
+        VStack {
             
-            Toggle("News", isOn: $newsNotifications)
-                .onChange(of: newsNotifications) { _ in
+            HStack(alignment: .top) {
+                
+                VStack(alignment: .leading, spacing: 0) {
                     
-                    if newsNotifications {
-                        
-                        subscribe(to: "popflashNews")
-                        
-                    } else {
-                        
-                        unsubscribe(from: "popflashNews")
-                        
-                    }
+                    Text("News")
+                        .padding(.top, 2)
+                        .font(.headline)
+                    
+                    Text("Receive occasional notifications when new maps, grenade line-ups and features are added.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     
                 }
-                .padding(.horizontal)
-            
-            Text("Receive occasional notifications of new maps, grenade line-ups and features.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .padding(.top, -8)
-                .padding(.leading)
-                .padding(.trailing, 64)
-            
+                
+                Spacer()
+                
+                Toggle("News", isOn: $newsNotifications)
+                    .labelsHidden()
+                    .padding(.top, 8)
+                    .onChange(of: newsNotifications) { _ in
+                        
+                        if newsNotifications {
+                            
+                            subscribe(to: "popflashNews")
+                            
+                        } else {
+                            
+                            unsubscribe(from: "popflashNews")
+                            
+                        }
+                        
+                    }
+                
+            }
+            .padding(.horizontal)
+
             Divider()
                 .padding(.leading, 16)
             
-            Toggle("Featured", isOn: $featuredNotifications)
-                .onChange(of: featuredNotifications) { _ in
+            HStack(alignment: .top) {
+                
+                VStack(alignment: .leading, spacing: 0) {
                     
-                    if featuredNotifications {
-                        
-                        subscribe(to: "popflashFeatured")
-                        
-                    } else {
-                        
-                        unsubscribe(from: "popflashFeatured")
-                        
-                    }
+                    Text("Featured")
+                        .padding(.top, 2)
+                        .font(.headline)
+                    
+                    Text("Receive a daily notification of the featured grenade line-up and map. ")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     
                 }
-                .padding(.horizontal)
-            
-            Text("Receive a daily notification of a featured grenade line-up and map.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .padding(.top, -8)
-                .padding(.leading)
-                .padding(.trailing, 64)
+                
+                Spacer()
+                
+                Toggle("Featured", isOn: $featuredNotifications)
+                    .labelsHidden()
+                    .padding(.top, 8)
+                    .onChange(of: featuredNotifications) { _ in
+                        
+                        if featuredNotifications {
+                            
+                            subscribe(to: "popflashFeatured")
+                            
+                        } else {
+                            
+                            unsubscribe(from: "popflashFeatured")
+                            
+                        }
+                        
+                    }
+                
+            }
+            .padding(.horizontal)
             
         }
-        .padding(.vertical, 8)
+        .padding(.top, 8)
+        .padding(.bottom, 14)
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .cellShadow()
         .padding()
         .onAppear(perform: onAppear)
         .onChange(of: notificationsViewModel.notifications) { notifications in
