@@ -82,8 +82,6 @@ struct NadeView: View {
             
         ])
         
-        print("+1")
-        
     }
     
     func addToRecentlyViewed() {
@@ -164,8 +162,6 @@ struct NadeView: View {
         let date = Date()
         let dateString = dateString(from: date)
         let dateDouble = Double(dateString) ?? 0
-        
-        print(dateDouble)
         
         return dateDouble
         
@@ -295,8 +291,6 @@ private struct VideoView: View {
     }
     
     func setupPlayer() {
-        
-        print("setupPlayer")
         
         player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
         
