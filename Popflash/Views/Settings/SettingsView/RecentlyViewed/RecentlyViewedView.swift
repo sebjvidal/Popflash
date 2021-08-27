@@ -35,6 +35,11 @@ struct RecentlyViewedView: View {
         .listStyle(.plain)
         .navigationBarTitle("", displayMode: .inline)
         .onAppear(perform: onAppear)
+        .sheet(item: $selectedNade) { nade in
+            
+            NadeView(nade: nade)
+            
+        }
         
     }
     
@@ -177,8 +182,6 @@ private struct NadeList: View {
     func viewNade(nade: Nade) {
         
         selectedNade = nade
-        
-        print(recentNades.count)
         
     }
     
