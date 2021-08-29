@@ -10,9 +10,13 @@ import SwiftUI
 import SwiftUI
 import FirebaseFirestore
 
-func mapFrom(doc: QueryDocumentSnapshot) -> Map {
+func mapFrom(doc: DocumentSnapshot) -> Map? {
     
-    let data = doc.data()
+    guard let data = doc.data() else {
+        
+        return nil
+        
+    }
     
     let id = doc.documentID
     let name = data["name"] as? String ?? ""
