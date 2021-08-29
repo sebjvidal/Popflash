@@ -12,7 +12,7 @@ import Kingfisher
 class Coordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UICollectionViewDataSource {
 
     var parent: MapCollectionView
-    var previousData = [Map]()
+    var previousData: [String] = []
     
     init(_ parent: MapCollectionView) {
         
@@ -35,70 +35,24 @@ class Coordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let item = self.parent.maps[indexPath.item]
-        let cellWidth = (UIScreen.main.bounds.width - 64) / 3
-
-        let backgroundImage = UIImageView()
-        backgroundImage.kf.setImage(with: URL(string: self.parent.maps[indexPath.item].background))
-        backgroundImage.frame = CGRect(x: 0, y: 0, width: cellWidth, height: cellWidth * 1.5)
-        backgroundImage.contentMode = .scaleAspectFill
-        backgroundImage.layer.cornerCurve = .continuous
-        backgroundImage.layer.cornerRadius = 15
-        backgroundImage.clipsToBounds = true
-        backgroundImage.layer.borderColor = UIColor.systemBlue.cgColor
-        backgroundImage.layer.borderWidth = previousData.contains(item) ? 5 : 0
-
-        let iconImage = UIImageView()
-        iconImage.kf.setImage(with: URL(string: self.parent.maps[indexPath.item].icon))
-        iconImage.frame = CGRect(x: (cellWidth / 2) - 40,
-                                 y: ((cellWidth / 2) * 1.5) - 40,
-                                 width: 80, height: 80)
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteMapCell", for: indexPath)
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOffset = CGSize(width: 0, height: 5)
-        cell.layer.shadowRadius = 6
-        cell.layer.shadowOpacity = 0.15
-        cell.backgroundColor = .clear
-
-        cell.addSubview(backgroundImage)
-        cell.addSubview(iconImage)
+        
+        let cell: FavouriteMapCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteMapCell", for: indexPath) as! FavouriteMapCollectionViewCell
+        cell.setupCell(map: item)
         cell.layer.cornerRadius = 15
         
-        if self.parent.selectedMaps.contains(item) {
+        if self.parent.selectedMaps.contains(item.id) {
 
-            if previousData.contains(item) {
-
-                backgroundImage.layer.borderWidth = 5
-
-            } else {
-
-                UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut) {
-
-                    backgroundImage.layer.borderWidth = 5
-
-                }
-
-            }
+            cell.contentView.layer.opacity = 1
+            cell.backgroundImage.transform = CGAffineTransform(scaleX: 1, y: 1)
 
         } else {
-
-            if previousData.contains(item) {
-
-                UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut) {
-                    
-                    backgroundImage.layer.borderWidth = 0
-                    
-                }
-
-            } else {
                 
-                backgroundImage.layer.borderWidth = 0
-                
+            cell.contentView.layer.opacity = 0.25
+            cell.backgroundImage.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
 
-            }
 
         }
-
+        
         return cell
 
     }
@@ -116,22 +70,35 @@ class Coordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDeleg
         previousData = self.parent.selectedMaps
         
         let item = self.parent.maps[indexPath.item]
+        let cell = collectionView.cellForItem(at: indexPath) as! FavouriteMapCollectionViewCell
         
-        if self.parent.selectedMaps.contains(item) {
-            
-            if let index = self.parent.selectedMaps.firstIndex(of: item) {
-                
+        if self.parent.selectedMaps.contains(item.id) {
+
+            if let index = self.parent.selectedMaps.firstIndex(of: item.id) {
+
                 self.parent.selectedMaps.remove(at: index)
                 
+                UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut) {
+
+                    cell.contentView.layer.opacity = 0.25
+                    cell.backgroundImage.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+
+                }
+
             }
-            
+
         } else {
+
+            self.parent.selectedMaps.append(item.id)
             
-            self.parent.selectedMaps.append(item)
-            
+            UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut) {
+                
+                cell.contentView.layer.opacity = 1
+                cell.backgroundImage.transform = CGAffineTransform(scaleX: 1, y: 1)
+
+            }
+
         }
-        
-        collectionView.reloadData()
         
     }
     
@@ -209,6 +176,47 @@ class Coordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDeleg
             coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
 
         }
+        
+    }
+    
+}
+
+class FavouriteMapCollectionViewCell: UICollectionViewCell {
+    
+    var backgroundImage: UIImageView = UIImageView()
+    var iconImage: UIImageView = UIImageView()
+    
+    override init(frame: CGRect) {
+        
+        super.init(frame: frame)
+        
+        let cellWidth = (UIScreen.main.bounds.width - 64) / 3
+
+        backgroundImage.frame = CGRect(x: 0, y: 0, width: cellWidth, height: cellWidth * 1.5)
+        backgroundImage.contentMode = .scaleAspectFill
+        backgroundImage.layer.cornerCurve = .continuous
+        backgroundImage.layer.cornerRadius = 15
+        backgroundImage.clipsToBounds = true
+        
+        iconImage.frame = CGRect(x: (cellWidth / 2) - 40,
+                                 y: ((cellWidth / 2) * 1.5) - 40,
+                                 width: 80, height: 80)
+        
+        backgroundImage.addSubview(iconImage)
+        contentView.addSubview(backgroundImage)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        
+        fatalError("init(coder:) has not been implemented")
+        
+    }
+    
+    func setupCell(map: Map) {
+        
+        backgroundImage.kf.setImage(with: URL(string: map.background))
+        iconImage.kf.setImage(with: URL(string: map.icon))
         
     }
     
