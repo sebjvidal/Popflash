@@ -35,9 +35,11 @@ class MapsViewModel: ObservableObject {
             
             for document in documents {
                 
-                let map = mapFrom(doc: document)
+                if let map = mapFrom(doc: document) {
                 
-                self.maps.append(map)
+                    self.maps.append(map)
+                
+                }
                 
             }
             
