@@ -120,7 +120,11 @@ private struct FavouriteMaps: View {
                         Spacer()
                             .frame(width: 8)
                         
-                        ForEach(mapsViewModel.maps, id: \.self) { map in
+                        ForEach(mapsViewModel.maps.sorted(by: {
+                            
+                            $0.position < $1.position
+                            
+                        }), id: \.self) { map in
                             
                             NavigationLink(destination: MapsDetailView(map: map)) {
                                 
@@ -137,7 +141,7 @@ private struct FavouriteMaps: View {
                         
                     }
                     .frame(minWidth: UIScreen.screenWidth)
-                    .buttonStyle(FavouriteMapCellButtonStyle())
+//                    .buttonStyle(FavouriteMapCellButtonStyle())
                     
                     Divider()
                         .padding(.horizontal)
@@ -151,11 +155,6 @@ private struct FavouriteMaps: View {
                 .fontWeight(.semibold)
                 .padding(.top, 12)
                 .padding(.leading, 18)
-            
-        }
-        .onAppear() {
-            
-            mapsViewModel.fetchData()
             
         }
         
