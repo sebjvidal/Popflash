@@ -201,18 +201,18 @@ private struct FavouriteToolbarItem: View {
     var body: some View {
 
         Button(action: favourite) {
-
-            if isLoading {
-
+            
+            ZStack {
+                
                 ProgressView()
                     .progressViewStyle(.circular)
-                    .onAppear(perform: getFavourite)
-
-            } else {
-
+                    .opacity(isLoading ? 1 : 0)
+                
                 Image(systemName: isFavourite ? "heart.fill" : "heart")
-
+                    .opacity(isLoading ? 0 : 1)
+                
             }
+            .onAppear(perform: getFavourite)
 
         }
         
@@ -220,30 +220,31 @@ private struct FavouriteToolbarItem: View {
     
     func getFavourite() {
         
-        guard let user = Auth.auth().currentUser else { return }
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
         
-        if user.isAnonymous { return }
+        if user.isAnonymous {
+            
+            return
+            
+        }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("maps").whereField("name", isEqualTo: map.name)
+        let mapRef = db.collection("maps").document(map.id)
+        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
         
         ref.getDocuments { snapshot, error in
             
-            guard let documents = snapshot?.documents else { return }
-            
-            for document in documents {
+            guard let documents = snapshot?.documents else {
                 
-                let data = document.data()
-                
-                guard let name = data["name"] as? String else { return }
-            
-                if name == map.name {
-                    
-                    isFavourite = true
-                    
-                }
+                return
                 
             }
+            
+            isFavourite = !documents.isEmpty
             
             DispatchQueue.main.async {
                 
@@ -273,35 +274,45 @@ private struct FavouriteToolbarItem: View {
     
     func addToFavourites() {
         
-        guard let user = Auth.auth().currentUser else { return }
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
         
-        if user.isAnonymous { return }
+        if user.isAnonymous {
+            
+            return
+            
+        }
         
         isLoading = true
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("maps").document(map.id)
+        let ref = db.collection("users").document(user.uid).collection("maps").document()
         
-        do {
+        guard let dateDouble = Double(dateString(from: Date())) else {
             
-            try ref.setData(from: map, completion: { error in
-                
-                if let error = error {
-                    
-                    print(error.localizedDescription)
-                    
-                    return
-                    
-                }
-                
-                isFavourite = true
-                isLoading = false
-                
-            })
+            return
             
-        } catch let error {
+        }
+        
+        ref.setData([
+            "map": db.collection("maps").document(map.id),
+            "position": dateDouble
+        ]) { error in
             
-            print(error.localizedDescription)
+            isLoading = false
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+                return
+                
+            }
+            
+            isFavourite = true
             
         }
         
@@ -309,28 +320,53 @@ private struct FavouriteToolbarItem: View {
     
     func removeFromFavourites() {
         
-        guard let user = Auth.auth().currentUser else { return }
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
         
-        if user.isAnonymous { return }
+        if user.isAnonymous {
+            
+            return
+            
+        }
         
         isLoading = true
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("maps").document(map.id)
+        let mapRef = db.collection("maps").document(map.id)
+        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
         
-        ref.delete { error in
+        ref.getDocuments { snapshot, error in
             
-            if let error = error {
-                
-                print(error.localizedDescription)
-                
-                isLoading = false
+            guard let documents = snapshot?.documents else {
                 
                 return
                 
             }
             
-            isFavourite = false
+            for document in documents {
+                
+                let favRef = db.collection("users").document(user.uid).collection("maps").document(document.documentID)
+                
+                favRef.delete { error in
+                    
+                    if let error = error {
+                        
+                        print(error.localizedDescription)
+                        
+                        isLoading = false
+                        
+                        return
+                        
+                    }
+                    
+                    isFavourite = false
+                    
+                }
+                
+            }
             
         }
         
