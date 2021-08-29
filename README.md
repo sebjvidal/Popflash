@@ -18,14 +18,14 @@ Detail view:
 - [x] Animated header
 - [x] Add to favourites button
 - [x] Search function
-- [ ] Filter by type, i.e. Smoke, Flashbang, Molotov, HE Grenade
-- [ ] Filter by metadata, i.e. server tickrate
+- [X] Filter by type, i.e. Smoke, Flashbang, Molotov, HE Grenade
+- [X] Filter by metadata, i.e. server tickrate
 
 
 ## Favourites
 Save favourite grenade line-ups in the Favourites tab for easy access.
 - [x] Favourite maps horizontal ScrollView
 - [x] Favourite grenade line-ups vertical ScrollView
-- [ ] Sort/edit favourite maps
+- [X] Sort/edit favourite maps
 
 ![Popflash Preview](https://i.imgur.com/FTUaeJW.png)
