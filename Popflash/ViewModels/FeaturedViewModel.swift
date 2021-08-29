@@ -47,9 +47,11 @@ class FeaturedViewModel: ObservableObject {
             
             for document in documents {
                 
-                let map = mapFrom(doc: document)
-                
-                self.featuredMap = [map]
+                if let map = mapFrom(doc: document) {
+                    
+                    self.featuredMap = [map]
+                    
+                }
                 
             }
             
