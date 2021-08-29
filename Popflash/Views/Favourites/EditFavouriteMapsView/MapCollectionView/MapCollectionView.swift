@@ -13,8 +13,10 @@ import FirebaseFirestore
 
 struct MapCollectionView: UIViewControllerRepresentable {
     
+    @StateObject var favouriteMaps = FavouriteMapsViewModel()
+    
     @Binding var maps: [Map]
-    @Binding var selectedMaps: [Map]
+    @Binding var selectedMaps: [String]
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<MapCollectionView>) -> UICollectionViewController {
         
@@ -30,13 +32,14 @@ struct MapCollectionView: UIViewControllerRepresentable {
         collectionViewController.collectionView.dragDelegate = context.coordinator
         collectionViewController.collectionView.dropDelegate = context.coordinator
         collectionViewController.collectionView.dataSource = context.coordinator
-        collectionViewController.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "FavouriteMapCell")
+        collectionViewController.collectionView.register(FavouriteMapCollectionViewCell.self, forCellWithReuseIdentifier: "FavouriteMapCell")
         collectionViewController.collectionView.alwaysBounceVertical = true
         collectionViewController.collectionView.dragInteractionEnabled = true
         collectionViewController.collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         collectionViewController.collectionView.backgroundColor = .clear
         
-        loadCollectionViewData(collectionViewController.collectionView)
+        loadMaps(collectionViewController.collectionView)
+        loadFavourites(collectionViewController.collectionView)
         
         return collectionViewController
         
@@ -50,24 +53,26 @@ struct MapCollectionView: UIViewControllerRepresentable {
         
     }
     
-    func loadCollectionViewData(_ collectionView: UICollectionView) {
-        
-        guard let user = Auth.auth().currentUser else { return }
-        
-        if user.isAnonymous { return }
+    func loadMaps(_ collectionView: UICollectionView) {
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("maps")
+        let ref = db.collection("maps").order(by: "name")
         
         ref.getDocuments { snapshot, error in
             
-            guard let documents = snapshot?.documents else { return }
+            guard let documents = snapshot?.documents else {
+                
+                return
+                
+            }
             
             for document in documents {
                 
-                let map = mapFrom(doc: document)
-                
-                self.maps.append(map)
+                if let map = mapFrom(doc: document) {
+                    
+                    self.maps.append(map)
+                    
+                }
                 
             }
             
@@ -75,6 +80,65 @@ struct MapCollectionView: UIViewControllerRepresentable {
             
         }
         
+    }
+    
+    func loadFavourites(_ collectionView: UICollectionView) {
+
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("maps")
+        
+        ref.getDocuments { snapshot, error in
+            
+            guard let documents = snapshot?.documents else {
+                
+                return
+                
+            }
+
+            for document in documents {
+                
+                let data = document.data()
+                
+                guard let mapRef = data["map"] as? DocumentReference else {
+                    
+                    return
+                    
+                }
+                
+                mapRef.getDocument { snapshot, error in
+                    
+                    guard let document = snapshot else {
+                        
+                        return
+                        
+                    }
+                    
+                    if let map = mapFrom(doc: document) {
+                        
+                        self.selectedMaps.append(map.id)
+                        
+                    }
+                    
+                    collectionView.reloadData()
+                    
+                }
+                
+            }
+            
+        }
+
     }
     
 }
