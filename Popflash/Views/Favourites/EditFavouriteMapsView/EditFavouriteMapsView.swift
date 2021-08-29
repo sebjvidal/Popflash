@@ -7,12 +7,13 @@
 
 import SwiftUI
 import Kingfisher
+import FirebaseAuth
 import FirebaseFirestore
 
 struct EditFavouriteMapsView: View {
     
     @State var maps = [Map]()
-    @State var selectedMaps = [Map]()
+    @State var selectedMaps = [String]()
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -25,26 +26,128 @@ struct EditFavouriteMapsView: View {
                 .navigationBarTitle("Edit Favourite Maps", displayMode: .inline)
                 .navigationBarItems(
                     leading:
-                        Button(action: {
-                            
-                            self.presentationMode.wrappedValue.dismiss()
-                            
-                        }) {
+                        Button(action: cancel) {
                             Text("Cancel")
                                 .fontWeight(.regular)
                         },
                     trailing:
-                        Button(action: {
-                            
-                            self.presentationMode.wrappedValue.dismiss()
-                            
-                        }) {
+                        Button(action: save) {
                             Text("Done")
                                 .fontWeight(.bold)
                         }
                 )
             
         }
+        
+    }
+    
+    func save() {
+        
+        removeExistingFavourites()
+        
+    }
+    
+    func cancel() {
+        
+        self.presentationMode.wrappedValue.dismiss()
+        
+    }
+    
+    func removeExistingFavourites() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("maps")
+        let batch = db.batch()
+        
+        ref.getDocuments { snapshot, error in
+            
+            guard let documents = snapshot?.documents else {
+                
+                return
+                
+            }
+            
+            for document in documents {
+                
+                batch.deleteDocument(ref.document(document.documentID))
+                
+            }
+            
+            batch.commit { error in
+                
+                if let error = error {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+                
+                addNewFavourites()
+                
+            }
+            
+        }
+        
+    }
+    
+    func addNewFavourites() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        var favouriteMaps: [(id: String, position: Int)] = []
+        
+        for map in maps where selectedMaps.contains(map.id) {
+            
+            favouriteMaps.append((id: map.id, position: favouriteMaps.count))
+            
+        }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("maps")
+        
+        let batch = db.batch()
+
+        for favourite in favouriteMaps {
+
+            batch.setData([
+                "map": db.collection("maps").document(favourite.id),
+                "position": favourite.position
+            ], forDocument: ref.document())
+
+        }
+        
+        batch.commit { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
+        
+        self.presentationMode.wrappedValue.dismiss()
         
     }
     
