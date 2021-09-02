@@ -131,6 +131,9 @@ private struct FavouriteMaps: View {
                                 FavouriteMapCell(map: map)
                                 
                             }
+                            .buttonStyle(FavouriteMapCellButtonStyle())
+                            .padding(.leading, 8)
+                            .padding(.bottom, 16)
                             
                         }
                         
@@ -141,7 +144,6 @@ private struct FavouriteMaps: View {
                         
                     }
                     .frame(minWidth: UIScreen.screenWidth)
-//                    .buttonStyle(FavouriteMapCellButtonStyle())
                     
                     Divider()
                         .padding(.horizontal)
@@ -187,8 +189,6 @@ private struct FavouriteMapCell: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .cellShadow()
-        .padding(.leading, 8)
-        .padding(.bottom, 16)
         
     }
     
@@ -223,6 +223,7 @@ private struct EditFavouritesButton: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .shadow(color: .black.opacity(0.1), radius: 6, y: 5)
+            .buttonStyle(FavouriteMapCellButtonStyle())
             .padding(.leading, 8)
             .padding(.bottom, 16)
             
