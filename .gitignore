@@ -1,1 +1,10 @@
+# Xcode
+
+## User settings
+xcuserdata/*
+.DS_Store
+
+# Firebase
+
+## Google Services
 GoogleService-Info.plist
