@@ -131,6 +131,7 @@ struct EditFavouriteMapsView: View {
         for favourite in favouriteMaps {
 
             batch.setData([
+                "id": favourite.id,
                 "map": db.collection("maps").document(favourite.id),
                 "position": favourite.position
             ], forDocument: ref.document())
