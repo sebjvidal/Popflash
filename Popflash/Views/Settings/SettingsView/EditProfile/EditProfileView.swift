@@ -41,6 +41,11 @@ struct EditProfileView: View {
                 
                 RankGrid(selectedIndex: $rankSelection)
                 
+                Divider()
+                    .padding(.horizontal)
+                
+                DeleteAccount(presentationMode: presentationMode)
+                
             }
             .navigationBarTitle("Edit Profile", displayMode: .inline)
             .navigationBarItems(
@@ -539,6 +544,7 @@ private struct RankGrid: View {
             }
             .padding(.horizontal, 12)
             .padding(.top, 16)
+            .padding(.bottom, 8)
             
         }
         .onAppear(perform: onAppear)
@@ -643,6 +649,135 @@ private struct SkillGroupCell: View {
             return false
             
         }
+        
+    }
+    
+}
+
+private struct DeleteAccount: View {
+    
+    @Binding var presentationMode: PresentationMode
+    
+    @State private var showingActionSheet = false
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            Text("Delete Account")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.leading, 18)
+            
+            Text("Delete your account and associated data.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.leading, 18)
+            
+            Button(action: deleteAccountAction) {
+
+                Text("Delete Account")
+                    .foregroundColor(.red)
+                    .padding(.vertical, 14)
+                    .frame(width: UIScreen.screenWidth - 32)
+                    .background(Color("Background"))
+                
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .buttonStyle(RoundedTableCell())
+            .padding(.vertical, 12)
+            .padding(.horizontal)
+            .cellShadow()
+            .actionSheet(isPresented: $showingActionSheet) {
+                
+                ActionSheet(title: Text("Delete Account"),
+                            message: Text("Are you sure you want to delete your Popflash account and all associated data?"),
+                            buttons: [
+                                .destructive(Text("Delete Account")) {
+                                    
+                                    deleteAccount()
+                                    
+                                },
+                                .cancel()
+                            ])
+                
+            }
+            
+        }
+        
+    }
+    
+    func deleteAccountAction() {
+        
+        showingActionSheet = true
+        
+    }
+    
+    func deleteAccount() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        deleteUserDocument(for: user)
+        deleteUserAvatar(for: user)
+        signOut()
+        
+        presentationMode.dismiss()
+        
+    }
+    
+    func deleteUserDocument(for user: User) {
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid)
+        
+        ref.delete { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
+        
+    }
+    
+    func deleteUserAvatar(for user: User) {
+        
+        let storage = Storage.storage()
+        let ref = storage.reference().child("Avatars/\(user.uid).png")
+        
+        ref.delete { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
+        
+    }
+    
+    func signOut() {
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            try? Auth.auth().signOut()
+            
+        }
+        
+        authenticateAnonymously()
         
     }
     
