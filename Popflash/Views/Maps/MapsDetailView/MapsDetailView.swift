@@ -298,6 +298,7 @@ private struct FavouriteToolbarItem: View {
         }
         
         ref.setData([
+            "id": map.id,
             "map": db.collection("maps").document(map.id),
             "position": dateDouble
         ]) { error in
