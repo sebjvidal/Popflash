@@ -49,7 +49,11 @@ class NotificationsViewModel: ObservableObject {
                     
                 }
                 
-                self.notifications = data["notifications"] as! [String]
+                if let notifications = data["notifications"] as? [String] {
+                    
+                    self.notifications = notifications
+                    
+                }
                 
                 self.loading = false
                 
