@@ -12,8 +12,8 @@ import Foundation
 class UserViewModel: ObservableObject {
     
     @Published var id = String()
-    @Published var displayName = String()
-    @Published var skillGroup = String()
+    @Published var displayName: String?
+    @Published var skillGroup: String?
     @Published var avatar = String()
     
     func fetchData(forUser: String) {
@@ -36,8 +36,8 @@ class UserViewModel: ObservableObject {
             }
             
             self.id = document.documentID
-            self.displayName = data["displayName"] as? String ?? "Display Name"
-            self.skillGroup = data["skillGroup"] as? String ?? "Unknown"
+            self.displayName = data["displayName"] as? String
+            self.skillGroup = data["skillGroup"] as? String
             self.avatar = data["avatar"] as? String ?? ""
             
         }
