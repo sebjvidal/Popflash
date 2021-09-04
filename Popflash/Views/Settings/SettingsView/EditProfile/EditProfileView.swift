@@ -59,7 +59,8 @@ struct EditProfileView: View {
                     SaveButton(presentationMode: presentationMode,
                                rankSelection: $rankSelection,
                                displayName: $displayName,
-                               inputImage: $inputImage)
+                               inputImage: $inputImage,
+                               deleteAvatar: $deleteAvatar)
                 
             )
             
@@ -96,11 +97,10 @@ private struct CancelButton: View {
 private struct SaveButton: View {
     
     @Binding var presentationMode: PresentationMode
-    
     @Binding var rankSelection: String
     @Binding var displayName: String
     @Binding var inputImage: UIImage?
-    
+    @Binding var deleteAvatar: Bool
     @State var showingAlert = false
     @State var alertID = 0
     
@@ -144,12 +144,12 @@ private struct SaveButton: View {
     
     func save() {
         
-        if rankSelection == "Unknown" && displayName == "" {
+        if rankSelection == "" && displayName == "" {
             
             alertID = 1
             showingAlert = true
             
-        } else if rankSelection == "Unknown" {
+        } else if rankSelection == "" {
             
             alertID = 2
             showingAlert = true
@@ -244,6 +244,12 @@ private struct SaveButton: View {
     }
     
     func removeImage() {
+        
+        if !deleteAvatar {
+            
+            return
+            
+        }
         
         guard let user = Auth.auth().currentUser else {
             
@@ -472,8 +478,6 @@ private struct DisplayNameTextField: View {
                     
                     Button {
                         
-                        print("tapped")
-                        
                         clear()
                         
                     } label: {
@@ -680,7 +684,7 @@ private struct DeleteAccount: View {
                     .foregroundColor(.red)
                     .padding(.vertical, 14)
                     .frame(width: UIScreen.screenWidth - 32)
-                    .background(Color("Background"))
+                    .background(Color("Secondary_Background"))
                 
             }
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
