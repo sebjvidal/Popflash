@@ -125,11 +125,11 @@ private struct Profile: View {
                 
                 VStack(alignment: .leading) {
 
-                    Text(signedIn ? userViewModel.displayName : "Sign in to Popflash")
+                    Text(signedIn ? String(userViewModel.displayName ?? "Display Name") : "Sign in to Popflash")
                         .foregroundStyle(signedIn ? AnyShapeStyle(.primary) : AnyShapeStyle(.blue))
                         .font(.headline)
                     
-                    Text(signedIn ? userViewModel.skillGroup : "Add grenades to favourites, see recently viewed.")
+                    Text(signedIn ? String(userViewModel.skillGroup ?? "Skill Group Unknown") : "Add grenades to favourites, see recently viewed.")
                         .foregroundStyle(.secondary)
                         .font(.callout)
                     
@@ -158,8 +158,8 @@ private struct Profile: View {
         }
         .sheet(isPresented: $showingProfileEditor) {
             
-            EditProfileView(displayName: userViewModel.displayName,
-                            rankSelection: userViewModel.skillGroup,
+            EditProfileView(displayName: userViewModel.displayName ?? "",
+                            rankSelection: userViewModel.skillGroup ?? "",
                             profilePicture: userViewModel.avatar)
             
         }
