@@ -64,27 +64,34 @@ class LoginViewModel: ObservableObject {
 }
 
 func createFirestoreAccount(user: String, credential: ASAuthorizationAppleIDCredential) {
-    
-    guard let givenName = credential.fullName?.givenName else {
-        
-        return
-        
-    }
-    
-    guard let familyName = credential.fullName?.familyName else {
-        
-        return
-        
-    }
-    
+
     if let uid = Auth.auth().currentUser?.uid {
         
         let db = Firestore.firestore()
+        let ref = db.collection("users").document(uid)
         
-        db.collection("users").document(uid).setData([
-            "displayName": "\(givenName) \(familyName)",
-            "skillGroup": "Unknown",
-        ])
+        let names = [credential.fullName?.givenName,
+                     credential.fullName?.familyName]
+        
+        let displayName = names.compactMap({ $0 }).joined(separator: " ")
+        
+        var data: [String: Any] = [:]
+        
+        if !displayName.isEmpty {
+            
+            data["displayName"] = displayName
+            
+        }
+
+        ref.setData(data, merge: true) { error in
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+            }
+            
+        }
         
     }
     
