@@ -8,9 +8,13 @@
 import SwiftUI
 import FirebaseFirestore
 
-func nadeFrom(doc: QueryDocumentSnapshot) -> Nade {
+func nadeFrom(doc: DocumentSnapshot) -> Nade? {
     
-    let data = doc.data()
+    guard let data = doc.data() else {
+        
+        return nil
+        
+    }
     
     let documentID = doc.documentID
     let id = data["id"] as? String ?? ""
