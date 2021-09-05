@@ -89,18 +89,4 @@ struct ContentView: View {
         
     }
     
-    func initStateDidChangeListener() {
-        
-        Auth.auth().addStateDidChangeListener { auth, user in
-            
-            guard let user = user else {
-                
-                return
-                
-            }
-            
-        }
-        
-    }
-    
 }
