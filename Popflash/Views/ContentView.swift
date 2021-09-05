@@ -76,11 +76,12 @@ struct ContentView: View {
     
     func displayWelcomeView() {
         
-        if firstLaunch && !loggedIn {
+        if firstLaunch {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 
                 showWelcomeView = true
+                firstLaunch = false
                 
             }
             
