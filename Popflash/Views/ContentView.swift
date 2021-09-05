@@ -16,7 +16,6 @@ struct ContentView: View {
     @State var tabSelection = standard.integer(forKey: "tabSelection")
     
     @AppStorage("firstLaunch") var firstLaunch = true
-    @AppStorage("loggedInStatus") var loggedIn = false
     
     var body: some View {
         
