@@ -26,6 +26,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         
+        Auth.auth().addStateDidChangeListener { auth, user in
+            
+            if let user = user {
+                
+                print("User \(user.uid) logged in. Anonymous: \(user.isAnonymous)")
+                
+            } else {
+                
+                authenticateAnonymously()
+                
+            }
+            
+        }
+        
         Messaging.messaging().delegate = self
         
         if #available(iOS 10.0, *) {

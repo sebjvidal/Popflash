@@ -100,8 +100,6 @@ struct ContentView: View {
                 
             }
             
-            print("User \(user.uid) logged in. Anonymous: \(user.isAnonymous)")
-            
         }
         
     }
