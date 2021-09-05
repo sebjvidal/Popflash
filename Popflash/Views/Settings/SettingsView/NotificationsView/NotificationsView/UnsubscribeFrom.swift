@@ -37,6 +37,6 @@ func unsubscribe(from topic: String) {
     let db = Firestore.firestore()
     let ref = db.collection("users").document(user.uid)
     
-    ref.updateData(["notifications" : FieldValue.arrayRemove([topic])])
+    ref.updateData(["topics" : FieldValue.arrayRemove([topic])])
     
 }
