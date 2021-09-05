@@ -38,9 +38,17 @@ class NadesViewModel: ObservableObject {
                 
                 self.lastDocument = document
                 
-                let nade = nadeFrom(doc: document)
+                guard let nade = nadeFrom(doc: document) else {
+                    
+                    continue
+                    
+                }
                 
-                if !self.nades.contains(nade) { self.nades.append(nade) }
+                if !self.nades.contains(nade) {
+                    
+                    self.nades.append(nade)
+                    
+                }
                 
             }
             
