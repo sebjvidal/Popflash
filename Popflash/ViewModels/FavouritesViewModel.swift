@@ -45,7 +45,11 @@ class FavouritesViewModel: ObservableObject {
                 
                 for document in documents {
                     
-                    let nade = nadeFrom(doc: document)
+                    guard let nade = nadeFrom(doc: document) else {
+                        
+                        continue
+                        
+                    }
                     
                     self.nades.append(nade)
                                     
