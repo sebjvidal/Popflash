@@ -238,7 +238,7 @@ private struct FeaturedCell: View {
                     .padding(.top, 10)
                     .padding(.bottom, 12)
                 
-                Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
+                Text(nade.longDescription.replacingOccurrences(of: "\\n\\n", with: " "))
                     .lineLimit(3)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
