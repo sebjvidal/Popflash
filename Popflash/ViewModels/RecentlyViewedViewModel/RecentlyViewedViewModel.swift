@@ -117,7 +117,11 @@ class RecentlyViewedViewModel: ObservableObject {
                     
                 }
                 
-                var nade = nadeFrom(doc: document)
+                guard var nade = nadeFrom(doc: document) else {
+                    
+                    continue
+                    
+                }
                 
                 nade.dateAdded = pointer.dateAdded
                 
