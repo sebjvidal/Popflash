@@ -211,9 +211,6 @@ private struct FeaturedCell: View {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-            //                .frame(width: UIScreen.screenWidth - 32,
-            //                       height: (UIScreen.screenWidth - 32 ) / 1.777)
-            //                .aspectRatio(contentMode: .fill)
                 .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
             
             VStack(alignment: .leading, spacing: 0) {
