@@ -29,9 +29,13 @@ class FeaturedViewModel: ObservableObject {
             
             for document in documents {
                 
-                let nade = nadeFrom(doc: document)
+                let data = document.data()
                 
-                self.featuredNade = [nade]
+                if let nadeRef = data["reference"] as? DocumentReference {
+                    
+                    self.fetchNade(from: nadeRef)
+                    
+                }
                 
             }
 
@@ -47,11 +51,53 @@ class FeaturedViewModel: ObservableObject {
             
             for document in documents {
                 
-                if let map = mapFrom(doc: document) {
+                let data = document.data()
+                
+                if let mapRef = data["reference"] as? DocumentReference {
                     
-                    self.featuredMap = [map]
+                    self.fetchMap(from: mapRef)
                     
                 }
+                
+            }
+            
+        }
+        
+    }
+    
+    private func fetchNade(from ref: DocumentReference) {
+        
+        ref.getDocument { document, error in
+            
+            guard let document = document  else {
+                
+                return
+                
+            }
+            
+            if let nade = nadeFrom(doc: document) {
+                
+                self.featuredNade = [nade]
+                
+            }
+
+        }
+        
+    }
+    
+    private func fetchMap(from ref: DocumentReference) {
+        
+        ref.getDocument { document, error in
+            
+            guard let document = document else {
+                
+                return
+                
+            }
+            
+            if let map = mapFrom(doc: document) {
+                
+                self.featuredMap = [map]
                 
             }
             
