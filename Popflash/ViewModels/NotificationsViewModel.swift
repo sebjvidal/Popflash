@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 class NotificationsViewModel: ObservableObject {
     
-    @Published var notifications = [String]()
+    @Published var topics = [String]()
     @Published var loading = Bool()
     
     func fetchData() {
@@ -49,9 +49,9 @@ class NotificationsViewModel: ObservableObject {
                     
                 }
                 
-                if let notifications = data["notifications"] as? [String] {
+                if let topics = data["topics"] as? [String] {
                     
-                    self.notifications = notifications
+                    self.topics = topics
                     
                 }
                 
