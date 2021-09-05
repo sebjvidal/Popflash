@@ -63,6 +63,16 @@
 		C2D4068026454B6B00CDCB2B /* ComplimentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */; };
 		C2D70557269232D6005A0D3B /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D70556269232D6005A0D3B /* OverviewView.swift */; };
 		C2DE77FE26CD67560092BADE /* FeaturedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE77FD26CD67560092BADE /* FeaturedViewModel.swift */; };
+		C2DE780126CFBF9D0092BADE /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE780026CFBF9D0092BADE /* NotificationsView.swift */; };
+		C2DE780326D0F7F60092BADE /* EnableNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE780226D0F7F60092BADE /* EnableNotificationsView.swift */; };
+		C2DE780626D2A8A10092BADE /* SubscribeTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE780526D2A8A10092BADE /* SubscribeTo.swift */; };
+		C2DE780826D2A9E50092BADE /* UnsubscribeFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE780726D2A9E50092BADE /* UnsubscribeFrom.swift */; };
+		C2DE780A26D2AC610092BADE /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE780926D2AC610092BADE /* NotificationsViewModel.swift */; };
+		C2DE781426D4FEB80092BADE /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE781326D4FEB80092BADE /* NotificationService.swift */; };
+		C2DE781826D4FEB80092BADE /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2DE781126D4FEB80092BADE /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C2DE783826D537760092BADE /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C2DE783726D537760092BADE /* FirebaseMessaging */; };
+		C2DE783A26D56EEC0092BADE /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE783926D56EEC0092BADE /* ActivityIndicator.swift */; };
+		C2DE785126D826A60092BADE /* RecentlyViewedViewModelOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE785026D826A60092BADE /* RecentlyViewedViewModelOrder.swift */; };
 		C2E65E7926C54F0E004DEE87 /* RecentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7826C54F0E004DEE87 /* RecentSection.swift */; };
 		C2E65E7C26C54F44004DEE87 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7B26C54F44004DEE87 /* Date.swift */; };
 		C2E65E7E26C54F63004DEE87 /* DateObjectFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */; };
@@ -88,7 +98,28 @@
 			remoteGlobalIDString = C2069AC425CAE8B300ACFD15;
 			remoteInfo = Popflash;
 		};
+		C2DE781626D4FEB80092BADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2069ABD25CAE8B300ACFD15 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2DE781026D4FEB80092BADE;
+			remoteInfo = NotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C2DE781C26D4FEB80092BADE /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C2DE781826D4FEB80092BADE /* NotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C2069AC525CAE8B300ACFD15 /* Popflash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Popflash.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +177,18 @@
 		C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplimentCell.swift; sourceTree = "<group>"; };
 		C2D70556269232D6005A0D3B /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		C2DE77FD26CD67560092BADE /* FeaturedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedViewModel.swift; sourceTree = "<group>"; };
+		C2DE780026CFBF9D0092BADE /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		C2DE780226D0F7F60092BADE /* EnableNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableNotificationsView.swift; sourceTree = "<group>"; };
+		C2DE780526D2A8A10092BADE /* SubscribeTo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribeTo.swift; sourceTree = "<group>"; };
+		C2DE780726D2A9E50092BADE /* UnsubscribeFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsubscribeFrom.swift; sourceTree = "<group>"; };
+		C2DE780926D2AC610092BADE /* NotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModel.swift; sourceTree = "<group>"; };
+		C2DE781126D4FEB80092BADE /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2DE781326D4FEB80092BADE /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		C2DE781526D4FEB80092BADE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C2DE782226D500240092BADE /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		C2DE782426D500240092BADE /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		C2DE783926D56EEC0092BADE /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		C2DE785026D826A60092BADE /* RecentlyViewedViewModelOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyViewedViewModelOrder.swift; sourceTree = "<group>"; };
 		C2E65E7826C54F0E004DEE87 /* RecentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSection.swift; sourceTree = "<group>"; };
 		C2E65E7B26C54F44004DEE87 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateObjectFrom.swift; sourceTree = "<group>"; };
@@ -185,6 +228,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2DE780E26D4FEB80092BADE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2DE783826D537760092BADE /* FirebaseMessaging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -194,6 +245,7 @@
 				C2069AC725CAE8B300ACFD15 /* Popflash */,
 				C2069ADE25CAE8B400ACFD15 /* PopflashTests */,
 				C2069AE925CAE8B400ACFD15 /* PopflashUITests */,
+				C2DE781226D4FEB80092BADE /* NotificationServiceExtension */,
 				C2069AC625CAE8B300ACFD15 /* Products */,
 				C2A1D2D526B0A20300DF92DF /* Frameworks */,
 			);
@@ -205,6 +257,7 @@
 				C2069AC525CAE8B300ACFD15 /* Popflash.app */,
 				C2069ADB25CAE8B400ACFD15 /* PopflashTests.xctest */,
 				C2069AE625CAE8B400ACFD15 /* PopflashUITests.xctest */,
+				C2DE781126D4FEB80092BADE /* NotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -257,6 +310,7 @@
 		C2069B0825CB3A9C00ACFD15 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C2DE783926D56EEC0092BADE /* ActivityIndicator.swift */,
 				C27E496825DEC78F00692E01 /* ArrayAppStorage.swift */,
 				C2E7A6B026A33EFA0057B5ED /* CellShadow.swift */,
 				C267B579261CD19800958E01 /* CustomButtonStyle.swift */,
@@ -321,6 +375,7 @@
 			children = (
 				C227A49925D828C2003F6822 /* SettingsView.swift */,
 				C272480B26B5A4AF00251418 /* EditProfile */,
+				C2DE77FF26CFBF7E0092BADE /* NotificationsView */,
 				C2E7A6AF26A1C4690057B5ED /* RecentlyViewed */,
 			);
 			path = SettingsView;
@@ -367,7 +422,8 @@
 				C272481A26B9C16500251418 /* FavouritesViewModel.swift */,
 				C2DE77FD26CD67560092BADE /* FeaturedViewModel.swift */,
 				C2F8AD5026ADD7F100038524 /* LoginViewModel.swift */,
-				C2B968EE26C16F9A00CB2C04 /* RecentlyViewedViewModel.swift */,
+				C2DE780926D2AC610092BADE /* NotificationsViewModel.swift */,
+				C2DE784F26D8265F0092BADE /* RecentlyViewedViewModel */,
 				C2B968EB26C01A4300CB2C04 /* MapsViewModel */,
 				C272481C26B9C47800251418 /* NadesViewModel */,
 				C2334C6726B328A9004C0FAA /* SkillGroupViewModel.swift */,
@@ -414,6 +470,8 @@
 		C2A1D2D526B0A20300DF92DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2DE782226D500240092BADE /* UserNotifications.framework */,
+				C2DE782426D500240092BADE /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -443,6 +501,43 @@
 				C2D4067F26454B6B00CDCB2B /* ComplimentCell.swift */,
 			);
 			path = Nade;
+			sourceTree = "<group>";
+		};
+		C2DE77FF26CFBF7E0092BADE /* NotificationsView */ = {
+			isa = PBXGroup;
+			children = (
+				C2DE780226D0F7F60092BADE /* EnableNotificationsView.swift */,
+				C2DE780426D2A8870092BADE /* NotificationsView */,
+			);
+			path = NotificationsView;
+			sourceTree = "<group>";
+		};
+		C2DE780426D2A8870092BADE /* NotificationsView */ = {
+			isa = PBXGroup;
+			children = (
+				C2DE780026CFBF9D0092BADE /* NotificationsView.swift */,
+				C2DE780526D2A8A10092BADE /* SubscribeTo.swift */,
+				C2DE780726D2A9E50092BADE /* UnsubscribeFrom.swift */,
+			);
+			path = NotificationsView;
+			sourceTree = "<group>";
+		};
+		C2DE781226D4FEB80092BADE /* NotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				C2DE781326D4FEB80092BADE /* NotificationService.swift */,
+				C2DE781526D4FEB80092BADE /* Info.plist */,
+			);
+			path = NotificationServiceExtension;
+			sourceTree = "<group>";
+		};
+		C2DE784F26D8265F0092BADE /* RecentlyViewedViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C2B968EE26C16F9A00CB2C04 /* RecentlyViewedViewModel.swift */,
+				C2DE785026D826A60092BADE /* RecentlyViewedViewModelOrder.swift */,
+			);
+			path = RecentlyViewedViewModel;
 			sourceTree = "<group>";
 		};
 		C2DFEA5B26AF31CE003B7E3D /* EditFavouriteMapsView */ = {
@@ -491,10 +586,12 @@
 				C2069AC125CAE8B300ACFD15 /* Sources */,
 				C2069AC225CAE8B300ACFD15 /* Frameworks */,
 				C2069AC325CAE8B300ACFD15 /* Resources */,
+				C2DE781C26D4FEB80092BADE /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C2DE781726D4FEB80092BADE /* PBXTargetDependency */,
 			);
 			name = Popflash;
 			packageProductDependencies = (
@@ -546,13 +643,33 @@
 			productReference = C2069AE625CAE8B400ACFD15 /* PopflashUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C2DE781026D4FEB80092BADE /* NotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C2DE781926D4FEB80092BADE /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */;
+			buildPhases = (
+				C2DE780D26D4FEB80092BADE /* Sources */,
+				C2DE780E26D4FEB80092BADE /* Frameworks */,
+				C2DE780F26D4FEB80092BADE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotificationServiceExtension;
+			packageProductDependencies = (
+				C2DE783726D537760092BADE /* FirebaseMessaging */,
+			);
+			productName = NotificationServiceExtension;
+			productReference = C2DE781126D4FEB80092BADE /* NotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		C2069ABD25CAE8B300ACFD15 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
+				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					C2069AC425CAE8B300ACFD15 = {
@@ -565,6 +682,9 @@
 					C2069AE525CAE8B400ACFD15 = {
 						CreatedOnToolsVersion = 12.4;
 						TestTargetID = C2069AC425CAE8B300ACFD15;
+					};
+					C2DE781026D4FEB80092BADE = {
+						CreatedOnToolsVersion = 13.0;
 					};
 				};
 			};
@@ -589,6 +709,7 @@
 				C2069AC425CAE8B300ACFD15 /* Popflash */,
 				C2069ADA25CAE8B400ACFD15 /* PopflashTests */,
 				C2069AE525CAE8B400ACFD15 /* PopflashUITests */,
+				C2DE781026D4FEB80092BADE /* NotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -619,6 +740,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2DE780F26D4FEB80092BADE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -627,10 +755,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C272481B26B9C16500251418 /* FavouritesViewModel.swift in Sources */,
+				C2DE780826D2A9E50092BADE /* UnsubscribeFrom.swift in Sources */,
 				C227A49A25D828C2003F6822 /* SettingsView.swift in Sources */,
 				C2B968ED26C01A5100CB2C04 /* MapFrom.swift in Sources */,
 				C2B968DF26BDAE0D00CB2C04 /* MapCollectionView.swift in Sources */,
 				C2E65E7926C54F0E004DEE87 /* RecentSection.swift in Sources */,
+				C2DE780626D2A8A10092BADE /* SubscribeTo.swift in Sources */,
 				C231055625D5A7E4000193A9 /* NadeView.swift in Sources */,
 				C23BB237262F4ED100A24E23 /* Detail.swift in Sources */,
 				C2069AC925CAE8B300ACFD15 /* AppDelegate.swift in Sources */,
@@ -641,14 +771,17 @@
 				C2F92E2525CC7A3C00AEECD0 /* MapsDetailView.swift in Sources */,
 				C272480E26B5D0F800251418 /* ImagePicker.swift in Sources */,
 				C2D21B2C260129C100FA7368 /* EditFavouriteMapsView.swift in Sources */,
+				C2DE780326D0F7F60092BADE /* EnableNotificationsView.swift in Sources */,
 				C23C6D5525D41FCF008D283F /* MapsViewModel.swift in Sources */,
 				C227A49F25DB0869003F6822 /* NadesViewModel.swift in Sources */,
 				C2334C6426B3052A004C0FAA /* EditProfileView.swift in Sources */,
+				C2DE780A26D2AC610092BADE /* NotificationsViewModel.swift in Sources */,
 				C2F8AD5126ADD7F100038524 /* LoginViewModel.swift in Sources */,
 				C250054B2681F010004F3A59 /* FilterView.swift in Sources */,
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
 				C2E7A6B126A33EFA0057B5ED /* CellShadow.swift in Sources */,
+				C2DE780126CFBF9D0092BADE /* NotificationsView.swift in Sources */,
 				C2B968EA26C018DE00CB2C04 /* FavouriteMapsViewModel.swift in Sources */,
 				C2069AFC25CAE8D500ACFD15 /* FeaturedView.swift in Sources */,
 				C2334C6626B3285F004C0FAA /* SkillGroup.swift in Sources */,
@@ -661,6 +794,8 @@
 				C2C5EEFB267209DA002ACAE1 /* SearchBar.swift in Sources */,
 				C2069B1525CC041B00ACFD15 /* ContentView.swift in Sources */,
 				C2E65E8026C6ACCE004DEE87 /* DateStringFrom.swift in Sources */,
+				C2DE783A26D56EEC0092BADE /* ActivityIndicator.swift in Sources */,
+				C2DE785126D826A60092BADE /* RecentlyViewedViewModelOrder.swift in Sources */,
 				C23C6D0325D3EE08008D283F /* Map.swift in Sources */,
 				C2B968EF26C16F9A00CB2C04 /* RecentlyViewedViewModel.swift in Sources */,
 				C2069ACB25CAE8B300ACFD15 /* SceneDelegate.swift in Sources */,
@@ -696,6 +831,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2DE780D26D4FEB80092BADE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2DE781426D4FEB80092BADE /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -708,6 +851,11 @@
 			isa = PBXTargetDependency;
 			target = C2069AC425CAE8B300ACFD15 /* Popflash */;
 			targetProxy = C2069AE725CAE8B400ACFD15 /* PBXContainerItemProxy */;
+		};
+		C2DE781726D4FEB80092BADE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2DE781026D4FEB80092BADE /* NotificationServiceExtension */;
+			targetProxy = C2DE781626D4FEB80092BADE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -842,6 +990,7 @@
 		C2069AF025CAE8B400ACFD15 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
@@ -866,6 +1015,7 @@
 		C2069AF125CAE8B400ACFD15 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
@@ -971,6 +1121,58 @@
 			};
 			name = Release;
 		};
+		C2DE781A26D4FEB80092BADE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DY2GQFY855;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sebvidal.Popflash.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C2DE781B26D4FEB80092BADE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DY2GQFY855;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sebvidal.Popflash.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1006,6 +1208,15 @@
 			buildConfigurations = (
 				C2069AF625CAE8B400ACFD15 /* Debug */,
 				C2069AF725CAE8B400ACFD15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C2DE781926D4FEB80092BADE /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C2DE781A26D4FEB80092BADE /* Debug */,
+				C2DE781B26D4FEB80092BADE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1074,6 +1285,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C272482126BA6A0300251418 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		C2DE783726D537760092BADE /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C272482126BA6A0300251418 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
