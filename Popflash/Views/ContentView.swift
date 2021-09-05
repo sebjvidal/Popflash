@@ -72,7 +72,6 @@ struct ContentView: View {
     func onAppear() {
         
         displayWelcomeView()
-        initStateDidChangeListener()
         
     }
     
