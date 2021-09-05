@@ -55,15 +55,15 @@ struct NotificationsView: View {
     func checkPushNotification(){
         
         UNUserNotificationCenter.current().getNotificationSettings() { (setttings) in
-
+            
             switch setttings.authorizationStatus{
                 
             case .authorized:
                 notificationsEnabled = true
-
+                
             case .denied, .notDetermined, .provisional, .ephemeral:
                 notificationsEnabled = false
-
+                
             @unknown default:
                 notificationsEnabled = false
                 
@@ -80,21 +80,21 @@ private struct Header: View {
     var body: some View {
         
         VStack(spacing: 0) {
-
+            
             Spacer()
                 .frame(height: 8)
-
+            
             HStack() {
-
+                
                 Text("Notifications")
                     .font(.system(size: 32))
                     .fontWeight(.bold)
                     .padding(.leading, 16)
                 
                 Spacer()
-
+                
             }
-
+            
             Divider()
                 .padding(.top, 6)
                 .padding(.horizontal, 16)
@@ -122,7 +122,6 @@ private struct NotificationsSettingsView: View {
                     
                     Text("News")
                         .padding(.top, 2)
-                        .font(.headline)
                     
                     Text("Receive occasional notifications when new maps, grenade line-ups and features are added.")
                         .font(.footnote)
@@ -162,7 +161,6 @@ private struct NotificationsSettingsView: View {
                     
                     Text("Featured")
                         .padding(.top, 2)
-                        .font(.headline)
                     
                     Text("Receive a daily notification of the featured grenade line-up and map. ")
                         .font(.footnote)
@@ -201,10 +199,10 @@ private struct NotificationsSettingsView: View {
         .cellShadow()
         .padding()
         .onAppear(perform: onAppear)
-        .onChange(of: notificationsViewModel.notifications) { notifications in
+        .onChange(of: notificationsViewModel.topics) { topics in
             
-            if notifications.contains("popflashNews") { newsNotifications = true }
-            if notifications.contains("popflashFeatured") { featuredNotifications = true }
+            if topics.contains("popflashNews") { newsNotifications = true }
+            if topics.contains("popflashFeatured") { featuredNotifications = true }
             
         }
         
