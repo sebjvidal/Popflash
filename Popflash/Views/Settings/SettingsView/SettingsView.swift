@@ -49,6 +49,7 @@ struct SettingsView: View {
             .navigationBarHidden(true)
             
         }
+        .navigationViewStyle(.stack)
         
     }
     

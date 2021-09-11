@@ -41,6 +41,7 @@ struct MapsView: View {
             .navigationBarHidden(hideNavBar)
 
         }
+        .navigationViewStyle(.stack)
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
         

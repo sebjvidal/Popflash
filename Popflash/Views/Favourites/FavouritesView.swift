@@ -57,6 +57,7 @@ struct FavouritesView: View {
             }
             
         }
+        .navigationViewStyle(.stack)
         .onAppear(perform: onAppear)
         
     }

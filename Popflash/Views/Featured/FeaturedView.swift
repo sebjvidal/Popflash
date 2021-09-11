@@ -70,6 +70,7 @@ struct FeaturedView: View {
             }
             
         }
+        .navigationViewStyle(.stack)
         .sheet(item: self.$selectedNade) { item in
             
             NadeView(nade: item)
