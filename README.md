@@ -28,4 +28,4 @@ Save favourite grenade line-ups in the Favourites tab for easy access.
 - [x] Favourite grenade line-ups vertical ScrollView
 - [X] Sort/edit favourite maps
 
-![Popflash Preview](https://i.imgur.com/FTUaeJW.png)
+![Popflash Preview](https://github.com/sebjvidal/Popflash/blob/main/Images/README_Graphic.png?raw=true)
