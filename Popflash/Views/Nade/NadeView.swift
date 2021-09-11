@@ -33,7 +33,7 @@ struct NadeView: View {
 
             SegmentedControl(selection: $selection)
             
-            SwiftUI.ScrollView {
+            ScrollView {
                 
                 ScrollViewReader { value in
                     
