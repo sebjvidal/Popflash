@@ -47,127 +47,50 @@ class RecentlyViewedViewModel: ObservableObject {
                 
             }
             
-            var recentIDs = [NadePointer]()
-            
             for document in documents {
                 
                 let data = document.data()
                 
-                let id = data["id"] as? String ?? ""
-                let dateAdded = data["dateAdded"] as? Double ?? 0
-                
-                recentIDs.append(NadePointer(id: id, dateAdded: dateAdded))
-                
-                self.lastDocument = document
-
-            }
-            
-            self.fetchNades(for: recentIDs)
-            
-        }
-        
-    }
-    
-    private func fetchNades(for pointers: [NadePointer]) {
-        
-        if pointers.isEmpty {
-            
-            return
-            
-        }
-        
-        guard let user = Auth.auth().currentUser else {
-            
-            return
-            
-        }
-        
-        if user.isAnonymous {
-            
-            return
-            
-        }
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("nades").whereField("id", in: pointerIDs(for: pointers)).limit(to: 10)
-        
-        ref.getDocuments { snapshot, error in
-            
-            guard let documents = snapshot?.documents else {
-                
-                return
-                
-            }
-            
-            if let error = error {
-                
-                print(error.localizedDescription)
-                
-            }
-            
-            for pointer in pointers {
-                
-                guard let document = documents.first(where: { snapshot in
-                    
-                    snapshot.data()["id"] as! String == pointer.id
-                    
-                }) else {
+                guard let recentRef = data["ref"] as? DocumentReference else {
                     
                     return
                     
                 }
                 
-                guard var nade = nadeFrom(doc: document) else {
-                    
-                    continue
-                    
-                }
+                let dateAdded = data["dateAdded"] as? Double ?? 0
                 
-                nade.dateAdded = pointer.dateAdded
+                self.lastDocument = document
                 
-                if !self.nades.isEmpty {
+                recentRef.getDocument { nadeDocument, error in
                     
-                    guard let first = self.nades.first else {
- 
-                        continue
+                    guard let nadeDocument = nadeDocument else {
+                        
+                        return
                         
                     }
                     
-                    if first.id == nade.id || self.nades.contains(nade) {
+                    guard var recentNade = nadeFrom(doc: nadeDocument) else {
                         
-                        continue
+                        return
+                        
+                    }
+                    
+                    recentNade.dateAdded = dateAdded
+                    
+                    
+                    
+                    if !self.nades.contains(recentNade) {
+                        
+                        self.nades.append(recentNade)
                         
                     }
                     
                 }
-                
-                self.nades.append(nade)
-                
+
             }
             
         }
         
     }
-    
-    private func pointerIDs(for pointers: [NadePointer]) -> [String] {
-        
-        var IDs = [String]()
-        
-        for pointer in pointers {
-            
-            IDs.append(pointer.id)
-            
-        }
-        
-        return IDs
-        
-    }
-    
-}
-
-struct NadePointer: Identifiable {
-    
-    var id: String
-    var dateAdded: Double
     
 }
