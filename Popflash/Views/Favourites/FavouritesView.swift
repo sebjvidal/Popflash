@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import FirebaseAuth
 import FirebaseFirestore
 
 struct FavouritesView: View {
@@ -197,15 +198,13 @@ private struct FavouriteMapCell: View {
 
 private struct EditFavouritesButton: View {
     
+    @State private var showingLoginAlert = false
+    @State private var showingLoginSheet = false
     @Binding var isShowing: Bool
     
     var body: some View {
         
-        Button {
-            
-            isShowing.toggle()
-            
-        } label: {
+        Button(action: showEditFavouritesMapView) {
             
             ZStack {
                 
@@ -229,6 +228,45 @@ private struct EditFavouritesButton: View {
             .padding(.bottom, 16)
             
         }
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to add maps to your favourites."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
+        
+    }
+    
+    func showEditFavouritesMapView() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert.toggle()
+            
+        } else {
+            
+            isShowing.toggle()
+            
+        }
+        
+    }
+    
+    func showLogin() {
+        
+        showingLoginSheet.toggle()
         
     }
     
