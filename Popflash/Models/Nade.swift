@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Nade: Encodable, Hashable, Identifiable {
+struct Nade: Codable, Hashable, Identifiable {
     
     var documentID: String
     var id: String
@@ -26,30 +26,7 @@ struct Nade: Encodable, Hashable, Identifiable {
     var tick: String
     var tags: Array<String>
     var dateAdded: Double
-    
     var compliments: Array<String>
     var warning: String
-    
-    enum CodingKeys: String, CodingKey {
-        case documentID
-        case id
-        case name
-        case map
-        case type
-        case side
-        case thumbnail
-        case video
-        case lineup
-        case shortDescription
-        case longDescription
-        case views
-        case favourites
-        case bind
-        case tick
-        case tags
-        case dateAdded
-        case compliments
-        case warning
-    }
     
 }
