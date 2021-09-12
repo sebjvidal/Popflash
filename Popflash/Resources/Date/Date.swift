@@ -13,22 +13,23 @@ func date(bound: Bound, subtracting subrtraction: Int = 0) -> Date {
     
     var dateComponents = Calendar.current.dateComponents(
         [.year, .month, .day, .hour, .minute, .second],
-        from: currentDate)
-    dateComponents.hour = bound == .upper ? 23 : 0
-    dateComponents.minute = bound == .upper ? 59 : 0
-    dateComponents.second = bound == .upper ? 59 : 0
+        from: currentDate
+    )
+    
+    dateComponents.hour = (bound == .upper ? 24 : 1)
+    dateComponents.minute = (bound == .upper ? 59 : 0)
+    dateComponents.second = (bound == .upper ? 59 : 0)
     
     var subtractionComponent = DateComponents()
     subtractionComponent.day = -subrtraction
     
-    let calendar = Calendar(identifier: .gregorian)
-    guard let date = calendar.date(from: dateComponents) else {
+    guard let date = Calendar.current.date(from: dateComponents) else {
         
         return Date()
         
     }
-    
-    guard let dateBound = calendar.date(byAdding: subtractionComponent, to: date) else {
+        
+    guard let dateBound = Calendar.current.date(byAdding: subtractionComponent, to: date) else {
         
         return Date()
         
