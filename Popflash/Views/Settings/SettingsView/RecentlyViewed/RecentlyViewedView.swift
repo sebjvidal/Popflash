@@ -16,24 +16,23 @@ struct RecentlyViewedView: View {
     var body: some View {
             
         List {
-            
-            Group {
                 
-                Header()
+            Group {
                 
                 NadeList(recentNades: $recentlyViewed.nades,
                          selectedNade: $selectedNade)
+                
                 
                 ActivityIndicator()
                     .onAppear(perform: loadMore)
                 
             }
-            .listRowInsets(.some(EdgeInsets()))
             .listRowSeparator(.hidden)
+            .listRowInsets(.some(EdgeInsets()))
             
         }
         .listStyle(.plain)
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarTitle("Recently Viewed", displayMode: .large)
         .onAppear(perform: onAppear)
         .sheet(item: $selectedNade) { nade in
             
@@ -120,12 +119,25 @@ private struct NadeList: View {
                     
                 }) {
                     
-                    Text(section.title)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .padding(.leading, 18)
+                    VStack(alignment: .leading, spacing: 0) {
+                        
+                        Divider()
+                            .padding(.horizontal)
+                            .padding(.bottom, 10)
+                        
+                        Text(section.title)
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .padding(.leading, 18)
+                            .padding(.bottom, 8)
+                        
+                    }
                     
-                    ForEach(nadesIn(section: section), id: \.self) { nade in
+                    ForEach(nadesIn(section: section).sorted(by: {
+                        
+                        $0.dateAdded > $1.dateAdded
+                        
+                    }), id: \.self) { nade in
                         
                         Button {
 
@@ -137,7 +149,8 @@ private struct NadeList: View {
 
                         }
                         .padding(.horizontal)
-                        .padding(.bottom, lastNade(nade: nade, inSection: section) ? nade == recentNades.last ? 16 : 0 : 16)
+                        .padding(.bottom, lastNade(nade: nade, inSection: section) ? nade == recentNades.last ? 16 : 16 : 16)
+                        .listRowSeparator(.hidden)
                         
                     }
                     
@@ -169,6 +182,7 @@ private struct NadeList: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom)
+                    .listRowSeparator(.hidden)
                     
                 }
                 
