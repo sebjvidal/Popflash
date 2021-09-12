@@ -17,9 +17,10 @@ struct NotificationsView: View {
         
         List {
             
-            Group {
+            VStack(spacing: 0) {
                 
-                Header()
+                Divider()
+                    .padding(.horizontal)
                 
                 if notificationsEnabled {
                     
@@ -38,6 +39,7 @@ struct NotificationsView: View {
         }
         .listStyle(.plain)
         .onAppear(perform: onAppear)
+        .navigationBarTitle("Notifications", displayMode: .large)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             
             checkPushNotification()
