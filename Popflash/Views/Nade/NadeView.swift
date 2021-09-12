@@ -104,13 +104,30 @@ struct NadeView: View {
     
     func removeDuplicateViews(forUser user: String) {
         
-        let dateBound = date(bound: .lower)
-        let dateString = dateString(from: dateBound)
+        let lowerDate = date(bound: .lower)
+        let lowerString = dateString(from: lowerDate)
         
-        guard let dateDouble = Double(dateString) else { return }
+        guard let lowerDouble = Double(lowerString) else {
+            
+            return
+            
+        }
+        
+        let upperDate = date(bound: .upper)
+        let upperString = dateString(from: upperDate)
+        
+        guard let upperDouble = Double(upperString) else {
+            
+            return
+            
+        }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user).collection("recents").whereField("id", isEqualTo: nade.id).whereField("dateAdded", isGreaterThan: dateDouble)
+        let recentRef = db.collection("nades").document(nade.documentID)
+        let ref = db.collection("users").document(user).collection("recents")
+            .whereField("ref", isEqualTo: recentRef)
+            .whereField("dateAdded", isGreaterThan: lowerDouble)
+            .whereField("dateAdded", isLessThan: upperDouble)
         
         ref.getDocuments { snapshot, error in
             
@@ -136,22 +153,24 @@ struct NadeView: View {
         
         let db = Firestore.firestore()
         let ref = db.collection("users").document(user).collection("recents").document()
-
-        do {
+        let recent = db.collection("nades").document(nade.documentID)
+        
+        guard let dateAdded = Double(dateString(from: Date())) else {
             
-            try ref.setData(from: recentNade, completion: { error in
+            return
+            
+        }
+        
+        ref.setData([
+            "ref": recent,
+            "dateAdded": dateAdded
+        ]) { error in
+            
+            if let error = error {
                 
-                if let error = error {
-                    
-                    print(error.localizedDescription)
-                    
-                }
+                print(error.localizedDescription)
                 
-            })
-            
-        } catch let error {
-            
-            print(error.localizedDescription)
+            }
             
         }
         
