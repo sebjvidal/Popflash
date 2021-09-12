@@ -77,8 +77,6 @@ class RecentlyViewedViewModel: ObservableObject {
                     
                     recentNade.dateAdded = dateAdded
                     
-                    
-                    
                     if !self.nades.contains(recentNade) {
                         
                         self.nades.append(recentNade)
