@@ -215,7 +215,7 @@ private struct Profile: View {
     
 }
 
-private struct LoginSheet: View {
+struct LoginSheet: View {
     
     @AppStorage("loggedInStatus") var loggedInStatus = false
     
