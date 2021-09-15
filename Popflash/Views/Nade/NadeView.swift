@@ -495,8 +495,18 @@ private struct VideoControls: View {
     
     func forward() {
         
-        player.seek(to: player.currentItem!.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
-        progress = 1
+        guard let playerItem = player.currentItem else {
+            
+            return
+            
+        }
+        
+        if !CMTIME_IS_INDEFINITE(playerItem.duration) && !CMTIME_IS_INVALID(playerItem.duration) {
+            
+            player.seek(to: playerItem.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
+            progress = 1
+            
+        }
         
     }
     
