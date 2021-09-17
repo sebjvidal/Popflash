@@ -323,6 +323,8 @@ private struct SettingIcon: View {
 private struct RecentlyViewed: View {
     
     @State private var action: Int? = 0
+    @State private var showingLoginAlert = false
+    @State private var showingLoginSheet = false
     
     var body: some View {
         
@@ -364,12 +366,45 @@ private struct RecentlyViewed: View {
             .padding(.bottom, 8)
             
         }
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to see recently viewed grenade line-ups."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
         
     }
     
     func showRecent() {
         
-        action = 1
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert = true
+            
+        } else {
+        
+            action = 1
+            
+        }
+        
+    }
+    
+    func showLogin() {
+        
+        showingLoginSheet = true
         
     }
     
@@ -378,6 +413,8 @@ private struct RecentlyViewed: View {
 private struct NotificationsRow: View {
     
     @State private var action: Int? = 0
+    @State private var showingLoginAlert = false
+    @State private var showingLoginSheet = false
     
     var body: some View {
         
@@ -419,12 +456,45 @@ private struct NotificationsRow: View {
             .padding(.bottom, 8)
             
         }
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to receive and manage notifications."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
         
     }
     
     func showNotifications() {
         
-        action = 1
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert = true
+            
+        } else {
+            
+            action = 1
+            
+        }
+        
+    }
+    
+    func showLogin() {
+        
+        showingLoginSheet = true
         
     }
     
