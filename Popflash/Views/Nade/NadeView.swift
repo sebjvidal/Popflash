@@ -536,9 +536,9 @@ struct SegmentedControl: View {
         
         Picker("Content View", selection: $selection) {
             
-            ForEach(options, id: \.self) {
+            ForEach(options, id: \.self) { option in
                 
-                Text($0)
+                Text(option)
                 
             }
             
@@ -623,8 +623,10 @@ private struct FavouriteButton: View {
 
     var nade: Nade
     
-    @State var loading = true
-    @State var isFavourite = false
+    @State private var loading = true
+    @State private var isFavourite = false
+    @State private var showingLoginAlert = false
+    @State private var showingLoginSheet = false
     
     var body: some View {
         
@@ -649,6 +651,19 @@ private struct FavouriteButton: View {
         .background(.regularMaterial)
         .clipShape(Circle())
         .onAppear(perform: getFavourite)
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to add grenade line-ups to your favourites."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
         
     }
 
@@ -657,7 +672,13 @@ private struct FavouriteButton: View {
         
         guard let user = Auth.auth().currentUser else { return }
         
-        if user.isAnonymous { return }
+        if user.isAnonymous {
+        
+            loading = false
+            
+            return
+            
+        }
         
         let db = Firestore.firestore()
         let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.id)
@@ -686,15 +707,33 @@ private struct FavouriteButton: View {
     
     func favouriteAction() {
         
-        if loading { return }
-        
-        if isFavourite {
+        if loading {
             
-            removeFromFavourites()
+            return
+            
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert = true
             
         } else {
             
-            addToFavourites()
+            if isFavourite {
+                
+                removeFromFavourites()
+                
+            } else {
+                
+                addToFavourites()
+                
+            }
             
         }
         
@@ -789,6 +828,12 @@ private struct FavouriteButton: View {
         print(dateDouble)
         
         return dateDouble
+        
+    }
+    
+    func showLogin() {
+        
+        showingLoginSheet = true
         
     }
     
