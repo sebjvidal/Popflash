@@ -50,7 +50,7 @@ struct ComplimentCell: View {
                         .font(.callout)
                         .padding(.horizontal, 11)
                         .lineLimit(2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.primary)
                     
                 }
                 .padding(.top, 8)
