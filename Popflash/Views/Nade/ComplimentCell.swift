@@ -20,30 +20,37 @@ struct ComplimentCell: View {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(16/9, contentMode: .fit)
                 .frame(width: 220)
-            
+        
             ZStack(alignment: .top) {
                 
                 KFImage(URL(string: nade.thumbnail))
                     .resizable()
                     .setProcessor(processor)
-                    .frame(width: 220, height: 80)
-                    .overlay(.thickMaterial)
+                    .frame(width: 220, height: 100)
+                    .overlay(.regularMaterial)
                 
                 LazyVStack(alignment: .leading) {
                     
                     Text(nade.map)
-                        .foregroundColor(.gray)
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .padding(.leading, 11)
+                        .foregroundStyle(.secondary)
                     
                     Text(nade.name)
                         .fontWeight(.semibold)
                         .padding(.top, 0)
                         .padding(.leading, 11)
                         .lineLimit(2)
+                        .foregroundStyle(.primary)
+                    
+                    Text(nade.shortDescription)
+                        .font(.callout)
+                        .padding(.horizontal, 11)
+                        .lineLimit(2)
+                        .foregroundStyle(.secondary)
                     
                 }
                 .padding(.top, 8)
