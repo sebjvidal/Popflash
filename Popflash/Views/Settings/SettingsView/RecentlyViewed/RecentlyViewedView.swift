@@ -31,6 +31,11 @@ struct RecentlyViewedView: View {
             .listRowInsets(.some(EdgeInsets()))
             
         }
+        .refreshable {
+            
+            recentlyViewed.refresh()
+            
+        }
         .listStyle(.plain)
         .navigationBarTitle("Recently Viewed", displayMode: .large)
         .onAppear(perform: onAppear)
