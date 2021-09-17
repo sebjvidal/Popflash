@@ -194,9 +194,11 @@ private struct Header: View {
 private struct FavouriteToolbarItem: View {
     
     var map: Map
-    
+
     @State var isFavourite = false
     @State var isLoading = true
+    @State var showingLoginAlert = false
+    @State var showingLoginSheet = false
     
     var body: some View {
 
@@ -215,6 +217,19 @@ private struct FavouriteToolbarItem: View {
             .onAppear(perform: getFavourite)
 
         }
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to add maps to your favourites."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
         
     }
     
@@ -227,6 +242,8 @@ private struct FavouriteToolbarItem: View {
         }
         
         if user.isAnonymous {
+            
+            isLoading = false
             
             return
             
@@ -258,15 +275,33 @@ private struct FavouriteToolbarItem: View {
     
     func favourite() {
         
-        if isLoading { return }
-        
-        if isFavourite {
+        if isLoading {
             
-            removeFromFavourites()
+            return
+            
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert = true
             
         } else {
             
-            addToFavourites()
+            if isFavourite {
+                
+                removeFromFavourites()
+                
+            } else {
+                
+                addToFavourites()
+                
+            }
             
         }
         
@@ -373,6 +408,12 @@ private struct FavouriteToolbarItem: View {
         
     }
     
+    func showLogin() {
+        
+        showingLoginSheet = true
+        
+    }
+    
 }
 
 private struct MoreToolbarItem: ToolbarContent {
@@ -385,7 +426,7 @@ private struct MoreToolbarItem: ToolbarContent {
 
             Button(action: seeMore, label: {
 
-                Image(systemName: "ellipsis.circle")
+                Image(systemName: "ellipsis")
                 
             })
 
