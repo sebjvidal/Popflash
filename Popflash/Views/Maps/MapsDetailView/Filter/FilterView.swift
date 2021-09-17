@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct FilterView: View {
     
@@ -185,6 +187,11 @@ private struct FavouriteButton: View {
     
     var map: Map
     
+    @State private var isLoading = true
+    @State private var isFavourite = false
+    @State private var showingLoginAlert = false
+    @State private var showingLoginSheet = false
+    
     @AppStorage("favourites.maps") private var favouriteMaps: Array = [String]()
     
     var body: some View {
@@ -197,9 +204,9 @@ private struct FavouriteButton: View {
                     
                     VStack(spacing: 4) {
                         
-                        Image(systemName: isFavourite() ? "heart.slash.fill" : "heart.fill")
+                        Image(systemName: isFavourite ? "heart.slash.fill" : "heart.fill")
                             .font(.title2)
-                        Text(isFavourite() ? "Unfavourite" : "Favourite")
+                        Text(isFavourite ? "Unfavourite" : "Favourite")
                             .font(.callout)
                         
                     }
@@ -207,38 +214,201 @@ private struct FavouriteButton: View {
                 }
             
         }
+        .onAppear(perform: getFavourite)
+        .sheet(isPresented: $showingLoginSheet) {
+            
+            LoginSheet()
+            
+        }
+        .alert(isPresented: $showingLoginAlert) {
+            
+            Alert(title: Text("Sign In"),
+                  message: Text("Sign in to Popflash to add maps to your favourites."),
+                  primaryButton: .default(Text("Sign In"), action: showLogin),
+                  secondaryButton: .cancel())
+            
+        }
+        
+    }
+    
+    func getFavourite() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            isLoading = false
+            
+            return
+            
+        }
+        
+        let db = Firestore.firestore()
+        let mapRef = db.collection("maps").document(map.id)
+        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
+        
+        ref.getDocuments { snapshot, error in
+            
+            guard let documents = snapshot?.documents else {
+                
+                return
+                
+            }
+            
+            isFavourite = !documents.isEmpty
+            
+            DispatchQueue.main.async {
+                
+                isLoading = false
+                
+            }
+            
+        }
         
     }
     
     func favourite() {
         
-        if isFavourite() {
+        if isLoading {
             
-            if let index = favouriteMaps.firstIndex(of: map.name) {
-                
-                favouriteMaps.remove(at: index)
-                
-            }
+            return
+            
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            showingLoginAlert = true
             
         } else {
             
-            favouriteMaps.append(map.name)
+            if isFavourite {
+                
+                removeFromFavourites()
+                
+            } else {
+                
+                addToFavourites()
+                
+            }
             
         }
         
     }
     
-    func isFavourite() -> Bool {
+    func addToFavourites() {
         
-        if favouriteMaps.contains(map.name) {
+        guard let user = Auth.auth().currentUser else {
             
-            return true
-            
-        } else {
-            
-            return false
+            return
             
         }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        isLoading = true
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("users").document(user.uid).collection("maps").document()
+        
+        guard let dateDouble = Double(dateString(from: Date())) else {
+            
+            return
+            
+        }
+        
+        ref.setData([
+            "id": map.id,
+            "map": db.collection("maps").document(map.id),
+            "position": dateDouble
+        ]) { error in
+            
+            isLoading = false
+            
+            if let error = error {
+                
+                print(error.localizedDescription)
+                
+                return
+                
+            }
+            
+            isFavourite = true
+            
+        }
+        
+    }
+    
+    func removeFromFavourites() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            return
+            
+        }
+        
+        isLoading = true
+        
+        let db = Firestore.firestore()
+        let mapRef = db.collection("maps").document(map.id)
+        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
+        
+        ref.getDocuments { snapshot, error in
+            
+            guard let documents = snapshot?.documents else {
+                
+                return
+                
+            }
+            
+            for document in documents {
+                
+                let favRef = db.collection("users").document(user.uid).collection("maps").document(document.documentID)
+                
+                favRef.delete { error in
+                    
+                    if let error = error {
+                        
+                        print(error.localizedDescription)
+                        
+                        isLoading = false
+                        
+                        return
+                        
+                    }
+                    
+                    isFavourite = false
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    func showLogin() {
+        
+        showingLoginSheet = true
         
     }
     
