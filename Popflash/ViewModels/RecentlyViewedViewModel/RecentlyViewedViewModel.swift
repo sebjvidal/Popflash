@@ -31,7 +31,7 @@ class RecentlyViewedViewModel: ObservableObject {
         
         let db = Firestore.firestore()
         let descending = (order == .newest ? true : false)
-        var ref = db.collection("users").document(user.uid).collection("recents").order(by: "dateAdded", descending: descending).limit(to: 10)
+        var ref = db.collection("users").document(user.uid).collection("recents").order(by: "dateAdded", descending: descending).limit(to: 25)
         
         if lastDocument != nil {
             
@@ -39,7 +39,7 @@ class RecentlyViewedViewModel: ObservableObject {
             
         }
         
-        ref.addSnapshotListener { snapshot, error in
+        ref.getDocuments { snapshot, error in
             
             guard let documents = snapshot?.documents else {
                 
@@ -51,13 +51,12 @@ class RecentlyViewedViewModel: ObservableObject {
                 
                 let data = document.data()
                 
+                let dateAdded = data["dateAdded"] as? Double ?? 0
                 guard let recentRef = data["ref"] as? DocumentReference else {
                     
                     return
                     
                 }
-                
-                let dateAdded = data["dateAdded"] as? Double ?? 0
                 
                 self.lastDocument = document
                 
@@ -77,17 +76,22 @@ class RecentlyViewedViewModel: ObservableObject {
                     
                     recentNade.dateAdded = dateAdded
                     
-                    if !self.nades.contains(recentNade) {
-                        
-                        self.nades.append(recentNade)
-                        
-                    }
+                    self.nades.append(recentNade)
                     
                 }
 
             }
             
         }
+        
+    }
+    
+    func refresh() {
+        
+        self.nades.removeAll()
+        self.lastDocument = nil
+        
+        fetchData()
         
     }
     
