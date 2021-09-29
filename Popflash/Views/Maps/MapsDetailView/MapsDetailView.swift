@@ -469,6 +469,14 @@ private struct NadeList: View {
         
     }
     
+    func selectNade(nade: Nade) {
+        
+        selectedNade = nade
+        
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    
+    }
+    
 }
 
 struct NadeCell: View, Equatable {
