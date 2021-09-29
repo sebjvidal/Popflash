@@ -10,7 +10,7 @@ import SwiftUI
 struct ScrollOffset: PreferenceKey {
     
     static var defaultValue: CGFloat = 0.0
-
-     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
     
- }
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
+    
+}
