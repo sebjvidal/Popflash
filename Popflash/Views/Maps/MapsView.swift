@@ -13,37 +13,48 @@ struct MapsView: View {
     
     @StateObject var mapsViewModel = MapsViewModel()
     
-    @State private var statusOpacity = 0.0
+    @State private var statusOpacity: Double = 0
     @State private var hideNavBar = true
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
-    @AppStorage("maps.listFilter") var listFilter = "Popularity"
     
     var body: some View {
         
-        NavigationView {
+        GeometryReader { outerGeo in
             
-            List {
+            NavigationView {
                 
-                Group {
+                List {
                     
-                    Header()
-                    
-                    MapsList(maps: mapsViewModel.maps)
+                    Group {
+                        
+                        StatusBarHelper(outerGeo: outerGeo,
+                                        statusOpacity: $statusOpacity)
+                        
+                        Header()
+                        
+                        MapsList(maps: mapsViewModel.maps)
+                        
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.some(EdgeInsets()))
                     
                 }
-                .listRowSeparator(.hidden)
-                .listRowInsets(.some(EdgeInsets()))
+                .listStyle(.plain)
+                .environment(\.defaultMinListRowHeight, 1)
+                .navigationBarTitle("Maps", displayMode: .inline)
+                .navigationBarHidden(true)
+
+            }
+            .navigationViewStyle(.stack)
+            .onAppear(perform: onAppear)
+            .overlay(alignment: .top) {
+                
+                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
                 
             }
-            .listStyle(.plain)
-            .navigationBarTitle("Maps", displayMode: .inline)
-            .navigationBarHidden(hideNavBar)
-
+            
         }
-        .navigationViewStyle(.stack)
-        .onAppear(perform: onAppear)
-        .onDisappear(perform: onDisappear)
         
     }
     
@@ -57,14 +68,6 @@ struct MapsView: View {
 
         tabSelection = 1
         
-        hideNavBar = true
-        
-    }
-    
-    func onDisappear() {
-        
-        hideNavBar = false
-        
     }
     
 }
@@ -76,7 +79,7 @@ private struct Header: View {
         LazyVStack(alignment: .center, spacing: 0) {
 
             Spacer()
-                .frame(height: 52)
+                .frame(height: 51)
 
             HStack() {
 
