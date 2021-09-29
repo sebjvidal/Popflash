@@ -12,54 +12,63 @@ import FirebaseFirestore
 
 struct FavouritesView: View {
     
-    @State var statusOpacitiy = 0.0
-    @State var isShowing = false
-    @State var selectedNade: Nade?
+    @State private var statusOpacity: Double = 0
+    @State private var isShowing = false
+    @State private var selectedNade: Nade?
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
         
-        NavigationView {
+        GeometryReader { outerGeo in
             
-            List {
+            NavigationView {
                 
-                Group {
+                List {
                     
-                    Header()
-                    
-                    FavouriteMaps(isShowing: $isShowing)
-                    
-                    FavouriteNades(selectedNade: $selectedNade)
+                    Group {
+                        
+                        StatusBarHelper(outerGeo: outerGeo,
+                                        statusOpacity: $statusOpacity)
+                        
+                        Header()
+                        
+                        FavouriteMaps(isShowing: $isShowing)
+                        
+                        FavouriteNades(selectedNade: $selectedNade)
+                        
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.some(EdgeInsets()))
                     
                 }
-                .listRowSeparator(.hidden)
-                .listRowInsets(.some(EdgeInsets()))
+                .listStyle(.plain)
+                .onAppear(perform: onAppear)
+                .environment(\.defaultMinListRowHeight, 1)
+                .navigationBarTitle("Favourites", displayMode: .inline)
+                .navigationBarHidden(true)
+                .sheet(item: self.$selectedNade) { item in
+                    
+                    NadeView(nade: item)
+                    
+                }
+                .sheet(isPresented: $isShowing) {
+                    
+                    EditFavouriteMapsView()
+                        .interactiveDismissDisabled()
+                    
+                }
                 
             }
-            .listStyle(.plain)
-            .onAppear {
+            .navigationViewStyle(.stack)
+            .onAppear(perform: onAppear)
+            .overlay(alignment: .top) {
                 
-                standard.set(2, forKey: "tabSelection")
-                
-            }
-            .navigationBarTitle("Favourites", displayMode: .inline)
-            .navigationBarHidden(true)
-            .sheet(item: self.$selectedNade) { item in
-                
-                NadeView(nade: item)
-                
-            }
-            .sheet(isPresented: $isShowing) {
-                
-                EditFavouriteMapsView()
-                    .interactiveDismissDisabled()
+                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
                 
             }
             
         }
-        .navigationViewStyle(.stack)
-        .onAppear(perform: onAppear)
         
     }
     
