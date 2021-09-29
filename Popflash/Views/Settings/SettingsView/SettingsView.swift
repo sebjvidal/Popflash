@@ -82,7 +82,7 @@ private struct Header: View {
         LazyVStack(alignment: .leading, spacing: 0) {
 
             Spacer()
-                .frame(height: 52)
+                .frame(height: 51)
 
             HStack() {
 
