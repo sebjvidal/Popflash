@@ -11,45 +11,60 @@ import Kingfisher
 
 struct SettingsView: View {
     
+    @State private var statusOpacity: Double = 0
+    
     @AppStorage("loggedInStatus") var loggedInStatus = false
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
         
-        NavigationView {
+        GeometryReader { outerGeo in
             
-            List {
+            NavigationView {
                 
-                Group {
+                List {
                     
-                    Header()
-                    
-                    Profile()
-                    
-                    RecentlyViewed()
-                    
-                    NotificationsRow()
-                    
-                    Settings()
-                    
-                    if loggedInStatus {
+                    Group {
                         
-                        SignOut()
+                        StatusBarHelper(outerGeo: outerGeo,
+                                        statusOpacity: $statusOpacity)
+                        
+                        Header()
+                        
+                        Profile()
+                        
+                        RecentlyViewed()
+                        
+                        NotificationsRow()
+                        
+                        Settings()
+                        
+                        if loggedInStatus {
+                            
+                            SignOut()
+                            
+                        }
                         
                     }
+                    .listRowInsets(.some(EdgeInsets()))
+                    .listRowSeparator(.hidden)
                     
                 }
-                .listRowInsets(.some(EdgeInsets()))
-                .listRowSeparator(.hidden)
+                .listStyle(.plain)
+                .environment(\.defaultMinListRowHeight, 1)
+                .onAppear(perform: onAppear)
+                .navigationBarTitle("Profile", displayMode: .inline)
+                .navigationBarHidden(true)
                 
             }
-            .listStyle(.plain)
-            .onAppear(perform: onAppear)
-            .navigationBarTitle("Profile", displayMode: .inline)
-            .navigationBarHidden(true)
+            .navigationViewStyle(.stack)
+            .overlay(alignment: .top) {
+                
+                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                
+            }
             
         }
-        .navigationViewStyle(.stack)
         
     }
     
