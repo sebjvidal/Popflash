@@ -12,6 +12,8 @@ struct MapCell: View {
     
     var map: Map
     
+    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
+    
     @AppStorage("settings.compactMapsView") var compactMapsView = false
     
     public var body: some View {
@@ -22,28 +24,26 @@ struct MapCell: View {
                 
                 KFImage(URL(string: map.background)!)
                     .resizable()
-                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
                 
             }
             
             ZStack {
                 
-                let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1))
-                
                 KFImage(URL(string: map.background)!)
                     .resizable()
                     .setProcessor(processor)
                     .opacity(compactMapsView ? 0 : 1)
-                    .frame(height: 80)
+                    .frame(maxHeight: .infinity)
                     .overlay(.regularMaterial)
                 
-                HStack {
+                HStack(spacing: 0) {
                     
                     KFImage(URL(string: map.icon))
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 55)
-                        .padding(.leading, 12)
+                        .padding(12)
                     
                     VStack(alignment: .leading) {
                         
@@ -54,7 +54,6 @@ struct MapCell: View {
                             .font(.subheadline)
                         
                     }
-                    .padding(.leading, 4)
                     
                     Spacer()
                     
@@ -113,17 +112,19 @@ private struct NewButton: View {
         
         dateComponent.day = -7
         
-        guard let dateThreshold = calendar.date(byAdding: dateComponent, to: currentDate) else { return false }
+        guard let dateThreshold = calendar.date(byAdding: dateComponent, to: currentDate) else {
+            
+            return false
+            
+        }
         
         if lastAddedDate > dateThreshold {
             
             return true
             
-        } else {
-            
-            return false
-            
         }
+        
+        return false
         
     }
     
