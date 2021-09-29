@@ -14,22 +14,24 @@ struct FeaturedView: View {
     
     @StateObject var featuredViewModel = FeaturedViewModel()
     
-    @State private var statusOppacity = 0.0
+    @State private var statusOpacity: Double = 0
     @State private var selectedNade: Nade?
     @State private var nadeViewIsPresented = false
-    @State private var hideNavBar = true
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
         
-        NavigationView {
+        GeometryReader { outerGeo in
             
-            ZStack {
+            NavigationView {
                 
                 List {
                     
                     Group {
+                        
+                        StatusBarHelper(outerGeo: outerGeo,
+                                        statusOpacity: $statusOpacity)
                         
                         Header()
                         
@@ -48,32 +50,28 @@ struct FeaturedView: View {
                     
                 }
                 .listStyle(.plain)
+                .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Featured", displayMode: .inline)
-                .navigationBarHidden(hideNavBar)
+                .navigationBarHidden(true)
                 .refreshable {
                     
                     fetchFeaturedData()
                     
                 }
                 .onAppear(perform: onAppear)
-                .onDisappear(perform: onDisappear)
-                
-                GeometryReader { geo in
-                    
-                    Rectangle()
-                        .foregroundColor(Color("True_Background"))
-                        .frame(width: geo.size.width, height: geo.safeAreaInsets.top, alignment: .center)
-                        .ignoresSafeArea()
-                    
-                }
                 
             }
-            
-        }
-        .navigationViewStyle(.stack)
-        .sheet(item: self.$selectedNade) { item in
-            
-            NadeView(nade: item)
+            .navigationViewStyle(.stack)
+            .overlay(alignment: .top) {
+                
+                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                
+            }
+            .sheet(item: self.$selectedNade) { item in
+                
+                NadeView(nade: item)
+                
+            }
             
         }
         
@@ -94,14 +92,6 @@ struct FeaturedView: View {
         }
         
         tabSelection = 0
-        
-        hideNavBar = true
-        
-    }
-    
-    func onDisappear() {
-        
-        hideNavBar = false
         
     }
     
@@ -364,16 +354,11 @@ private struct Top5: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
-                HStack {
-                    
-                    Spacer()
-                        .frame(width: 16)
+                HStack(spacing: 16) {
                     
                     ForEach(top5Nades.nades, id: \.self) { nade in
                         
                         Button {
-                            
-                            print(nade.name)
                             
                             selectedNade = nade
                             nadeViewIsPresented.toggle()
@@ -381,18 +366,15 @@ private struct Top5: View {
                         } label: {
                             
                             ComplimentCell(nade: nade)
-                                .padding(.bottom, 16)
-                                .fixedSize()
                             
                         }
                         
                     }
                     .buttonStyle(ComplimentsCellButtonStyle())
-                    
-                    Spacer()
-                        .frame(width: 10)
+                    .padding(.bottom, 16)
                     
                 }
+                .padding(.horizontal)
                 .onAppear() {
                     
                     fetchTop5Nades()
