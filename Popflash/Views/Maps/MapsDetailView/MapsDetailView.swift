@@ -447,15 +447,13 @@ private struct NadeList: View {
     @Binding var nades: [Nade]
     @Binding var selectedNade: Nade?
     
-    @AppStorage("favourites.nades") var favouriteNades: Array = [String]()
-    
     var body: some View {
             
         ForEach(nades, id: \.self) { nade in
-                
+            
             Button {
                 
-                self.selectedNade = nade
+                selectNade(nade: nade)
                 
             } label: {
                 
@@ -466,64 +464,6 @@ private struct NadeList: View {
                 
             }
             .buttonStyle(NadeCellButtonStyle())
-            .contentShape(Circle())
-//            .swipeActions {
-//                
-//                Button {
-//
-//                    favouriteButtonAction(nade: nade.id)
-//
-//                } label: {
-//
-//                    Label("", image: isFavourite(nadeID: nade.id) ? "Unfavourite_Swipe_Action" : "Favourite_Swipe_Action")
-//
-//                }
-//                .tint(Color("True_Background"))
-//                
-//                Button {
-//                    
-//                    print("Tapped!")
-//                    
-//                } label: {
-//
-//                    Label("", image: "Share_Swipe_Action")
-//                    
-//                }
-//                .tint(Color("True_Background"))
-//                
-//            }
-            
-        }
-        
-    }
-    
-    func isFavourite(nadeID: String) -> Bool {
-        
-        if favouriteNades.contains(nadeID) {
-            
-            return true
-            
-        } else {
-            
-            return false
-            
-        }
-        
-    }
-    
-    func favouriteButtonAction(nade: String) {
-        
-        if isFavourite(nadeID: nade) {
-            
-            if let index = favouriteNades.firstIndex(of: nade) {
-                
-                favouriteNades.remove(at: index)
-                
-            }
-            
-        } else {
-            
-            favouriteNades.append(nade)
             
         }
         
@@ -656,12 +596,4 @@ private struct NadeCellTypeIcon: View {
 
     }
 
-}
-
-private struct HeaderOffsetPreferenceKey: PreferenceKey {
-    
-    static var defaultValue: CGFloat = .zero
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
-    
 }
