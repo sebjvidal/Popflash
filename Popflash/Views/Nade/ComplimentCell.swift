@@ -16,51 +16,47 @@ struct ComplimentCell: View {
     
     var body: some View {
         
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-                .aspectRatio(16/9, contentMode: .fit)
-                .frame(width: 220)
-        
-            ZStack(alignment: .top) {
+                .aspectRatio(contentMode: .fill)
+            
+            ZStack(alignment: .topLeading) {
                 
                 KFImage(URL(string: nade.thumbnail))
                     .resizable()
                     .setProcessor(processor)
-                    .frame(width: 220, height: 100)
+                    .frame(maxWidth: .infinity)
                     .overlay(.regularMaterial)
                 
-                LazyVStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     
                     Text(nade.map)
-                        .font(.system(size: 14))
+                        .font(.subheadline)
                         .fontWeight(.semibold)
-                        .padding(.leading, 11)
                         .foregroundStyle(.secondary)
                     
                     Text(nade.name)
                         .fontWeight(.semibold)
-                        .padding(.top, 0)
-                        .padding(.leading, 11)
-                        .lineLimit(2)
                         .foregroundStyle(.primary)
                     
                     Text(nade.shortDescription)
                         .font(.callout)
-                        .padding(.horizontal, 11)
                         .lineLimit(2)
                         .foregroundStyle(.primary)
                     
                 }
                 .padding(.top, 8)
+                .padding(.horizontal, 11)
+                .padding(.bottom, 8)
                 
             }
             
         }
+        .frame(width: 220)
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .cellShadow()
-        .padding(.trailing, 8)
         
     }
     
