@@ -98,7 +98,7 @@ private struct WidgetDetails: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(.ultraThickMaterial)
                 .environment(\.colorScheme, .light)
-                .padding(.leading, 8)
+                .padding(.leading, 10)
                 .padding()
             
             Spacer()
