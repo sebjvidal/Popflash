@@ -35,6 +35,8 @@ struct SettingsView: View {
                         
                         RecentlyViewed()
                         
+                        AppearanceSettings()
+                        
                         NotificationsRow()
                         
                         Settings()
@@ -55,14 +57,14 @@ struct SettingsView: View {
                 .onAppear(perform: onAppear)
                 .navigationBarTitle("Profile", displayMode: .inline)
                 .navigationBarHidden(true)
+                .overlay(alignment: .top) {
+                    
+                    StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                    
+                }
                 
             }
             .navigationViewStyle(.stack)
-            .overlay(alignment: .top) {
-                
-                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
-                
-            }
             
         }
         
@@ -84,7 +86,7 @@ private struct Header: View {
             Spacer()
                 .frame(height: 51)
 
-            HStack() {
+            HStack {
 
                 Text("Profile")
                     .font(.system(size: 32))
@@ -280,7 +282,7 @@ private struct Settings: View {
     
     var body: some View {
             
-        VStack {
+        VStack(spacing: 0) {
             
             AutoPlayVideoRow()
             
@@ -295,7 +297,6 @@ private struct Settings: View {
             CompactMapsViewRow()
             
         }
-        .padding(.vertical, 12)
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .padding(.top, 8)
@@ -330,6 +331,7 @@ private struct SettingIcon: View {
             
         }
         .padding(.leading)
+        .padding(.vertical, 14)
         
     }
     
@@ -355,12 +357,11 @@ private struct RecentlyViewed: View {
             
             Button(action: showRecent) {
                 
-                HStack {
+                HStack(spacing: 12) {
                     
                     SettingIcon(color: .orange, icon: Image(systemName: "gobackward"), edges: .bottom, length: 2.5)
                     
                     Text("Recently Viewed")
-                        .frame(height: 43)
                     
                     Spacer()
                     
@@ -369,7 +370,6 @@ private struct RecentlyViewed: View {
                         .padding(.trailing)
                     
                 }
-                .padding(.vertical, 6)
                 .background(Color("Background"))
                 .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                 
@@ -425,6 +425,75 @@ private struct RecentlyViewed: View {
     
 }
 
+private struct AppearanceSettings: View {
+    
+    var body: some View {
+        
+        VStack(spacing: 0) {
+            
+            AppIconRow()
+            
+            Divider()
+                .padding(.leading, 54)
+            
+            TintColourRow()
+            
+        }
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding(.top, 8)
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+        .cellShadow()
+        
+    }
+    
+}
+
+private struct AppIconRow: View {
+    
+    var body: some View {
+        
+        HStack(spacing: 12) {
+            
+            SettingIcon(color: .purple, icon: Image(systemName: "square.grid.3x3.fill"))
+
+            Text("App Icon")
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.secondary)
+                .padding(.trailing)
+            
+        }
+        
+    }
+    
+}
+
+private struct TintColourRow: View {
+    
+    var body: some View {
+        
+        HStack(spacing: 12) {
+            
+            SettingIcon(color: .blue, icon: Image(systemName: "eyedropper.halffull"))
+
+            Text("App Tint")
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.secondary)
+                .padding(.trailing)
+            
+        }
+        
+    }
+    
+}
+
 private struct NotificationsRow: View {
     
     @State private var action: Int? = 0
@@ -445,12 +514,11 @@ private struct NotificationsRow: View {
             
             Button(action: showNotifications) {
                 
-                HStack {
+                HStack(spacing: 12) {
                     
                     SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
                     
                     Text("Notifications")
-                        .frame(height: 43)
                     
                     Spacer()
                     
@@ -459,7 +527,6 @@ private struct NotificationsRow: View {
                         .padding(.trailing)
                     
                 }
-                .padding(.vertical, 6)
                 .background(Color("Background"))
                 .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                 
@@ -521,7 +588,7 @@ private struct AutoPlayVideoRow: View {
     
     var body: some View {
         
-        HStack {
+        HStack(spacing: 12) {
             
             SettingIcon(color: Color("Light_Blue"), icon: Image(systemName: "play.fill"))
 
@@ -549,7 +616,7 @@ private struct AutoPlayAudioRow: View {
     
     var body: some View {
         
-        HStack {
+        HStack(spacing: 12) {
             
             SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "speaker.wave.3.fill"), size: .subheadline)
 
@@ -568,7 +635,7 @@ private struct PlayAudioSilencedRow: View {
     
     var body: some View {
         
-        HStack {
+        HStack(spacing: 12) {
             
             SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "bell.and.waveform.fill"))
 
@@ -587,7 +654,7 @@ private struct CompactMapsViewRow: View {
     
     var body: some View {
         
-        HStack {
+        HStack(spacing: 12) {
 
             SettingIcon(color: .green, icon: Image(systemName: "rectangle.arrowtriangle.2.inward"))
 
