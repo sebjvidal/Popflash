@@ -24,7 +24,10 @@ struct MapCell: View {
                 
                 KFImage(URL(string: map.background)!)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                #if os(iOS)
+                    .frame(width: UIScreen.screenWidth - 32,
+                           height: (UIScreen.screenWidth - 32) / 1.777)
+                #endif
                 
             }
             
@@ -34,7 +37,7 @@ struct MapCell: View {
                     .resizable()
                     .setProcessor(processor)
                     .opacity(compactMapsView ? 0 : 1)
-                    .frame(maxHeight: .infinity)
+                    .frame(minHeight: 80, maxHeight: .infinity)
                     .overlay(.regularMaterial)
                 
                 HStack(spacing: 0) {
