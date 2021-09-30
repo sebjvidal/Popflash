@@ -53,6 +53,11 @@ struct FeaturedView: View {
                 .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Featured", displayMode: .inline)
                 .navigationBarHidden(true)
+                .overlay(alignment: .top) {
+                    
+                    StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                    
+                }
                 .refreshable {
                     
                     fetchFeaturedData()
@@ -62,11 +67,6 @@ struct FeaturedView: View {
                 
             }
             .navigationViewStyle(.stack)
-            .overlay(alignment: .top) {
-                
-                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
-                
-            }
             .sheet(item: self.$selectedNade) { item in
                 
                 NadeView(nade: item)
