@@ -44,15 +44,15 @@ struct MapsView: View {
                 .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Maps", displayMode: .inline)
                 .navigationBarHidden(true)
+                .overlay(alignment: .top) {
+                    
+                    StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                    
+                }
 
             }
             .navigationViewStyle(.stack)
             .onAppear(perform: onAppear)
-            .overlay(alignment: .top) {
-                
-                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
-                
-            }
             
         }
         
