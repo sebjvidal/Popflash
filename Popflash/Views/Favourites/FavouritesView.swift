@@ -47,6 +47,11 @@ struct FavouritesView: View {
                 .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Favourites", displayMode: .inline)
                 .navigationBarHidden(true)
+                .overlay(alignment: .top) {
+                    
+                    StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
+                    
+                }
                 .sheet(item: self.$selectedNade) { item in
                     
                     NadeView(nade: item)
@@ -62,11 +67,6 @@ struct FavouritesView: View {
             }
             .navigationViewStyle(.stack)
             .onAppear(perform: onAppear)
-            .overlay(alignment: .top) {
-                
-                StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
-                
-            }
             
         }
         
