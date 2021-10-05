@@ -10,8 +10,8 @@ import Firebase
 import FirebaseAuth
 import FirebaseMessaging
 
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
+    
     static var orientationLock = UIInterfaceOrientationMask.portrait
     
     let gcmMessageIDKey = "gcm.message_id"
@@ -23,9 +23,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // Configure Firebase
         FirebaseApp.configure()
         
+        //Initialise UserAccessGroup for Keychain Sharing
+        do {
+            
+            try Auth.auth().useUserAccessGroup("DY2GQFY855.com.sebvidal.Popflash")
+            
+        } catch {
+            
+            print(error.localizedDescription)
+            
+        }
+        
+        // Add auth stateDidChangeListener for log in/out events
         Auth.auth().addStateDidChangeListener { auth, user in
             
             if let user = user {
@@ -40,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
+        // Setup push notifications
         Messaging.messaging().delegate = self
         
         if #available(iOS 10.0, *) {
@@ -76,18 +90,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    func application(_ application: UIApplication,
-                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult)
-                     -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
         if let messageID = userInfo[gcmMessageIDKey] {
+            
             print("Message ID: \(messageID)")
+            
         }
-        
-        // Print full message.
-        print(userInfo)
-        
+
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
@@ -111,25 +121,24 @@ extension AppDelegate: MessagingDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
         let userInfo = notification.request.content.userInfo
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
-        // Change this to your preferred presentation option
         completionHandler([[.banner, .badge, .sound]])
+        
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
         let userInfo = response.notification.request.content.userInfo
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
         completionHandler()
+        
     }
     
 }
