@@ -28,6 +28,16 @@
 				<string>com.googleusercontent.apps.704583417652-0srrpie9brc838vi4vmjkecvhlm4lou7</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.sebvidal.Popflash</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>popflash</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
