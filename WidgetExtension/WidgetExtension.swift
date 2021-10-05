@@ -7,18 +7,19 @@
 
 import WidgetKit
 import SwiftUI
+import Firebase
 
 struct Provider: TimelineProvider {
     
     func placeholder(in context: Context) -> SimpleEntry {
         
-        SimpleEntry(date: Date())
+        SimpleEntry(date: Date(), nade: Nade.widgetPreview)
         
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
         
-        let entry = SimpleEntry(date: Date())
+        let entry = SimpleEntry(date: Date(), nade: Nade.widgetPreview)
         completion(entry)
         
     }
@@ -29,53 +30,66 @@ struct Provider: TimelineProvider {
         let startOfDay = Calendar.current.startOfDay(for: currentDate)
         let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        let entry = SimpleEntry(date: startOfDay)
-        let timeline = Timeline(entries: [entry], policy: .after(endOfDay))
-        completion(timeline)
-        
-    }
-    
-}
-
-struct SimpleEntry: TimelineEntry {
-    
-    let date: Date
-}
-
-struct WidgetExtensionEntryView : View {
-    
-    var entry: Provider.Entry
-
-    var body: some View {
-        
-        ZStack(alignment: .topLeading) {
+        fetchData { nade in
             
-            WidgetBackground()
+            let entry = SimpleEntry(date: startOfDay, nade: nade)
+            let timeline = Timeline(entries: [entry], policy: .after(endOfDay))
             
-            WidgetDetails()
+            completion(timeline)
             
         }
         
     }
     
-}
-
-private struct WidgetBackground: View {
-    
-    var body: some View {
+    func fetchData(completion: @escaping(Nade) -> ()) {
         
-        GeometryReader { geo in
+        guard let _ = Auth.auth().currentUser else {
             
-            ZStack(alignment: .top) {
+            completion(Nade.empty)
+            
+            return
+            
+        }
+        let db = Firestore.firestore()
+        let ref = db.collection("featured").document("nade")
+        
+        ref.getDocument { snapshot, error in
+            
+            guard let document = snapshot else {
                 
-                Image("dust2_background")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geo.size.width, height: geo.size.height)
+                completion(Nade.empty)
                 
-                LinearGradient(gradient: Gradient(colors: [.black, .black, .clear]), startPoint: .top, endPoint: .bottom)
-                    .frame(width: geo.size.width, height: geo.size.height / 3)
-                    .opacity(0.25)
+                return
+                
+            }
+            
+            guard let nadeRef = document.data()?["reference"] as? DocumentReference else {
+                
+                completion(Nade.empty)
+                
+                return
+                
+            }
+            
+            nadeRef.getDocument { nadeSnapshot, error in
+                
+                guard let nadeDocument = nadeSnapshot else {
+                    
+                    completion(Nade.empty)
+                    
+                    return
+                    
+                }
+                
+                guard let nade = nadeFrom(doc: nadeDocument) else {
+                    
+                    completion(Nade.empty)
+                    
+                    return
+                    
+                }
+                
+                completion(nade)
                 
             }
             
@@ -85,45 +99,67 @@ private struct WidgetBackground: View {
     
 }
 
-private struct WidgetDetails: View {
+struct SimpleEntry: TimelineEntry {
+    
+    let date: Date
+    let nade: Nade
+    
+}
+
+struct WidgetExtensionEntryView : View {
+    
+    var entry: Provider.Entry
+
+    var body: some View {
+        
+        VStack(spacing: 0) {
+        
+            WidgetBackground(nade: entry.nade)
+            
+            WidgetDetails(nade: entry.nade)
+            
+        }
+        .widgetURL(URL(string: "popflash://featured/nade?=\(entry.nade.id)")!)
+        
+    }
+    
+}
+
+private struct WidgetBackground: View {
+    
+    var nade: Nade
     
     @Environment(\.widgetFamily) var family
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        GeometryReader { geo in
             
-            Text("Featured")
-                .font(font())
-                .fontWeight(.semibold)
-                .foregroundStyle(.ultraThickMaterial)
-                .environment(\.colorScheme, .light)
-                .padding(.leading, 10)
-                .padding()
-            
-            Spacer()
-            
-            if family == .systemLarge || family == .systemExtraLarge {
+            ZStack(alignment: .topLeading) {
                 
-                LazyVStack(alignment: .leading, spacing: 0) {
+                if let url = URL(string: nade.thumbnail),
+                   let data = try? Data(contentsOf: url),
+                   let uiImage = UIImage(data: data) {
                     
-                    Text("Dust II")
-                        .bold()
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    
-                    Text("XBox Smoke")
-                        .bold()
-                        .padding(.top, -2)
-                    
-                    Text("Smoke Xbox from T Spawn.\n")
-                        .font(.callout)
-                        .lineLimit(2)
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geo.size.width,
+                               height: geo.size.height + (family == .systemLarge ? 16 : 0))
                     
                 }
-                .padding(12)
-                .padding(.leading, 4)
-                .background(family == .systemLarge ? .regularMaterial : .bar)
+                
+                LinearGradient(gradient: Gradient(colors: [.black, .clear]), startPoint: .top, endPoint: .bottom)
+                    .frame(width: geo.size.width, height: geo.size.height / (family == .systemLarge ? 2.5 : 2))
+                    .opacity(0.25)
+                
+                Text("Featured")
+                    .font(font())
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.ultraThickMaterial)
+                    .environment(\.colorScheme, .light)
+                    .padding(.leading, family == .systemLarge ? 10 : 8)
+                    .padding(family == .systemSmall ? 12 : 16)
                 
             }
             
@@ -156,14 +192,74 @@ private struct WidgetDetails: View {
     
 }
 
+private struct WidgetDetails: View {
+    
+    var nade: Nade
+    
+    @Environment(\.widgetFamily) var family
+    
+    var body: some View {
+        
+        if family == .systemLarge || family == .systemExtraLarge {
+            
+            LazyVStack(alignment: .leading, spacing: 0) {
+                
+                Text(nade.map)
+                    .bold()
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                
+                Text(nade.name)
+                    .bold()
+                
+                Text("\(nade.shortDescription)\n")
+                    .font(.callout)
+                    .lineLimit(2)
+                
+            }
+            .padding(12)
+            .padding(.leading, 4)
+            .background {
+                
+                if let url = URL(string: nade.thumbnail),
+                   let data = try? Data(contentsOf: url),
+                   let uiImage = UIImage(data: data),
+                   let cgImage = uiImage.cgImage,
+                   let croppedImage = cgImage.cropping(to: CGRect(x: 0, y: cgImage.height - 16, width: cgImage.width, height: 100)) {
+                    
+                    Image(uiImage: UIImage(cgImage: croppedImage))
+                        .resizable()
+                        .frame(maxHeight: .infinity)
+                        .overlay(.regularMaterial)
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
 @main
 struct WidgetExtension: Widget {
     
-//    init() {
-//
-//        FirebaseApp.configure()
-//
-//    }
+    init() {
+        
+        FirebaseApp.configure()
+        
+        do {
+            
+            try Auth.auth().useUserAccessGroup("DY2GQFY855.com.sebvidal.Popflash")
+            
+        } catch {
+            
+            print(error.localizedDescription)
+            
+        }
+        
+    }
     
     let kind: String = "WidgetExtension"
 
@@ -176,22 +272,6 @@ struct WidgetExtension: Widget {
         }
         .configurationDisplayName("Featured")
         .description("View daily featured grenade line-ups.")
-    }
-    
-}
-
-struct WidgetExtension_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        WidgetExtensionEntryView(entry: SimpleEntry(date: Date()))
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
-        
-        WidgetExtensionEntryView(entry: SimpleEntry(date: Date()))
-            .previewContext(WidgetPreviewContext(family: .systemMedium))
-        
-        WidgetExtensionEntryView(entry: SimpleEntry(date: Date()))
-            .previewContext(WidgetPreviewContext(family: .systemLarge))
         
     }
     
