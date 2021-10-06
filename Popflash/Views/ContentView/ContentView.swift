@@ -110,8 +110,6 @@ struct ContentView: View {
             
         }
         
-        print(url)
-        
         if let tabIdentifier = url.tabIdentifier {
             
             tabSelection = tabIdentifier
