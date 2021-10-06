@@ -282,7 +282,7 @@ private struct Settings: View {
     
     var body: some View {
             
-        VStack(spacing: 0) {
+        VStack(spacing: 8) {
             
             AutoPlayVideoRow()
             
@@ -297,6 +297,7 @@ private struct Settings: View {
             CompactMapsViewRow()
             
         }
+        .padding(.vertical, 14)
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .padding(.top, 8)
@@ -331,7 +332,6 @@ private struct SettingIcon: View {
             
         }
         .padding(.leading)
-        .padding(.vertical, 14)
         
     }
     
@@ -362,6 +362,7 @@ private struct RecentlyViewed: View {
                     SettingIcon(color: .orange, icon: Image(systemName: "gobackward"), edges: .bottom, length: 2.5)
                     
                     Text("Recently Viewed")
+                        .padding(.vertical, 18)
                     
                     Spacer()
                     
@@ -429,7 +430,7 @@ private struct AppearanceSettings: View {
     
     var body: some View {
         
-        VStack(spacing: 0) {
+        VStack(spacing: 9) {
             
             AppIconRow()
             
@@ -467,6 +468,7 @@ private struct AppIconRow: View {
                 .padding(.trailing)
             
         }
+        .padding(.top, 14)
         
     }
     
@@ -489,6 +491,7 @@ private struct TintColourRow: View {
                 .padding(.trailing)
             
         }
+        .padding(.bottom, 14)
         
     }
     
@@ -519,6 +522,7 @@ private struct NotificationsRow: View {
                     SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
                     
                     Text("Notifications")
+                        .padding(.vertical, 18)
                     
                     Spacer()
                     
