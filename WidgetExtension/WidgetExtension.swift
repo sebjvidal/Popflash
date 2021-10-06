@@ -28,11 +28,12 @@ struct Provider: TimelineProvider {
 
         let currentDate = Date()
         let startOfDay = Calendar.current.startOfDay(for: currentDate)
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        let startOfDay5 = Calendar.current.date(byAdding: .minute, value: 5, to: startOfDay)!
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay5)!
         
         fetchData { nade in
             
-            let entry = SimpleEntry(date: startOfDay, nade: nade)
+            let entry = SimpleEntry(date: startOfDay5, nade: nade)
             let timeline = Timeline(entries: [entry], policy: .after(endOfDay))
             
             completion(timeline)
@@ -151,7 +152,7 @@ private struct WidgetBackground: View {
                 
                 LinearGradient(gradient: Gradient(colors: [.black, .clear]), startPoint: .top, endPoint: .bottom)
                     .frame(width: geo.size.width, height: geo.size.height / (family == .systemLarge ? 2.5 : 2))
-                    .opacity(0.25)
+                    .opacity(0.5)
                 
                 Text("Featured")
                     .font(font())
