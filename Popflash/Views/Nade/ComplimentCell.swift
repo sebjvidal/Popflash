@@ -45,6 +45,7 @@ struct ComplimentCell: View {
                         .font(.callout)
                         .lineLimit(2)
                         .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
                     
                 }
                 .padding(.top, 8)
