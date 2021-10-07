@@ -99,11 +99,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
 
         completionHandler(UIBackgroundFetchResult.newData)
+        
     }
     
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) { }
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
     
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) { }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {}
     
 }
 
@@ -134,6 +135,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         let userInfo = response.notification.request.content.userInfo
+        
+        if let link = userInfo["link"] as? String,
+           let url = URL(string: link) {
+            
+            if url.isDeepLink {
+                
+                UIApplication.shared.open(url)
+                
+            }
+            
+        }
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
