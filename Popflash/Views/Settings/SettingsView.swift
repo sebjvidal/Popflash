@@ -114,6 +114,7 @@ private struct Profile: View {
     @State var showingProfileEditor = false
     
     @AppStorage("loggedInStatus") var signedIn = false
+    @AppStorage("settings.tint") var tint: Int = 1
     
     @Environment(\.dismiss) var dismiss
     
@@ -144,7 +145,7 @@ private struct Profile: View {
                 VStack(alignment: .leading) {
 
                     Text(signedIn ? String(userViewModel.displayName ?? "Display Name") : "Sign in to Popflash")
-                        .foregroundStyle(signedIn ? AnyShapeStyle(.primary) : AnyShapeStyle(.blue))
+                        .foregroundStyle(signedIn ? AnyShapeStyle(.primary) : AnyShapeStyle(TintColour.colour(withID: tint)))
                         .font(.headline)
                     
                     Text(signedIn ? String(userViewModel.skillGroup ?? "Skill Group Unknown") : "Add grenades to favourites, see recently viewed.")
@@ -235,6 +236,7 @@ private struct Profile: View {
 struct LoginSheet: View {
     
     @AppStorage("loggedInStatus") var loggedInStatus = false
+    @AppStorage("settings.tint") var tint: Int = 1
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -255,7 +257,7 @@ struct LoginSheet: View {
                         }) {
                             
                             Text("Cancel")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(TintColour.colour(withID: tint))
                             
                         }
                         
@@ -430,7 +432,7 @@ private struct AppearanceSettings: View {
     
     var body: some View {
         
-        VStack(spacing: 9) {
+        VStack(spacing: 0) {
             
             AppIconRow()
             
@@ -438,6 +440,11 @@ private struct AppearanceSettings: View {
                 .padding(.leading, 54)
             
             TintColourRow()
+            
+            Divider()
+                .padding(.leading, 54)
+            
+            AppearanceRow()
             
         }
         .background(Color("Background"))
@@ -469,6 +476,68 @@ private struct AppIconRow: View {
             
         }
         .padding(.top, 14)
+        .padding(.bottom, 9)
+        
+    }
+    
+}
+
+private struct AppearanceRow: View {
+    
+    @State private var action: Int? = 0
+    
+    var body: some View {
+        
+        Button(action: showAppearance) {
+            
+            ZStack {
+                
+                NavigationLink(destination: AppearanceView(), tag: 1, selection: $action) {
+                    
+                    EmptyView()
+                    
+                }
+                .hidden()
+                .disabled(true)
+                
+                HStack(spacing: 12) {
+                    
+                    ZStack {
+                        
+                        RoundedRectangle(cornerRadius: 6.5, style: .continuous)
+                            .frame(width: 29, height: 29)
+                            .foregroundColor(Color("Headline"))
+                        
+                        Image("Dark_Mode")
+                            .resizable()
+                            .frame(width: 22, height: 22)
+                        
+                    }
+                    .padding(.leading)
+
+                    Text("Appearance")
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing)
+                    
+                }
+                
+            }
+            .padding(.top, 9)
+            .padding(.bottom, 14)
+            .background(Color("Background"))
+            
+        }
+        .buttonStyle(RoundedTableCell())
+        
+    }
+    
+    func showAppearance() {
+        
+        action = 1
         
     }
     
@@ -476,22 +545,48 @@ private struct AppIconRow: View {
 
 private struct TintColourRow: View {
     
+    @State private var action: Int? = 0
+    
     var body: some View {
         
-        HStack(spacing: 12) {
+        Button(action: showTint) {
             
-            SettingIcon(color: .blue, icon: Image(systemName: "eyedropper.halffull"))
+            ZStack {
+                
+                NavigationLink(destination: TintView(), tag: 1, selection: $action) {
+                    
+                    EmptyView()
+                    
+                }
+                .hidden()
+                .disabled(true)
+                
+                HStack(spacing: 12) {
+                    
+                    SettingIcon(color: .blue, icon: Image(systemName: "eyedropper.halffull"))
 
-            Text("App Tint")
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
-                .padding(.trailing)
+                    Text("App Tint")
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing)
+                    
+                }
+                .padding(.vertical, 9)
+                
+            }
+            .background(Color("Background"))
             
         }
-        .padding(.bottom, 14)
+        .buttonStyle(RoundedTableCell())
+        
+    }
+    
+    func showTint() {
+        
+        action = 1
         
     }
     
@@ -531,12 +626,12 @@ private struct NotificationsRow: View {
                         .padding(.trailing)
                     
                 }
-                .background(Color("Background"))
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                 
             }
-            .cellShadow()
             .buttonStyle(RoundedTableCell())
+            .background(Color("Background"))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .cellShadow()
             .padding(.top, 8)
             .padding(.horizontal)
             .padding(.bottom, 8)
@@ -594,7 +689,7 @@ private struct AutoPlayVideoRow: View {
         
         HStack(spacing: 12) {
             
-            SettingIcon(color: Color("Light_Blue"), icon: Image(systemName: "play.fill"))
+            SettingIcon(color: .cyan, icon: Image(systemName: "play.fill"))
 
             Toggle("Auto-Play Videos", isOn: $autoPlayVideo)
                 .padding(.trailing)
@@ -622,7 +717,7 @@ private struct AutoPlayAudioRow: View {
         
         HStack(spacing: 12) {
             
-            SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "speaker.wave.3.fill"), size: .subheadline)
+            SettingIcon(color: .pink, icon: Image(systemName: "speaker.wave.3.fill"), size: .subheadline)
 
             Toggle("Auto-Play Audio", isOn: $autoPlayAudio)
                 .padding(.trailing)
@@ -641,7 +736,7 @@ private struct PlayAudioSilencedRow: View {
         
         HStack(spacing: 12) {
             
-            SettingIcon(color: Color("Fuscia_Pink"), icon: Image(systemName: "bell.and.waveform.fill"))
+            SettingIcon(color: .pink, icon: Image(systemName: "bell.and.waveform.fill"))
 
             Toggle("Silenced Audio Playback", isOn: $playAudioSilenced)
                 .padding(.trailing)
@@ -685,13 +780,13 @@ private struct SignOut: View {
                 .foregroundColor(.red)
                 .padding(.vertical, 14)
                 .frame(width: UIScreen.screenWidth - 32)
-                .background(Color("Background"))    
+                .background(Color("Background"))
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .buttonStyle(RoundedTableCell())
-        .padding(.vertical, 8)
-        .padding(.horizontal)
+        .padding(.top, 8)
+        .padding([.horizontal, .bottom])
         .cellShadow()
         .actionSheet(isPresented: $showingActionSheet) {
             
