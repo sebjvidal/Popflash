@@ -160,12 +160,12 @@ private struct Profile: View {
                     .padding(.trailing)
                 
             }
-            .background(Color("Background"))
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             
         }
-        .cellShadow()
         .buttonStyle(RoundedTableCell())
+        .background(Color("Background"))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .cellShadow()
         .padding(.vertical, 8)
         .padding(.horizontal)
         .onAppear(perform: onAppear)
@@ -372,11 +372,11 @@ private struct RecentlyViewed: View {
                     
                 }
                 .background(Color("Background"))
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
                 
             }
-            .cellShadow()
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .buttonStyle(RoundedTableCell())
+            .cellShadow()
             .padding(.top, 8)
             .padding(.horizontal)
             .padding(.bottom, 8)
