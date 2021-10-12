@@ -17,6 +17,8 @@ struct EditFavouriteMapsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    @AppStorage("settings.tint") var tint: Int = 0
+    
     var body: some View { 
         
         NavigationView {
@@ -29,11 +31,13 @@ struct EditFavouriteMapsView: View {
                         Button(action: cancel) {
                             Text("Cancel")
                                 .fontWeight(.regular)
+                                .foregroundColor(TintColour.colour(withID: tint))
                         },
                     trailing:
                         Button(action: save) {
                             Text("Done")
                                 .fontWeight(.bold)
+                                .foregroundColor(TintColour.colour(withID: tint))
                         }
                 )
             
