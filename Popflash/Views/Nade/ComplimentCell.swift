@@ -36,6 +36,7 @@ struct ComplimentCell: View {
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
+                        .padding(.top, 8)
                     
                     Text(nade.name)
                         .fontWeight(.semibold)
@@ -45,13 +46,11 @@ struct ComplimentCell: View {
                         .font(.callout)
                         .lineLimit(2)
                         .foregroundStyle(.primary)
-                        .fixedSize(horizontal: false, vertical: true)
                     
                 }
-                .padding(.top, 8)
                 .padding(.horizontal, 11)
-                .padding(.bottom, 8)
-                
+                .padding(.bottom, 10)
+
             }
             
         }
