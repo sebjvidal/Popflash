@@ -72,6 +72,8 @@ struct EnableNotificationsView: View {
 
 private struct SettingsIconRow: View {
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: openSettings) {
@@ -90,7 +92,7 @@ private struct SettingsIconRow: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12.5, style: .continuous))
                     
                     Text("Open Settings")
-                        .foregroundColor(.blue)
+                        .foregroundColor(TintColour.colour(withID: tint))
                         .padding(.leading, 8)
                     
                     Spacer()
