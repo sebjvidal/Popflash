@@ -10,16 +10,14 @@ import SwiftUI
 struct SegmentedPicker: View {
     
     var items: [String]
+    var itemStyle: SegmentedPickerItemStyle = .text
+    var style: SegmentedPickerStyle = .default
     var defaultsKey: String
     var wildcard: String = "All"
-    var style: SegmentedPickerStyle = .default
     
     @Binding var selectedItems: String
     
-    enum SegmentedPickerStyle {
-        case `default`
-        case single
-    }
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
         
@@ -32,7 +30,7 @@ struct SegmentedPicker: View {
             } label: {
                 
                 Rectangle()
-                    .foregroundStyle(isSelected(item: wildcard) ? Color.blue : Color("Picker_Background"))
+                    .foregroundStyle(isSelected(item: wildcard) ? TintColour.colour(withID: tint) : Color("Picker_Background"))
                     .overlay(Text(wildcard).font(.subheadline).foregroundStyle(isSelected(item: wildcard) ? Color("Selected") : Color("Unselected")))
                 
             }
@@ -46,10 +44,11 @@ struct SegmentedPicker: View {
                 } label: {
                     
                     Rectangle()
-                        .foregroundStyle(isSelected(item: item) ? Color.blue : Color("Picker_Background"))
+                        .foregroundStyle(isSelected(item: item) ? TintColour.colour(withID: tint) : Color("Picker_Background"))
                         .overlay {
                             
-                            if UIImage(named: "\(item)_Icon") != nil {
+                            switch itemStyle {
+                            case .image:
                                 
                                 Image("\(item)_Icon")
                                     .renderingMode(.template)
@@ -59,7 +58,7 @@ struct SegmentedPicker: View {
                                     .font(.subheadline)
                                     .foregroundColor(isSelected(item: item) ? Color("Selected") : Color("Unselected"))
                                 
-                            } else {
+                            case .text:
                                 
                                 Text(item)
                                     .font(.subheadline)
