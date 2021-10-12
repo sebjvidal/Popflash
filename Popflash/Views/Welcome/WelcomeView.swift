@@ -218,6 +218,8 @@ private struct GetStarted: View {
     
     @Binding var selection: Int
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button {
@@ -232,7 +234,7 @@ private struct GetStarted: View {
             
         }
         .frame(width: UIScreen.screenWidth - 90, height: 52)
-        .background(.blue)
+        .background(TintColour.colour(withID: tint))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         
     }
@@ -291,12 +293,14 @@ struct LoginPage: View {
 
 private struct AccountFeatures: View {
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         VStack(spacing: 0) {
             
             Image(systemName: "person.fill")
-                .foregroundStyle(.blue)
+                .foregroundStyle(TintColour.colour(withID: tint))
                 .font(.system(size: 44))
                 .padding()
             
@@ -341,12 +345,14 @@ private struct AccountFeatures: View {
 
 private struct AccountPrivacy: View {
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         VStack {
             
             Image(systemName: "hand.raised.fill")
-                .foregroundStyle(.blue)
+                .foregroundStyle(TintColour.colour(withID: tint))
                 .font(.system(size: 44))
                 .padding()
             
