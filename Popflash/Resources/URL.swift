@@ -15,6 +15,12 @@ extension URL {
         
     }
     
+    var isDynamicLink: Bool {
+        
+        return scheme == "https" && host == "popflash.app"
+        
+    }
+    
     var tabIdentifier: Int? {
         
         guard isDeepLink else {
