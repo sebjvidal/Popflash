@@ -110,66 +110,64 @@ private struct FavouriteMaps: View {
     
     @Binding var isShowing: Bool
     
-    @ObservedObject var mapsViewModel = FavouriteMapsViewModel()
-    
     @State private var showingFavouriteMapsEdittingView = false
     
     var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             
-            ScrollView(.horizontal, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                VStack(alignment: .leading, spacing: 0) {
+                Divider()
+                    .padding(.horizontal)
+                
+                Text("Maps")
+                    .font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .padding(.vertical, 11)
+                    .padding(.leading, 18)
+                
+                HStack(spacing: 16) {
+
+                    FavouriteMapsList()
                     
-                    Divider()
-                        .padding(.horizontal)
-                        .padding(.bottom, 47)
-                    
-                    HStack {
-                        
-                        Spacer()
-                            .frame(width: 8)
-                        
-                        ForEach(mapsViewModel.maps.sorted(by: {
-                            
-                            $0.position < $1.position
-                            
-                        }), id: \.self) { map in
-                            
-                            NavigationLink(destination: MapsDetailView(map: map)) {
-                                
-                                FavouriteMapCell(map: map)
-                                
-                            }
-                            .buttonStyle(FavouriteMapCellButtonStyle())
-                            .padding(.leading, 8)
-                            .padding(.bottom, 16)
-                            
-                        }
-                        
-                        EditFavouritesButton(isShowing: $isShowing)
-                        
-                        Spacer()
-                            .frame(minWidth: 16)
-                        
-                    }
-                    .frame(minWidth: UIScreen.screenWidth)
-                    
-                    Divider()
-                        .padding(.horizontal)
+                    EditFavouritesButton(isShowing: $isShowing)
                     
                 }
+                .padding([.horizontal, .bottom])
+                
+                Divider()
+                    .padding(.horizontal)
+                
+            }
+            .frame(minWidth: UIScreen.screenWidth)
+            
+        }
+        
+    }
+    
+}
+
+private struct FavouriteMapsList: View {
+    
+    @StateObject var mapsViewModel = FavouriteMapsViewModel()
+    
+    var body: some View {
+        
+        ForEach(mapsViewModel.maps.sorted(by: {
+            
+            $0.position < $1.position
+            
+        }), id: \.self) { map in
+            
+            NavigationLink(destination: MapsDetailView(map: map)) {
+                
+                FavouriteMapCell(map: map)
                 
             }
             
-            Text("Maps")
-                .font(.system(size: 20))
-                .fontWeight(.semibold)
-                .padding(.top, 12)
-                .padding(.leading, 18)
-            
         }
+        .buttonStyle(FavouriteMapCellButtonStyle())
         
     }
     
