@@ -544,7 +544,7 @@ struct SegmentedControl: View {
             
         }
         .frame(maxWidth: UIScreen.screenWidth)
-        .pickerStyle(SegmentedPickerStyle())
+        .pickerStyle(.segmented)
         .padding([.top, .horizontal])
         .padding(.bottom, 10)
         
