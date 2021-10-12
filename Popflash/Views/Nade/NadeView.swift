@@ -975,30 +975,15 @@ private struct Compliments: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
-                VStack(alignment: .leading) {
-                    
-                    Divider()
-                        .frame(minWidth: UIScreen.screenWidth - 32)
-                        .padding(.horizontal)
-                        .padding(.bottom, 4)
-                        .onAppear(perform: loadCompliments)
-                        .onChange(of: nade) { _ in
-                            
-                            self.complimentsViewModel.nades.removeAll()
-                            self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
-                                                                        .whereField("id", in: nade.compliments))
-                            
-                        }
+                VStack(alignment: .leading, spacing: 11) {
                     
                     Text("Use With")
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
-                        .padding(.leading, 18)
+                        .padding(.top, 3)
+                        .padding(.leading, 2)
                     
-                    HStack {
-                        
-                        Spacer()
-                            .frame(width: 16)
+                    HStack(spacing: 16) {
                         
                         ForEach(complimentsViewModel.nades, id: \.self) { comp in
                             
@@ -1010,19 +995,25 @@ private struct Compliments: View {
                             } label: {
                                 
                                 ComplimentCell(nade: comp)
-                                    .padding(.bottom, 18)
+                                    .padding(.bottom)
                                 
                             }
                             .buttonStyle(ComplimentsCellButtonStyle())
                             
                         }
                         
-                        Spacer()
-                            .frame(width: 8)
-                        
                     }
                     
                 }
+                .padding(.horizontal)
+                
+            }
+            .onAppear(perform: loadCompliments)
+            .onChange(of: nade) { _ in
+                
+                self.complimentsViewModel.nades.removeAll()
+                self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
+                                                            .whereField("id", in: nade.compliments))
                 
             }
             
