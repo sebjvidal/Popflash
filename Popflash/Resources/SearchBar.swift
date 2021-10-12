@@ -11,10 +11,10 @@ struct SearchBar: View {
 
     @State var placeholder: String
     @Binding var query: String
-    
     @State var isEditing = false
-    
     @FocusState var isFocused: Bool
+    
+    @AppStorage("settings.tint") var tint: Int = 1
 
     var body: some View {
 
@@ -82,7 +82,7 @@ struct SearchBar: View {
                     
                 }
                 .padding(.leading, 12)
-                .foregroundColor(.blue)
+                .foregroundColor(TintColour.colour(withID: tint))
                 .transition(AnyTransition.move(edge: .trailing).combined(with: .opacity).animation(.easeInOut(duration: 0.25)))
                 .animation(.easeInOut(duration: 0.25))
 
