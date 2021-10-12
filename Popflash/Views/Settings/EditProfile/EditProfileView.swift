@@ -75,12 +75,14 @@ private struct CancelButton: View {
     
     @Binding var presentationMode: PresentationMode
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: cancel) {
             
             Text("Cancel")
-                .foregroundStyle(.blue)
+                .foregroundStyle(TintColour.colour(withID: tint))
             
         }
         
@@ -101,8 +103,11 @@ private struct SaveButton: View {
     @Binding var displayName: String
     @Binding var inputImage: UIImage?
     @Binding var deleteAvatar: Bool
+    
     @State var showingAlert = false
     @State var alertID = 0
+    
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
             
@@ -110,7 +115,7 @@ private struct SaveButton: View {
             
             Text("Save")
                 .fontWeight(.bold)
-                .foregroundStyle(.blue)
+                .foregroundStyle(TintColour.colour(withID: tint))
             
         }
         .alert(isPresented: $showingAlert) {
@@ -295,11 +300,14 @@ private struct SaveButton: View {
 private struct ProfilePictureEditor: View {
     
     @State var avatarURL: String
+    
     @Binding var inputImage: UIImage?
     @Binding var deleteAvatarOnDismiss: Bool
     
     @State private var image: Image?
     @State private var showingImagePicker = false
+    
+    @AppStorage("settings.tint") var tint: Int = 0
     
     var body: some View {
         
@@ -376,7 +384,7 @@ private struct ProfilePictureEditor: View {
                     Text("Upload Image")
                     
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(TintColour.colour(withID: tint))
                 .padding(.top, 8)
                 
                 Spacer()
@@ -590,6 +598,8 @@ private struct SkillGroupCell: View {
     
     @Binding var selectedIndex: String
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button {
@@ -602,7 +612,7 @@ private struct SkillGroupCell: View {
                 
                 RoundedRectangle(cornerRadius: 15, style: .continuous)
                     .frame(height: 162)
-                    .foregroundColor(selected() ? Color("Selected_Blue") : Color("Secondary_Background"))
+                    .foregroundColor(selected() ? Color("Selected_\(TintColour.name(forID: tint))") : Color("Secondary_Background"))
                     .cellShadow()
                     .animation(.easeInOut, value: selectedIndex)
                 
