@@ -99,7 +99,7 @@ struct FeaturedView: View {
 
 private struct Header: View {
     
-    @State var dateTimeString = ""
+    @State var dateTimeString = " "
     
     var body: some View {
         
@@ -112,7 +112,7 @@ private struct Header: View {
                 
                 VStack(alignment: .leading) {
                     
-                    Text(dateTimeString.uppercased())
+                    Text(dateTimeString)
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
                         .fontWeight(.semibold)
@@ -150,7 +150,7 @@ private struct Header: View {
         
         let dateString = dateFormatter.string(from: date)
         
-        return dateString
+        return dateString.uppercased()
         
     }
     
@@ -236,9 +236,6 @@ private struct FeaturedCell: View {
                     .padding(.horizontal)
                 
                 SeeMore()
-                    .padding(.top, 12)
-                    .padding(.horizontal, 18)
-                    .padding(.bottom, 15)
                 
             }
             
@@ -253,19 +250,24 @@ private struct FeaturedCell: View {
 
 private struct SeeMore: View {
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         HStack {
             
             Text("Learn More...")
-                .foregroundColor(.blue)
+                .foregroundColor(TintColour.colour(withID: tint))
             
             Spacer()
             
             Image(systemName: "chevron.right")
-                .foregroundColor(.blue)
+                .foregroundColor(TintColour.colour(withID: tint))
             
         }
+        .padding(.top, 12)
+        .padding(.horizontal, 18)
+        .padding(.bottom, 15)
         
     }
     
