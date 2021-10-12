@@ -398,6 +398,7 @@ private struct FavouriteToolbarItem: View {
                         
                     }
                     
+                    isLoading = false
                     isFavourite = false
                     
                 }
