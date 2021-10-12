@@ -43,8 +43,9 @@ struct NadeView: View {
                             value.scrollTo(0, anchor: .top)
                         }
                     
-                    Compliments(nade: $nade, player: $player)
+                    Share(nade: nade)
                     
+                    Compliments(nade: $nade, player: $player)
                     
                 }
                 
@@ -628,6 +629,8 @@ private struct FavouriteButton: View {
     @State private var showingLoginAlert = false
     @State private var showingLoginSheet = false
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: favouriteAction) {
@@ -641,7 +644,7 @@ private struct FavouriteButton: View {
                 
                 Image(systemName: isFavourite ? "heart.fill" : "heart")
                     .font(.system(size: 21))
-                    .foregroundColor(isFavourite ? Color("Heart") : .blue)
+                    .foregroundColor(isFavourite ? Color("Heart") : TintColour.colour(withID: tint))
                     .offset(y: 0.5)
                 
             }
@@ -1032,6 +1035,49 @@ private struct Compliments: View {
         self.complimentsViewModel.nades.removeAll()
         self.complimentsViewModel.fetchData(ref: Firestore.firestore().collection("nades")
                                                     .whereField("id", in: nade.compliments))
+        
+    }
+    
+}
+
+private struct Share: View {
+    
+    @State var nade: Nade
+    @State var showingShareSheet = false
+    
+    @AppStorage("settings.tint") var tint: Int = 1
+    
+    var body: some View {
+        
+        VStack(alignment: .leading) {
+            
+            Divider()
+            
+            Button(action: shareAction) {
+                
+                Label("Share", systemImage: "square.and.arrow.up")
+                    .foregroundColor(TintColour.colour(withID: tint))
+                    .padding(.top, 4)
+                
+            }
+            .buttonStyle(.plain)
+            
+            Divider()
+            
+        }
+        .padding(.horizontal)
+        .sheet(isPresented: $showingShareSheet, content: {
+            
+            ShareSheet(items: [URL(string: "https://popflash.app/dust2_xbox_smoke")!])
+                .ignoresSafeArea()
+            
+        })
+        
+    }
+    
+    func shareAction() {
+        
+        showingShareSheet = true
         
     }
     
