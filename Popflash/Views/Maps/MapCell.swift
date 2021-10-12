@@ -80,6 +80,8 @@ private struct NewButton: View {
     
     var lastAdded: String
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         if recentlyAdded(dateString: lastAdded) {
@@ -88,7 +90,7 @@ private struct NewButton: View {
                 
                 Rectangle()
                     .frame(width: 75, height: 26)
-                    .foregroundColor(.blue)
+                    .foregroundColor(TintColour.colour(withID: tint))
                     .cornerRadius(13)
                 
                 Text("NEW")
