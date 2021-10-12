@@ -114,30 +114,29 @@ private struct SaveButton: View {
             
         }
         .alert(isPresented: $showingAlert) {
+            
             switch alertID {
-            case 1:
                 
-                return Alert(title: Text("Cannot Save Profile"),
-                             message: Text("Please enter your preferred display name and select your in-game rank."),
-                             dismissButton: .default(Text("OK")))
-            
-            case 2:
-                
-                return Alert(title: Text("Cannot Save Profile"),
-                             message: Text("Please select your in-game rank."),
-                             dismissButton: .default(Text("OK")))
-            
             case 3:
                 
                 return Alert(title: Text("Cannot Save Profile"),
                              message: Text("Please enter your preferred display name."),
                              dismissButton: .default(Text("OK")))
-            
+                
+            case 2:
+                
+                return Alert(title: Text("Cannot Save Profile"),
+                             message: Text("Please select your in-game rank."),
+                             dismissButton: .default(Text("OK")))
+                
             default:
                 
-                fatalError()
-            
+                return Alert(title: Text("Cannot Save Profile"),
+                             message: Text("Please enter your preferred display name and select your in-game rank."),
+                             dismissButton: .default(Text("OK")))
+                
             }
+            
         }
         
     }
