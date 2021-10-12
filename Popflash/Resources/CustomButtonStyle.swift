@@ -116,7 +116,6 @@ struct RoundedTableCell: ButtonStyle {
         
         Rectangle()
             .foregroundColor(.primary)
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         
     }
     
