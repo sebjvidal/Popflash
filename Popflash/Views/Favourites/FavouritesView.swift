@@ -116,7 +116,7 @@ private struct FavouriteMaps: View {
     
     var body: some View {
         
-        ZStack(alignment: .topLeading) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
@@ -209,7 +209,10 @@ private struct EditFavouritesButton: View {
     
     @State private var showingLoginAlert = false
     @State private var showingLoginSheet = false
+    
     @Binding var isShowing: Bool
+    
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
         
@@ -226,17 +229,15 @@ private struct EditFavouritesButton: View {
                     .foregroundColor(Color("Favourite_Map_Button"))
                 
                 Image(systemName: "plus")
-                    .foregroundColor(.blue)
+                    .foregroundColor(TintColour.colour(withID: tint))
                     .font(.system(size: 24))
                 
             }
-            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-            .shadow(color: .black.opacity(0.1), radius: 6, y: 5)
-            .buttonStyle(FavouriteMapCellButtonStyle())
-            .padding(.leading, 8)
-            .padding(.bottom, 16)
             
         }
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .shadow(color: .black.opacity(0.1), radius: 6, y: 5)
+        .buttonStyle(FavouriteMapCellButtonStyle())
         .sheet(isPresented: $showingLoginSheet) {
             
             LoginSheet()
@@ -292,12 +293,12 @@ private struct FavouriteNades: View {
     
     var body: some View {
         
-        HStack(alignment: .bottom) {
+        HStack(alignment: .center) {
             
             Text("Grenades")
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
-                .padding(.top, 2)
+                .padding(.vertical, 11)
                 .padding(.leading, 2)
             
             Spacer()
