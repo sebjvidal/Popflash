@@ -35,12 +35,14 @@ struct NadeView: View {
             
             ScrollView {
                 
-                ScrollViewReader { value in
+                ScrollViewReader { scrollView in
                     
                     Details(nade: nade)
                         .id(0)
                         .onChange(of: nade) { _ in
-                            value.scrollTo(0, anchor: .top)
+                            
+                            scrollView.scrollTo(0, anchor: .top)
+                            
                         }
                     
                     Share(nade: nade)
