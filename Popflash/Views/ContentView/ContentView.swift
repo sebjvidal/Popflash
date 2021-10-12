@@ -19,6 +19,8 @@ struct ContentView: View {
     
     @AppStorage("tabSelection") var tabSelection = 0
     @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("settings.appearance") var appearance: Int = 0
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
         
@@ -62,6 +64,10 @@ struct ContentView: View {
             
         }
         .onAppear(perform: onAppear)
+        .preferredColorScheme(appearance == 0 ? .none :
+                              appearance == 1 ? .light :
+                              appearance == 2 ? .dark : .none)
+        .accentColor(TintColour.colour(withID: tint))
         .onOpenURL { url in
             
             handleURL(url)
