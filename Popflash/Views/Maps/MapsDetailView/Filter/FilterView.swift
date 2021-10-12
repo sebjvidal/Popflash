@@ -43,8 +43,8 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Smoke", "Flashbang", "Molotov", "Grenade"],
-                                    defaultsKey: "type",
                                     style: .single,
+                                    defaultsKey: "type",
                                     selectedItems: $selectedType)
                         .padding(.bottom, 8)
                     
@@ -53,8 +53,8 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["64", "128"],
-                                    defaultsKey: "tick",
                                     style: .single,
+                                    defaultsKey: "tick",
                                     selectedItems: $selectedTick)
                         .padding(.bottom, 8)
                     
@@ -63,8 +63,8 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Terrorist", "Counter-\nTerrorist"],
-                                    defaultsKey: "side",
                                     style: .single,
+                                    defaultsKey: "side",
                                     selectedItems: $selectedSide)
                         .padding(.bottom, 8)
                     
@@ -73,8 +73,8 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Yes", "No"],
-                                    defaultsKey: "bind",
                                     style: .single,
+                                    defaultsKey: "bind",
                                     selectedItems: $selectedBind)
                         .padding(.bottom, 8)
                     
@@ -152,6 +152,8 @@ private struct SearchButton: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: search) {
@@ -164,10 +166,12 @@ private struct SearchButton: View {
                         
                         Image(systemName: "magnifyingglass")
                             .font(.title2)
+                        
                         Text("Search")
                             .font(.callout)
                         
                     }
+                    .foregroundColor(TintColour.colour(withID: tint))
                     
                 }
             
@@ -193,6 +197,7 @@ private struct FavouriteButton: View {
     @State private var showingLoginSheet = false
     
     @AppStorage("favourites.maps") private var favouriteMaps: Array = [String]()
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
         
@@ -206,10 +211,12 @@ private struct FavouriteButton: View {
                         
                         Image(systemName: isFavourite ? "heart.slash.fill" : "heart.fill")
                             .font(.title2)
+                        
                         Text(isFavourite ? "Unfavourite" : "Favourite")
                             .font(.callout)
                         
                     }
+                    .foregroundColor(TintColour.colour(withID: tint))
                     
                 }
             
@@ -420,6 +427,8 @@ private struct OverviewButton: View {
     
     @State private var isShowing = false
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: showOverview) {
@@ -432,10 +441,12 @@ private struct OverviewButton: View {
                         
                         Image(systemName: "map.fill")
                             .font(.title2)
+                        
                         Text("Overview")
                             .font(.callout)
                         
                     }
+                    .foregroundColor(TintColour.colour(withID: tint))
                     
                 }
             
