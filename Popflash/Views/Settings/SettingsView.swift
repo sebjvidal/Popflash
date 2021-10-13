@@ -161,10 +161,10 @@ private struct Profile: View {
                     .padding(.trailing)
                 
             }
+            .background(Color("Background"))
             
         }
         .buttonStyle(RoundedTableCell())
-        .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .cellShadow()
         .padding(.vertical, 8)
@@ -626,10 +626,10 @@ private struct NotificationsRow: View {
                         .padding(.trailing)
                     
                 }
+                .background(Color("Background"))
                 
             }
             .buttonStyle(RoundedTableCell())
-            .background(Color("Background"))
             .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .cellShadow()
             .padding(.top, 8)
