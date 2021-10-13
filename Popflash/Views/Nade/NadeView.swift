@@ -583,7 +583,7 @@ private struct Details: View {
                     
                 }
                 
-                Spacer()
+                Spacer(minLength: 0)
                 
                 FavouriteButton(nade: nade)
                     .padding()
