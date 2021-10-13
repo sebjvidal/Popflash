@@ -1042,22 +1042,24 @@ private struct Share: View {
     
     var body: some View {
         
-        VStack(alignment: .leading) {
+        Button(action: shareAction) {
             
-            Divider()
-            
-            Button(action: shareAction) {
+            VStack(alignment: .leading) {
+                
+                Divider()
                 
                 Label("Share", systemImage: "square.and.arrow.up")
                     .foregroundColor(TintColour.colour(withID: tint))
-                    .padding(.top, 4)
+                    .padding(.top, 5)
+                    .padding(.leading, 1)
+                
+                Divider()
                 
             }
-            .buttonStyle(.plain)
-            
-            Divider()
+            .background(Color(uiColor: .systemBackground))
             
         }
+        .buttonStyle(.plain)
         .padding(.horizontal)
         .sheet(isPresented: $showingShareSheet, content: {
             
