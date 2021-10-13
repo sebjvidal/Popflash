@@ -451,11 +451,14 @@ private struct NotNow: View {
     
     @Binding var presentationMode: PresentationMode
     
+    @AppStorage("settings.tint") var tint: Int = 1
+    
     var body: some View {
         
         Button(action: notNow) {
             
             Text("Not Now")
+                .foregroundColor(TintColour.colour(withID: tint))
             
         }
         
