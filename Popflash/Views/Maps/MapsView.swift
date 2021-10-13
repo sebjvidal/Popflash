@@ -157,7 +157,7 @@ private struct MapsList: View {
     
     @AppStorage("maps.listFilter") var listFilter = "Popularity"
     
-    @State private var action: Int? = 0
+    @State private var action: Int?
     
     var body: some View {
             
@@ -165,7 +165,7 @@ private struct MapsList: View {
             
             ZStack {
                 
-                NavigationLink(destination: MapsDetailView(map: map), tag: generateID(forMap: map.id), selection: $action) {
+                NavigationLink(destination: MapsDetailView(map: map), tag: tag(forMap: map), selection: $action) {
                     
                     EmptyView()
                     
@@ -175,7 +175,7 @@ private struct MapsList: View {
 
                 Button {
 
-                    action = generateID(forMap: map.id)
+                    action = tag(forMap: map)
 
                 } label: {
 
@@ -198,21 +198,33 @@ private struct MapsList: View {
         let filteredMapsList = mapsList.sorted(by: {
             
             if listFilter == "Popularity" {
+                
                 return $0.views > $1.views
+                
             } else if listFilter == "A-Z" {
+                
                 return $0.name < $1.name
+                
             } else {
+                
                 return $0.name < $1.name
+                
             }
             
         }).filter( {
             
             if listFilter == "Active Duty" {
+                
                 return $0.group == "Active Duty"
+                
             } else if listFilter == "Reserves" {
+                
                 return $0.group == "Reserves"
+                
             } else {
+                
                 return $0.group != ""
+                
             }
             
         })
@@ -221,22 +233,15 @@ private struct MapsList: View {
         
     }
     
-    func generateID(forMap: String) -> Int {
+    func tag(forMap map: Map) -> Int {
         
-        let rawString = forMap
-        var idString = ""
-        
-        for character in rawString {
+        guard let index = filteredMaps(mapsList: maps).firstIndex(of: map) else {
             
-            if character.isASCII {
-                
-                idString.append(String(character.asciiValue!))
-                
-            }
+            return 0
             
         }
         
-        return Int(idString.prefix(9)) ?? 0
+        return index
         
     }
     
