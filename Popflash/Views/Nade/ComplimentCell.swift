@@ -20,34 +20,35 @@ struct ComplimentCell: View {
             
             KFImage(URL(string: nade.thumbnail))
                 .resizable()
-                .aspectRatio(16/9, contentMode: .fit)
+                .aspectRatio(16/9, contentMode: .fill)
+                .frame(width: 220, height: 124)
             
             ZStack(alignment: .topLeading) {
-                
+
                 KFImage(URL(string: nade.thumbnail))
                     .resizable()
                     .setProcessor(processor)
                     .frame(width: 220)
                     .overlay(.regularMaterial)
-                
+
                 VStack(alignment: .leading, spacing: 0) {
-                    
+
                     Text(nade.map)
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                         .padding(.top, 8)
-                    
+
                     Text(nade.name)
                         .fontWeight(.semibold)
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                     Text(nade.shortDescription)
                         .font(.callout)
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                 }
                 .padding(.horizontal, 11)
                 .padding(.bottom, 10)
