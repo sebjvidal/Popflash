@@ -1036,7 +1036,7 @@ private struct Compliments: View {
 private struct Share: View {
     
     @State var nade: Nade
-    @State var showingShareSheet = false
+    @State var shareLink: DynamicLink?
     
     @AppStorage("settings.tint") var tint: Int = 1
     
@@ -1061,18 +1061,22 @@ private struct Share: View {
         }
         .buttonStyle(.plain)
         .padding(.horizontal)
-        .sheet(isPresented: $showingShareSheet, content: {
+        .sheet(item: $shareLink) { dynamicLink in
             
-            ShareSheet(items: [URL(string: "https://popflash.app/dust2_xbox_smoke")!])
-                .ignoresSafeArea()
+            ShareSheet(items: [dynamicLink.link])
+                .edgesIgnoringSafeArea(.bottom)
             
-        })
+        }
         
     }
     
     func shareAction() {
         
-        showingShareSheet = true
+        dynamicLink(for: nade) { dynamicLink in
+            
+            shareLink = dynamicLink
+            
+        }
         
     }
     
@@ -1096,6 +1100,6 @@ private struct VideoPlayer: UIViewControllerRepresentable {
         
     }
     
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) { }
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) {}
     
 }
