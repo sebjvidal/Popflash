@@ -15,6 +15,16 @@ struct ShareSheet: UIViewControllerRepresentable {
         
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         
+        controller.completionWithItemsHandler = { (activityType, completed: Bool, returnedItems: [Any]?, error: Error?) in
+            
+            if completed {
+                
+                controller.dismiss(animated: true)
+                
+            }
+            
+         }
+        
         return controller
         
     }
