@@ -66,7 +66,11 @@ struct SearchBar: View {
                         
                         if focused {
                             
-                            isEditing = true
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                
+                                isEditing = true
+                                
+                            }
                             
                         }
                                                 
@@ -77,14 +81,13 @@ struct SearchBar: View {
             if isEditing {
                 
                 Button("Cancel") {
-                    
+                        
                     cancel()
                     
                 }
                 .padding(.leading, 12)
                 .foregroundColor(TintColour.colour(withID: tint))
                 .transition(AnyTransition.move(edge: .trailing).combined(with: .opacity).animation(.easeInOut(duration: 0.25)))
-                .animation(.easeInOut(duration: 0.25))
 
             }
             
@@ -104,7 +107,12 @@ struct SearchBar: View {
         
         query = ""
         isFocused = false
-        isEditing = false
+        
+        withAnimation(.easeInOut(duration: 0.25)) {
+            
+            isEditing = false
+            
+        }
         
     }
 
