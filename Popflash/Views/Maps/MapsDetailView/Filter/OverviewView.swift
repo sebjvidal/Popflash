@@ -21,6 +21,7 @@ struct OverviewView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: UIScreen.screenWidth,
                        height: UIScreen.screenWidth)
+                .background(.black)
                 .zIndex(1)
             
             List {
