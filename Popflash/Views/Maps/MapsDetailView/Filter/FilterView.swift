@@ -43,7 +43,8 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Smoke", "Flashbang", "Molotov", "Grenade"],
-                                    style: .single,
+                                    itemStyle: .image,
+                                    pickerStyle: .single,
                                     defaultsKey: "type",
                                     selectedItems: $selectedType)
                         .padding(.bottom, 8)
@@ -53,7 +54,7 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["64", "128"],
-                                    style: .single,
+                                    pickerStyle: .single,
                                     defaultsKey: "tick",
                                     selectedItems: $selectedTick)
                         .padding(.bottom, 8)
@@ -63,7 +64,7 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Terrorist", "Counter-\nTerrorist"],
-                                    style: .single,
+                                    pickerStyle: .single,
                                     defaultsKey: "side",
                                     selectedItems: $selectedSide)
                         .padding(.bottom, 8)
@@ -73,7 +74,7 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Yes", "No"],
-                                    style: .single,
+                                    pickerStyle: .single,
                                     defaultsKey: "bind",
                                     selectedItems: $selectedBind)
                         .padding(.bottom, 8)
