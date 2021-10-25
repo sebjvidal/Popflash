@@ -11,7 +11,7 @@ struct SegmentedPicker: View {
     
     var items: [String]
     var itemStyle: SegmentedPickerItemStyle = .text
-    var style: SegmentedPickerStyle = .default
+    var pickerStyle: SegmentedPickerStyle = .default
     var defaultsKey: String
     var wildcard: String = "All"
     
@@ -95,7 +95,7 @@ struct SegmentedPicker: View {
     
     func segmentAction(item: String) {
         
-        if style == .single {
+        if pickerStyle == .single {
             
             selectedItems = item
             
