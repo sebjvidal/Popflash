@@ -391,6 +391,7 @@
 				C2D4067D2643270C00CDCB2B /* PinchToZoom.swift */,
 				C223FB9125E6785B004EEA5F /* PlayerView.swift */,
 				C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */,
+				C2BA142A27273F1A000B6C4B /* PushNotifications */,
 				C2D44B2627039E5C003A151E /* ScrollOffset.swift */,
 				C2C5EEFA267209DA002ACAE1 /* SearchBar.swift */,
 				C2A301DC271617C7007EF964 /* SegmentedPicker */,
@@ -629,6 +630,15 @@
 			path = MapsViewModel;
 			sourceTree = "<group>";
 		};
+		C2BA142A27273F1A000B6C4B /* PushNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				C2DE780526D2A8A10092BADE /* SubscribeTo.swift */,
+				C2DE780726D2A9E50092BADE /* UnsubscribeFrom.swift */,
+			);
+			path = PushNotifications;
+			sourceTree = "<group>";
+		};
 		C2BB805026F77A0300592CBD /* WidgetExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -662,8 +672,6 @@
 			isa = PBXGroup;
 			children = (
 				C2DE780026CFBF9D0092BADE /* NotificationsView.swift */,
-				C2DE780526D2A8A10092BADE /* SubscribeTo.swift */,
-				C2DE780726D2A9E50092BADE /* UnsubscribeFrom.swift */,
 			);
 			path = NotificationsView;
 			sourceTree = "<group>";
