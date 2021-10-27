@@ -36,7 +36,7 @@ class FavouriteMapsViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection("users").document(user.uid).collection("maps")
 
-        ref.addSnapshotListener { snapshot, error in
+        ref.addSnapshotListener { [weak self] snapshot, error in
 
             guard let documents = snapshot?.documents else {
 
@@ -44,7 +44,7 @@ class FavouriteMapsViewModel: ObservableObject {
 
             }
 
-            self.maps.removeAll()
+            self?.maps.removeAll()
 
             for document in documents {
 
@@ -57,27 +57,39 @@ class FavouriteMapsViewModel: ObservableObject {
                 }
 
                 let position = data["position"] as? Int ?? 0
-
-                mapRef.getDocument { snapshot, error in
-
-                    guard let document = snapshot else {
-
-                        return
-
-                    }
-
-                    if var map = mapFrom(doc: document) {
-
-                        map.position = position
-
-                        self.maps.append(map)
-
-                    }
-
+                
+                self?.fetchMap(from: mapRef, withPosition: position) { map in
+                    
+                    self?.maps.append(map)
+                    
                 }
 
             }
 
+        }
+        
+    }
+    
+    private func fetchMap(from ref: DocumentReference, withPosition position: Int, completion: @escaping (Map) -> Void) {
+        
+        ref.getDocument { snapshot, error in
+            
+            guard let document = snapshot else {
+                
+                return
+                
+            }
+            
+            guard var map = mapFrom(doc: document) else {
+                
+                return
+                
+            }
+            
+            map.position = position
+            
+            completion(map)
+            
         }
         
     }
