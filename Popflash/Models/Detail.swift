@@ -11,10 +11,10 @@ struct Detail: Hashable {
     
     func hash(into hasher: inout Hasher) {
         
-            hasher.combine(name)
-            hasher.combine(value)
+        hasher.combine(name)
+        hasher.combine(value)
         
-        }
+    }
 
     var name: String
     var value: String
