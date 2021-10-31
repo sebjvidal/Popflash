@@ -7,10 +7,13 @@
 
 import SwiftUI
 
-struct Callout: Hashable {
+struct Callout: Identifiable, Hashable {
     
+    var id = UUID()
     var name: String
     var posX: Double
     var posY: Double
+    var level: String
+    var thumbnail: String
     
 }
