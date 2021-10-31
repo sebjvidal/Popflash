@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "teamlogo-large-terrorist.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
