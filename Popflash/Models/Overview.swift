@@ -13,5 +13,38 @@ struct Overview: Hashable {
     var upperRadar: String
     var lowerRadar: String?
     var scale: Double
+    var callouts: [Callout]
+    
+    func upperCallouts() -> [Callout] {
+        
+        let calls = callouts.filter { call in
+            
+            return call.level == "Upper"
+            
+        }.sorted(by: {
+            
+            $0.name < $1.name
+            
+        })
+        
+        return calls
+        
+    }
+    
+    func lowerCallouts() -> [Callout] {
+        
+        let calls = callouts.filter { call in
+            
+            return call.level == "Lower"
+            
+        }.sorted(by: {
+            
+            $0.name < $1.name
+            
+        })
+        
+        return calls
+        
+    }
     
 }
