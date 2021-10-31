@@ -19,8 +19,10 @@ func calloutFrom(document doc: DocumentSnapshot) -> Callout? {
     let name = data["name"] as? String ?? ""
     let posX = data["posX"] as? Double ?? 0.0
     let posY = data["posY"] as? Double ?? 0.0
+    let level = data["level"] as? String ?? "Upper"
+    let thumbnail = data["thumbnail"] as? String ?? ""
     
-    let callout = Callout(name: name, posX: posX, posY: posY)
+    let callout = Callout(name: name, posX: posX, posY: posY, level: level, thumbnail: thumbnail)
     
     return callout
     
