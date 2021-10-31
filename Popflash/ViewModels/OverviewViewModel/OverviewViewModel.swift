@@ -10,10 +10,9 @@ import FirebaseFirestore
 
 class OverviewViewModel: ObservableObject {
     
-    @Published var overviews: [Overview] = []
-    @Published var callouts: [Callout] = []
+    @Published private(set) var overview: Overview?
     
-    func fetchOverviews(for map: Map) {
+    func fetchData(for map: Map) {
             
         let db = Firestore.firestore()
         let ref = db.collection("overviews").document(map.id)
@@ -26,19 +25,27 @@ class OverviewViewModel: ObservableObject {
                 
             }
             
-            guard let overview = overviewFrom(doc: document) else {
+            guard var overview = overviewFrom(doc: document) else {
                 
                 return
                 
             }
             
-            self.overviews = [overview]
+            self.fetchCallouts(for: map) { [weak self] callouts in
+                
+                overview.callouts = callouts
+                
+                self?.overview = overview
+                
+            }
             
         }
         
     }
     
-    func fetchCallouts(for map: Map) {
+    private func fetchCallouts(for map: Map, completion: @escaping ([Callout]) -> Void) {
+        
+        var callouts: [Callout] = []
         
         let db = Firestore.firestore()
         let ref = db.collection("overviews").document(map.id).collection("callouts")
@@ -55,11 +62,13 @@ class OverviewViewModel: ObservableObject {
                 
                 if let callout = calloutFrom(document: document) {
                     
-                    self.callouts.append(callout)
+                    callouts.append(callout)
                     
                 }
                 
             }
+            
+            completion(callouts)
             
         }
         
