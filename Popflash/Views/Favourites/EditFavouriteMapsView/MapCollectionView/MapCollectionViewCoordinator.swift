@@ -9,7 +9,7 @@ import UIKit
 import SwiftUI
 import Kingfisher
 
-class Coordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UICollectionViewDataSource {
+class MapCollectionViewCoordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UICollectionViewDataSource {
 
     var parent: MapCollectionView
     var previousData: [String] = []

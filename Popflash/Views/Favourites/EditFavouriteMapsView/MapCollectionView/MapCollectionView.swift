@@ -46,9 +46,9 @@ struct MapCollectionView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UICollectionViewController, context: UIViewControllerRepresentableContext<MapCollectionView>) {}
     
-    func makeCoordinator() -> Coordinator {
+    func makeCoordinator() -> MapCollectionViewCoordinator {
         
-        Coordinator(self)
+        MapCollectionViewCoordinator(self)
         
     }
     
