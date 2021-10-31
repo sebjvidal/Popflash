@@ -21,7 +21,7 @@ func overviewFrom(doc document: DocumentSnapshot) -> Overview? {
     let lowerLevel = data["lowerRadar"] as? String
     let scale = data["scale"] as? Double ?? 1
     
-    let overview = Overview(id: id, upperRadar: upperLevel, lowerRadar: lowerLevel, scale: scale)
+    let overview = Overview(id: id, upperRadar: upperLevel, lowerRadar: lowerLevel, scale: scale, callouts: [])
     
     return overview
     
