@@ -39,18 +39,18 @@ struct FilterView: View {
                         .padding(.leading, 2)
                     
                     Text("Type")
-                        .font(.headline)
+                        .font(.subheadline)
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Smoke", "Flashbang", "Molotov", "Grenade"],
                                     itemStyle: .image,
-                                    pickerStyle: .single,
+                                    pickerStyle: .default,
                                     defaultsKey: "type",
                                     selectedItems: $selectedType)
                         .padding(.bottom, 8)
                     
                     Text("Tick-Rate")
-                        .font(.headline)
+                        .font(.subheadline)
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["64", "128"],
@@ -60,7 +60,7 @@ struct FilterView: View {
                         .padding(.bottom, 8)
                     
                     Text("Side")
-                        .font(.headline)
+                        .font(.subheadline)
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Terrorist", "Counter-\nTerrorist"],
@@ -70,7 +70,7 @@ struct FilterView: View {
                         .padding(.bottom, 8)
                     
                     Text("Jump-Throw Bind")
-                        .font(.headline)
+                        .font(.subheadline)
                         .padding(.leading, 2)
                     
                     SegmentedPicker(items: ["Yes", "No"],
