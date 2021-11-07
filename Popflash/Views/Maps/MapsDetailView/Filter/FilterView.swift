@@ -135,11 +135,11 @@ private struct QuickActions: View {
         
         HStack {
             
-            SearchButton()
-            
             FavouriteButton(map: map)
             
             OverviewButton(map: map)
+            
+            ShareButton(map: map)
             
         }
         .frame(height: 75)
@@ -463,6 +463,45 @@ private struct OverviewButton: View {
     func showOverview() {
         
         isShowing.toggle()
+        
+    }
+    
+}
+
+private struct ShareButton: View {
+    
+    var map: Map
+    
+    @AppStorage("settings.tint") var tint: Int = 1
+    
+    var body: some View {
+        
+        Button(action: share) {
+            
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .foregroundStyle(Color("Picker_Background"))
+                .overlay {
+                    
+                    VStack(spacing: 4) {
+                        
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.title2)
+                        
+                        Text("Share")
+                            .font(.callout)
+                        
+                    }
+                    .foregroundColor(TintColour.colour(withID: tint))
+                    
+                }
+            
+        }
+        
+    }
+    
+    func share() {
+        
+//        isShowing.toggle()
         
     }
     
