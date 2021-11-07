@@ -15,7 +15,7 @@ struct SegmentedPicker: View {
     var defaultsKey: String
     var wildcard: String = "All"
     
-    @Binding var selectedItems: String
+    @Binding var selectedItems: [String]
     
     @AppStorage("settings.tint") var tint: Int = 1
     
@@ -25,7 +25,7 @@ struct SegmentedPicker: View {
             
             Button {
                 
-                selectedItems = wildcard
+                selectedItems = [wildcard]
                 
             } label: {
                 
@@ -56,7 +56,7 @@ struct SegmentedPicker: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(height: 35)
                                     .font(.subheadline)
-                                    .foregroundColor(isSelected(item: item) ? Color("Selected") : Color("Unselected"))
+                                    .foregroundStyle(isSelected(item: item) ? Color("Selected") : Color("Unselected"))
                                 
                             case .text:
                                 
@@ -81,24 +81,46 @@ struct SegmentedPicker: View {
     
     func isSelected(item: String) -> Bool {
         
-        if selectedItems == item {
-            
-            return true
-            
-        } else {
-            
-            return false
-            
-        }
+        return selectedItems.contains(item)
         
     }
     
     func segmentAction(item: String) {
         
-        if pickerStyle == .single {
+        switch pickerStyle {
+        case .default:
             
-            selectedItems = item
+            if selectedItems.contains(item) {
+                
+                if let index = selectedItems.firstIndex(of: item) {
+                    
+                    selectedItems.remove(at: index)
+                    
+                    
+                }
+                
+                if selectedItems.isEmpty {
+                    
+                    selectedItems.append(wildcard)
+                    
+                }
+                
+            } else {
+                
+                if let index = selectedItems.firstIndex(of: wildcard) {
+                    
+                    selectedItems.remove(at: index)
+                    
+                }
+                
+                selectedItems.append(item)
+                
+            }
             
+        case .single:
+            
+            selectedItems = [item]
+
         }
         
     }
