@@ -13,10 +13,10 @@ struct FilterView: View {
     
     var map: Map
     
-    @Binding var selectedType: String
-    @Binding var selectedTick: String
-    @Binding var selectedSide: String
-    @Binding var selectedBind: String
+    @Binding var selectedType: [String]
+    @Binding var selectedTick: [String]
+    @Binding var selectedSide: [String]
+    @Binding var selectedBind: [String]
     
     var body: some View {
         
