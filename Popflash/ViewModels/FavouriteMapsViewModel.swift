@@ -94,4 +94,10 @@ class FavouriteMapsViewModel: ObservableObject {
         
     }
     
+    func clear() {
+        
+        maps.removeAll()
+        
+    }
+    
 }
