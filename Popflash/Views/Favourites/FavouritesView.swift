@@ -168,6 +168,23 @@ private struct FavouriteMapsList: View {
             
         }
         .buttonStyle(FavouriteMapCellButtonStyle())
+        .onAppear(perform: onAppear)
+        
+    }
+    
+    func onAppear() {
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if !mapsViewModel.maps.isEmpty && user.isAnonymous {
+            
+            mapsViewModel.clear()
+            
+        }
         
     }
     
@@ -342,6 +359,18 @@ private struct FavouriteNades: View {
     func onAppear() {
         
         favouritesViewModel.fetchData()
+        
+        guard let user = Auth.auth().currentUser else {
+            
+            return
+            
+        }
+        
+        if user.isAnonymous {
+            
+            favouritesViewModel.clear()
+            
+        }
         
     }
     
