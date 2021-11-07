@@ -61,4 +61,10 @@ class FavouritesViewModel: ObservableObject {
 
     }
     
+    func clear() {
+        
+        nades.removeAll()
+        
+    }
+    
 }
