@@ -157,7 +157,7 @@ private struct MapsList: View {
     
     @AppStorage("maps.listFilter") var listFilter = "Popularity"
     
-    @State private var action: Int?
+    @State private var action: Map?
     
     var body: some View {
             
@@ -165,7 +165,7 @@ private struct MapsList: View {
             
             ZStack {
                 
-                NavigationLink(destination: MapsDetailView(map: map), tag: tag(forMap: map), selection: $action) {
+                NavigationLink(destination: MapsDetailView(map: map), tag: map, selection: $action) {
                     
                     EmptyView()
                     
@@ -175,7 +175,7 @@ private struct MapsList: View {
 
                 Button {
 
-                    action = tag(forMap: map)
+                    action = map
 
                 } label: {
 
@@ -230,18 +230,6 @@ private struct MapsList: View {
         })
         
         return filteredMapsList
-        
-    }
-    
-    func tag(forMap map: Map) -> Int {
-        
-        guard let index = filteredMaps(mapsList: maps).firstIndex(of: map) else {
-            
-            return 0
-            
-        }
-        
-        return index
         
     }
     
