@@ -408,8 +408,6 @@ private struct CalloutsList: View {
     
     var overview: Overview
     
-//    @State var callouts: [Callout]
-    
     @Binding var selection: String
     @Binding var calloutSelection: String
     @Binding var calloutPreview: Callout?
@@ -429,7 +427,9 @@ private struct CalloutsList: View {
                 
                 ForEach(sortedCallouts(), id: \.self) { callout in
                     
-                    CalloutCell(callout: callout, selectedCallout: $calloutSelection, calloutPreview: $calloutPreview,
+                    CalloutCell(callout: callout,
+                                selectedCallout: $calloutSelection,
+                                calloutPreview: $calloutPreview,
                                 originX: $originX, originY: $originY,
                                 posX: $posX, posY: $posY,
                                 width: $width, height: $height)
@@ -494,6 +494,8 @@ private struct CalloutCell: View {
     @Binding var width: CGFloat
     @Binding var height: CGFloat
     
+    let processor = ResizingImageProcessor(referenceSize: CGSize(width: 180, height: 90), mode: .aspectFit)
+    
     var body: some View {
         
         Button(action: selectCallout) {
@@ -522,6 +524,7 @@ private struct CalloutCell: View {
                                 
                                 KFImage(URL(string: callout.thumbnail))
                                     .resizable()
+                                    .setProcessor(processor)
                                     .aspectRatio(16/9, contentMode: .fill)
                                     .frame(width: 30, height: 30)
                                     .clipShape(Circle())
