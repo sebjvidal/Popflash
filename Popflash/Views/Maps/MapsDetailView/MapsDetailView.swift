@@ -16,10 +16,10 @@ struct MapsDetailView: View {
     @State private var showingBottomSheet = false
     @State private var showingNavigationBarTitle = false
     
-    @AppStorage("maps.filter.type") private var selectedType: String = "All"
-    @AppStorage("maps.filter.tick") private var selectedTick: String = "All"
-    @AppStorage("maps.filter.side") private var selectedSide: String = "All"
-    @AppStorage("maps.filter.bind") private var selectedBind: String = "All"
+    @AppStorage("maps.filter.type") private var selectedType: [String] = ["All"]
+    @AppStorage("maps.filter.tick") private var selectedTick: [String] = ["All"]
+    @AppStorage("maps.filter.side") private var selectedSide: [String] = ["All"]
+    @AppStorage("maps.filter.bind") private var selectedBind: [String] = ["All"]
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -132,9 +132,9 @@ struct MapsDetailView: View {
         
         for filter in filters {
             
-            if filter.value != "All" {
+            if filter.value != ["All"] {
                 
-                filteredRef = filteredRef.whereField(filter.key, isEqualTo: filter.value.replacingOccurrences(of: "\n", with: ""))
+                filteredRef = filteredRef.whereField(filter.key, isEqualTo: filter.value[0].replacingOccurrences(of: "\n", with: ""))
                 
             }
             
@@ -143,9 +143,9 @@ struct MapsDetailView: View {
         let tickExclusion = ["64": "128",
                              "128": "64"]
         
-        if selectedTick != "All" {
+        if selectedTick != ["All"] {
             
-            if let exclusion = tickExclusion[selectedTick] {
+            if let exclusion = tickExclusion[selectedTick[0]] {
                 
                 filteredRef = filteredRef.whereField("tick", isNotEqualTo: exclusion)
                                 
