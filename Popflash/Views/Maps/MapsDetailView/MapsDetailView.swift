@@ -527,10 +527,10 @@ struct NadeCell: View, Equatable {
                         Spacer()
                         
                         Image(systemName: "chevron.right")
+                            .padding(.horizontal)
                         
                     }
                     .padding(.leading, 12)
-                    .padding(.trailing)
                     
                 }
                 
@@ -560,24 +560,26 @@ struct NadeDetails: View {
     
     var body: some View {
         
-        HStack {
+        HStack(spacing: 0) {
             
-            Group {
-
-                Label("\(views)", systemImage: "eye.fill")
-                
-                Label("\(favourites)", systemImage: "heart.fill")
-                
-                Label("\(tick)", systemImage: "clock.fill")
-                
-                Label("\(bind)", systemImage: "keyboard.fill")
-                
-            }
-            .foregroundStyle(.primary)
-            .padding(.trailing, 16)
-            .font(.system(size: 11))
+            Label("\(views)", systemImage: "eye.fill")
+            
+            Spacer(minLength: 0)
+            
+            Label("\(favourites)", systemImage: "heart.fill")
+            
+            Spacer(minLength: 0)
+            
+            Label("\(tick)", systemImage: "clock.fill")
+            
+            Spacer(minLength: 0)
+            
+            Label("\(bind)", systemImage: "keyboard.fill")
             
         }
+        .foregroundStyle(.primary)
+        .font(.caption2)
+        .labelStyle(.compact)
         
     }
     
