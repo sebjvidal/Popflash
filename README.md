@@ -1,8 +1,9 @@
-# Popflash
 ![Popflash Icon](https://github.com/sebjvidal/Popflash/blob/main/Images/README_Icon.png?raw=true)
+![Popflash Icon](https://github.com/sebjvidal/Popflash/blob/main/Images/README_Title.png?raw=true)
 
 ![Popflash Preview](https://github.com/sebjvidal/Popflash/blob/main/Images/README_Graphic.png?raw=true)
 
+# Popflash
 Popflash is a SwiftUI-based project for the popular first-person shooter, [Counter-Strike: Global Offensive](https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/). Popflash provides a curated catalogue of high-quality grenade line-up videos to assist players in developing round-winning strategies in competitive play.
 
 ## Featured
