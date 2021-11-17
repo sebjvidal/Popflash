@@ -15,6 +15,7 @@ struct MapsView: View {
     
     @State private var statusOpacity: Double = 0
     @State private var hideNavBar = true
+    @State private var selectedMap: Map?
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -160,7 +161,7 @@ private struct MapsList: View {
     @State private var action: Map?
     
     var body: some View {
-            
+        
         ForEach(filteredMaps(mapsList: maps), id: \.self) { map in
             
             ZStack {
@@ -172,20 +173,20 @@ private struct MapsList: View {
                 }
                 .hidden()
                 .disabled(true)
-
+                
                 Button {
-
+                    
                     action = map
-
+                    
                 } label: {
-
+                    
                     MapCell(map: map)
                         .cellShadow()
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)
-
+                    
                 }
-
+                
             }
             .buttonStyle(MapCellButtonStyle())
             
@@ -255,4 +256,20 @@ private struct LoadingList: View {
                 
     }
     
+}
+
+struct MapsView_Previews: PreviewProvider {
+
+    @State var map: String?
+
+    static var previews: some View {
+
+        MapsView()
+            .preferredColorScheme(.light)
+
+        MapsView()
+            .preferredColorScheme(.dark)
+
+    }
+
 }
