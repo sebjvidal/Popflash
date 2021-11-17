@@ -10,6 +10,7 @@ struct MapsDetailView: View {
     
     @StateObject private var viewModel = NadesViewModel()
     
+    @State private var isFavourite = false
     @State private var selectedNade: Nade?
     @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
@@ -70,7 +71,7 @@ struct MapsDetailView: View {
 
             ToolbarItem(placement: .navigationBarTrailing) {
 
-                FavouriteToolbarItem(map: map)
+                FavouriteToolbarItem(map: map, isFavourite: $isFavourite)
 
             }
 
@@ -86,6 +87,7 @@ struct MapsDetailView: View {
                      uiApplication: UIApplication.shared) {
 
             FilterView(map: map,
+                       isFavourite: $isFavourite,
                        selectedType: $selectedType,
                        selectedTick: $selectedTick,
                        selectedSide: $selectedSide,
@@ -195,7 +197,7 @@ private struct FavouriteToolbarItem: View {
     
     var map: Map
 
-    @State var isFavourite = false
+    @Binding var isFavourite: Bool
     @State var isLoading = true
     @State var showingLoginAlert = false
     @State var showingLoginSheet = false
