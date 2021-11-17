@@ -13,6 +13,7 @@ struct FilterView: View {
     
     var map: Map
     
+    @Binding var isFavourite: Bool
     @Binding var selectedType: [String]
     @Binding var selectedTick: [String]
     @Binding var selectedSide: [String]
@@ -26,7 +27,7 @@ struct FilterView: View {
                 
                 Header()
                 
-                QuickActions(map: map)
+                QuickActions(map: map, isFavourite: $isFavourite)
                 
                 Divider()
                     .padding(.top, 8)
@@ -129,13 +130,15 @@ private struct QuickActions: View {
     
     var map: Map
     
+    @Binding var isFavourite: Bool
+    
     @FocusState var searchFocused: Bool
     
     var body: some View {
         
         HStack {
             
-            FavouriteButton(map: map)
+            FavouriteButton(map: map, isFavourite: $isFavourite)
             
             OverviewButton(map: map)
             
@@ -192,8 +195,9 @@ private struct FavouriteButton: View {
     
     var map: Map
     
-    @State private var isLoading = true
-    @State private var isFavourite = false
+    @Binding var isFavourite: Bool
+    
+    @State private var isLoading = false
     @State private var showingLoginAlert = false
     @State private var showingLoginSheet = false
     
@@ -222,7 +226,6 @@ private struct FavouriteButton: View {
                 }
             
         }
-        .onAppear(perform: getFavourite)
         .sheet(isPresented: $showingLoginSheet) {
             
             LoginSheet()
@@ -234,46 +237,6 @@ private struct FavouriteButton: View {
                   message: Text("Sign in to Popflash to add maps to your favourites."),
                   primaryButton: .default(Text("Sign In"), action: showLogin),
                   secondaryButton: .cancel())
-            
-        }
-        
-    }
-    
-    func getFavourite() {
-        
-        guard let user = Auth.auth().currentUser else {
-            
-            return
-            
-        }
-        
-        if user.isAnonymous {
-            
-            isLoading = false
-            
-            return
-            
-        }
-        
-        let db = Firestore.firestore()
-        let mapRef = db.collection("maps").document(map.id)
-        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
-        
-        ref.getDocuments { snapshot, error in
-            
-            guard let documents = snapshot?.documents else {
-                
-                return
-                
-            }
-            
-            isFavourite = !documents.isEmpty
-            
-            DispatchQueue.main.async {
-                
-                isLoading = false
-                
-            }
             
         }
         
@@ -373,7 +336,7 @@ private struct FavouriteButton: View {
             return
             
         }
-        
+    
         isLoading = true
         
         let db = Firestore.firestore()
@@ -398,8 +361,6 @@ private struct FavouriteButton: View {
                         
                         print(error.localizedDescription)
                         
-                        isLoading = false
-                        
                         return
                         
                     }
@@ -409,6 +370,8 @@ private struct FavouriteButton: View {
                 }
                 
             }
+            
+            isLoading = false
             
         }
         
@@ -471,7 +434,7 @@ private struct OverviewButton: View {
 private struct ShareButton: View {
     
     var map: Map
-    
+    @State var shareLink: DynamicLink?
     @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
@@ -496,13 +459,17 @@ private struct ShareButton: View {
                 }
             
         }
+        .sheet(item: $shareLink) { dynamicLink in
+            ShareSheet(items: [dynamicLink.link])
+                .edgesIgnoringSafeArea(.bottom)
+        }
         
     }
     
     func share() {
-        
-//        isShowing.toggle()
-        
+        dynamicLink(for: map) { dynamicLink in
+            shareLink = dynamicLink
+        }
     }
     
 }
