@@ -35,10 +35,16 @@ class MapsViewModel: ObservableObject {
             
             for document in documents {
                 
-                if let map = mapFrom(doc: document) {
+                guard let map = mapFrom(doc: document) else {
+                    
+                    return
+                    
+                }
                 
+                if !self.maps.contains(map) {
+                    
                     self.maps.append(map)
-                
+                    
                 }
                 
             }
