@@ -21,11 +21,31 @@ struct NadeView: View {
     @State var showControls = false
     @State var fullscreen = false
     @State var selection = "Video"
+    @State var isLoading = false
     
     var body: some View {
                         
+        if isLoading {
+            loadingView
+        } else {
+            nadeView
+        }
+        
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Color.black
+                .frame(width: UIScreen.screenWidth,
+                       height: UIScreen.screenWidth / 1.777)
+            
+            Spacer()
+        }
+    }
+    
+    var nadeView: some View {
         VStack(spacing: 0) {
-
+            
             NadeContent(nade: nade,
                         player: player,
                         contentSelection: selection,
@@ -57,52 +77,38 @@ struct NadeView: View {
         .animation(.easeInOut(duration: 0.25), value: fullscreen)
         .onAppear(perform: onAppear)
         .background {
-            
             Color.black
                 .opacity(fullscreen ? 1 : 0)
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut(duration: 0.25), value: fullscreen)
-
         }
-        
+        .onOpenURL(perform: handleURL)
     }
     
     func onAppear() {
-        
         incrementViews()
         addToRecentlyViewed()
-        
     }
     
     func incrementViews() {
-            
         let db = Firestore.firestore()
         let viewsRef = db.collection("nades").document(nade.documentID)
         
         viewsRef.updateData([
-            
             "views": FieldValue.increment(1.0)
-            
         ])
-        
     }
     
     func addToRecentlyViewed() {
-        
         guard let user = Auth.auth().currentUser else {
-            
             return
-            
         }
         
         if user.isAnonymous {
-            
             return
-            
         }
         
         removeDuplicateViews(forUser: user.uid)
-        
     }
     
     func removeDuplicateViews(forUser user: String) {
@@ -180,15 +186,24 @@ struct NadeView: View {
     }
     
     func favouriteDate() -> Double {
-        
         let date = Date()
         let dateString = dateString(from: date)
         let dateDouble = Double(dateString) ?? 0
         
         return dateDouble
-        
     }
     
+    func handleURL(_ url: URL) {
+        isLoading = true
+        
+        if let id = url.nadeID {
+            fetchNade(withID: id) { nade in
+                self.nade = nade
+                player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
+                isLoading = false
+            }
+        }
+    }
 }
 
 private struct CloseButton: View {
