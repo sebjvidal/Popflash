@@ -23,14 +23,22 @@ struct NadeView: View {
     @State var selection = "Video"
     @State var isLoading = false
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
-                        
-        if isLoading {
-            loadingView
-        } else {
-            nadeView
+        Group {
+            if isLoading {
+                loadingView
+            } else {
+                nadeView
+            }
         }
-        
+        .onOpenURL(perform: handleURL)
+        .onOpenURL { url in
+            if url.mapID != nil {
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
     }
     
     var loadingView: some View {
@@ -82,7 +90,6 @@ struct NadeView: View {
                 .edgesIgnoringSafeArea(.all)
                 .animation(.easeInOut(duration: 0.25), value: fullscreen)
         }
-        .onOpenURL(perform: handleURL)
     }
     
     func onAppear() {
@@ -194,9 +201,8 @@ struct NadeView: View {
     }
     
     func handleURL(_ url: URL) {
-        isLoading = true
-        
         if let id = url.nadeID {
+            isLoading = true
             fetchNade(withID: id) { nade in
                 self.nade = nade
                 player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
