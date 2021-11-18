@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 func fetchMap(withID id: String, completion: @escaping (Map) -> Void) {
     let db = Firestore.firestore()
-    let ref = db.collection("map").document(id)
+    let ref = db.collection("maps").document(id)
     
     ref.getDocument { snapshot, error in
         guard let document = snapshot else {
