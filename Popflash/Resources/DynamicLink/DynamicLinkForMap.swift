@@ -10,7 +10,7 @@ import FirebaseDynamicLinks
 
 func dynamicLink(for map: Map, completion: @escaping (DynamicLink) -> Void) {
     
-    guard let link = URL(string: "https://popflash.app") else {
+    guard let link = URL(string: "https://popflash.app/map?id=\(map.id)") else {
         
         completion(DynamicLink(link: URL(string: "")!))
         
