@@ -204,7 +204,7 @@ private struct OverviewOverlay: View {
             
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
 
             showingPreview = false
             calloutPreview = nil
