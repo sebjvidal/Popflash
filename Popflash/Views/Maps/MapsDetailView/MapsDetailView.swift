@@ -15,7 +15,7 @@ struct MapsDetailView: View {
     @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
     @State private var showingBottomSheet = false
-    @State private var showingNavigationBarTitle = false
+    @State private var selectedMap: Map?
     
     @AppStorage("maps.filter.type") private var selectedType: [String] = ["All"]
     @AppStorage("maps.filter.tick") private var selectedTick: [String] = ["All"]
@@ -25,9 +25,8 @@ struct MapsDetailView: View {
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
     var body: some View {
-                
         List {
-                
+            
             Group {
                 
                 Header(icon: map.icon,
@@ -39,7 +38,7 @@ struct MapsDetailView: View {
                           query: $searchQuery)
                     .padding(.bottom, 6)
                     .onChange(of: searchQuery) { _ in
-
+                        
                         handleSearch()
                         
                     }
@@ -65,36 +64,38 @@ struct MapsDetailView: View {
         .listStyle(.plain)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarHidden(false)
+        .onOpenURL(perform: handleURL)
+        .background(MapNavigationLink(selectedMap: $selectedMap))
         .toolbar {
-
+            
             MoreToolbarItem(showingBottomSheet: $showingBottomSheet)
-
+            
             ToolbarItem(placement: .navigationBarTrailing) {
-
+                
                 FavouriteToolbarItem(map: map, isFavourite: $isFavourite)
-
+                
             }
-
+            
         }
         .sheet(item: self.$selectedNade) { item in
             
             NadeView(nade: item)
-                            
+            
         }
         .bottomSheet(isPresented: $showingBottomSheet,
                      detents: [.medium(), .large()],
                      prefersGrabberVisible: true,
                      uiApplication: UIApplication.shared) {
-
+            
             FilterView(map: map,
                        isFavourite: $isFavourite,
                        selectedType: $selectedType,
                        selectedTick: $selectedTick,
                        selectedSide: $selectedSide,
                        selectedBind: $selectedBind)
-
+            
         }
-
+        
     }
     
     func loadNades() {
@@ -126,39 +127,40 @@ struct MapsDetailView: View {
     }
     
     func filteredRef(ref: Query) -> Query {
-        
         var filteredRef = ref
         let filters = ["type": selectedType,
                        "side": selectedSide,
                        "bind": selectedBind]
         
         for filter in filters {
-            
             if filter.value != ["All"] {
-                
                 filteredRef = filteredRef.whereField(filter.key, isEqualTo: filter.value[0].replacingOccurrences(of: "\n", with: ""))
-                
             }
-            
         }
         
         let tickExclusion = ["64": "128",
                              "128": "64"]
         
         if selectedTick != ["All"] {
-            
             if let exclusion = tickExclusion[selectedTick[0]] {
-                
                 filteredRef = filteredRef.whereField("tick", isNotEqualTo: exclusion)
-                                
             }
-            
         }
         
         return filteredRef
-        
     }
     
+    func handleURL(_ url: URL) {
+        if selectedMap != nil {
+            return
+        }
+        
+        if let id = url.mapID {
+            fetchMap(withID: id) { map in
+                selectedMap = map
+            }
+        }
+    }
 }
 
 private struct Header: View {
