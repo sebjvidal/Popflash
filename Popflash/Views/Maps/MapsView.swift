@@ -50,27 +50,44 @@ struct MapsView: View {
                     StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
                     
                 }
-
+                .background(MapNavigationLink(selectedMap: $selectedMap))
+                
             }
             .navigationViewStyle(.stack)
-            .onAppear(perform: onAppear)
-            
         }
-        
+        .onAppear(perform: onAppear)
+        .onOpenURL(perform: handleURL)
     }
     
     func onAppear() {
-        
         if mapsViewModel.maps.isEmpty {
-
             mapsViewModel.fetchData()
-
         }
 
         tabSelection = 1
-        
     }
     
+    func handleURL(_ url: URL) {
+        print(url)
+        if selectedMap != nil {
+            return
+        }
+        
+        if tabSelection != 1 {
+            return
+        }
+        
+        if url.host != "maps" {
+            UIApplication.shared.open(url)
+            return
+        }
+        
+        if let id = url.mapID {
+            fetchMap(withID: id) { map in
+                selectedMap = map
+            }
+        }
+    }
 }
 
 private struct Header: View {
