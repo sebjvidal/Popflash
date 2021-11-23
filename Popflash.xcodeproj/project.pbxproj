@@ -17,8 +17,11 @@
 		C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2069B0025CAF01900ACFD15 /* MapsView.swift */; };
 		C2069B1525CC041B00ACFD15 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2069B1425CC041B00ACFD15 /* ContentView.swift */; };
 		C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21085C325E5832B0062DC81 /* WelcomeView.swift */; };
+		C2170FEC274BF6C3001FEEC4 /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2170FEB274BF6C3001FEEC4 /* AppIconView.swift */; };
+		C2170FEF274BFC41001FEEC4 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2170FEE274BFC41001FEEC4 /* AppIcon.swift */; };
 		C21953A627459C7B00837D4F /* FetchNade.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21953A527459C7B00837D4F /* FetchNade.swift */; };
 		C21953A92745A8F200837D4F /* FetchMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21953A82745A8F200837D4F /* FetchMap.swift */; };
+		C21953CD2747B5F200837D4F /* MapDeepLinkNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21953CC2747B5F200837D4F /* MapDeepLinkNavigationLink.swift */; };
 		C21EC4EF271B6AF2002D5B91 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C21EC4EE271B6AF2002D5B91 /* FirebaseAuth */; };
 		C21EC4F1271B6AF2002D5B91 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = C21EC4F0271B6AF2002D5B91 /* FirebaseDynamicLinks */; };
 		C21EC4F3271B6AF2002D5B91 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C21EC4F2271B6AF2002D5B91 /* FirebaseFirestore */; };
@@ -182,8 +185,11 @@
 		C2069B0025CAF01900ACFD15 /* MapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsView.swift; sourceTree = "<group>"; };
 		C2069B1425CC041B00ACFD15 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C21085C325E5832B0062DC81 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		C2170FEB274BF6C3001FEEC4 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
+		C2170FEE274BFC41001FEEC4 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		C21953A527459C7B00837D4F /* FetchNade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchNade.swift; sourceTree = "<group>"; };
 		C21953A82745A8F200837D4F /* FetchMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchMap.swift; sourceTree = "<group>"; };
+		C21953CC2747B5F200837D4F /* MapDeepLinkNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDeepLinkNavigationLink.swift; sourceTree = "<group>"; };
 		C21EC4FB271C0CF3002D5B91 /* DynamicLinkForMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLinkForMap.swift; sourceTree = "<group>"; };
 		C21EC4FD271C27A2002D5B91 /* DynamicLinkForNade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLinkForNade.swift; sourceTree = "<group>"; };
 		C21EC4FF271C2A3E002D5B91 /* DynamicLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLink.swift; sourceTree = "<group>"; };
@@ -421,6 +427,7 @@
 				C2A301942714CCD2007EF964 /* ShareSheet */,
 				C29092E82704ED860017C049 /* StatusBar */,
 				C29092FA270B7DC30017C049 /* TabIdentifier.swift */,
+				C21953CE2747B60B00837D4F /* UniversalLinks */,
 				C29092F8270B7CAA0017C049 /* URL.swift */,
 				C2D44B222700E269003A151E /* VisualEffectView.swift */,
 			);
@@ -435,6 +442,15 @@
 			path = Welcome;
 			sourceTree = "<group>";
 		};
+		C2170FED274BF6C7001FEEC4 /* AppIcon */ = {
+			isa = PBXGroup;
+			children = (
+				C2170FEE274BFC41001FEEC4 /* AppIcon.swift */,
+				C2170FEB274BF6C3001FEEC4 /* AppIconView.swift */,
+			);
+			path = AppIcon;
+			sourceTree = "<group>";
+		};
 		C21953A72745A8E600837D4F /* Fetch */ = {
 			isa = PBXGroup;
 			children = (
@@ -442,6 +458,14 @@
 				C21953A527459C7B00837D4F /* FetchNade.swift */,
 			);
 			path = Fetch;
+			sourceTree = "<group>";
+		};
+		C21953CE2747B60B00837D4F /* UniversalLinks */ = {
+			isa = PBXGroup;
+			children = (
+				C21953CC2747B5F200837D4F /* MapDeepLinkNavigationLink.swift */,
+			);
+			path = UniversalLinks;
 			sourceTree = "<group>";
 		};
 		C21EC4FA271C0CB5002D5B91 /* DynamicLink */ = {
@@ -486,6 +510,7 @@
 			children = (
 				C227A49925D828C2003F6822 /* SettingsView.swift */,
 				C2A3018A27122767007EF964 /* Appearance */,
+				C2170FED274BF6C7001FEEC4 /* AppIcon */,
 				C272480B26B5A4AF00251418 /* EditProfile */,
 				C2DE77FF26CFBF7E0092BADE /* NotificationsView */,
 				C2E7A6AF26A1C4690057B5ED /* RecentlyViewed */,
@@ -1044,9 +1069,11 @@
 				C2334C6626B3285F004C0FAA /* SkillGroup.swift in Sources */,
 				C2D4067E2643270C00CDCB2B /* PinchToZoom.swift in Sources */,
 				C21953A627459C7B00837D4F /* FetchNade.swift in Sources */,
+				C21953CD2747B5F200837D4F /* MapDeepLinkNavigationLink.swift in Sources */,
 				C21EC500271C2A3E002D5B91 /* DynamicLink.swift in Sources */,
 				C21EC4FE271C27A2002D5B91 /* DynamicLinkForNade.swift in Sources */,
 				C267B57A261CD19800958E01 /* CustomButtonStyle.swift in Sources */,
+				C2170FEF274BFC41001FEEC4 /* AppIcon.swift in Sources */,
 				C2DE77FE26CD67560092BADE /* FeaturedViewModel.swift in Sources */,
 				C2D4068026454B6B00CDCB2B /* ComplimentCell.swift in Sources */,
 				C272480A26B4250300251418 /* UserViewModel.swift in Sources */,
@@ -1056,6 +1083,7 @@
 				C2069B1525CC041B00ACFD15 /* ContentView.swift in Sources */,
 				C29092EA2704EDCF0017C049 /* StatusBarBlur.swift in Sources */,
 				C29092FB270B7DC30017C049 /* TabIdentifier.swift in Sources */,
+				C2170FEC274BF6C3001FEEC4 /* AppIconView.swift in Sources */,
 				C2E65E8026C6ACCE004DEE87 /* DateStringFrom.swift in Sources */,
 				C2A3018C2712E2F2007EF964 /* TintView.swift in Sources */,
 				C2DE783A26D56EEC0092BADE /* ActivityIndicator.swift in Sources */,
@@ -1275,8 +1303,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconDev;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Popflash/Preview Content\"";
@@ -1300,8 +1330,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconDev;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Popflash/Popflash.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Popflash/Preview Content\"";
