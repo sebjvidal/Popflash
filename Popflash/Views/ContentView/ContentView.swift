@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseDynamicLinks
 
 public var standard = UserDefaults.standard
 
@@ -25,136 +26,79 @@ struct ContentView: View {
     var body: some View {
         
         TabView(selection: $tabSelection) {
-            
             FeaturedView()
                 .tabItem {
-                    
                     Image(systemName: "star.fill")
                     Text("Featured")
-                    
                 }
                 .tag(0)
             
             MapsView()
                 .tabItem {
-                    
                     Image(systemName: "map.fill")
                     Text("Maps")
-                    
                 }
                 .tag(1)
             
             FavouritesView()
                 .tabItem {
-                    
                     Image(systemName: "heart.fill")
                     Text("Favourites")
-                    
                 }
                 .tag(2)
             
             SettingsView()
                 .tabItem {
-                    
                     Image(systemName: "person.fill")
                     Text("Profile")
-                    
                 }
                 .tag(3)
-            
         }
         .onAppear(perform: onAppear)
         .preferredColorScheme(appearance == 0 ? .none :
-                              appearance == 1 ? .light :
-                              appearance == 2 ? .dark : .none)
+                                appearance == 1 ? .light :
+                                appearance == 2 ? .dark : .none)
         .accentColor(TintColour.colour(withID: tint))
-        .onOpenURL { url in
-            
-            handleURL(url)
-            
-        }
+//        .tint(TintColour.colour(withID: tint))
+        .onOpenURL(perform: handleURL)
         .sheet(isPresented: $showWelcomeView) {
-            
             WelcomeView()
                 .interactiveDismissDisabled()
-            
         }
         .sheet(item: $nade) { nade in
-            
             NadeView(nade: nade)
-            
         }
         
     }
     
     func onAppear() {
-        
         displayWelcomeView()
-        
+    }
+    
+    func resetNade() {
+        nade = nil
     }
     
     func displayWelcomeView() {
-        
         if firstLaunch {
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                
                 showWelcomeView = true
                 firstLaunch = false
-                
             }
-            
         }
-        
     }
     
     func handleURL(_ url: URL) {
-        
-        guard url.isDeepLink else {
-            
-            return
-            
+        if nade == nil {
+            if let nadeID = url.nadeID {
+                fetchNade(withID: nadeID) { nade in
+                    self.nade = nade
+                }
+            }
         }
         
         if let tabIdentifier = url.tabIdentifier {
-            
             tabSelection = tabIdentifier
-            
         }
-        
-        if let nadeID = url.nadeID {
-            
-            self.nade = nil
-            
-            fetchNade(withID: nadeID)
-            
-        }
-        
     }
-    
-    func fetchNade(withID id: String) {
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("nades").whereField("id", isEqualTo: id).limit(to: 1)
-        
-        ref.getDocuments { snapshot, error in
-            
-            guard let documents = snapshot?.documents else {
-                
-                return
-                
-            }
-            
-            for document in documents {
-                
-                let nade = nadeFrom(doc: document)
-                
-                self.nade = nade
-                
-            }
-            
-        }
-        
-    }
-    
 }
