@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct TintColour: Identifiable, Hashable {
-    
     var id: Int
     var name: String
     var colour: Color
-    
 }
 
 extension TintColour {
-    
     static let tintColours = [
         TintColour(id: 0, name: "Red", colour: .red),
         TintColour(id: 1, name: "Orange", colour: .orange),
@@ -30,37 +27,23 @@ extension TintColour {
         TintColour(id: 9, name: "Pink", colour: Color("Pink"))
     ]
     
-    
     static func colour(withID id: Int) -> Color {
-        
         guard let tintColour = tintColours.first(where: { colour in
-            
             colour.id == id
-            
         }) else {
-            
             return .blue
-            
         }
-        
+
         return tintColour.colour
-        
     }
     
     static func name(forID id: Int) -> String {
-        
         guard let tintColour = tintColours.first(where: { colour in
-            
             colour.id == id
-            
         }) else {
-            
             return "Blue"
-            
         }
         
         return tintColour.name
-        
     }
-    
 }
