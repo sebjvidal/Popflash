@@ -460,24 +460,48 @@ private struct AppearanceSettings: View {
 
 private struct AppIconRow: View {
     
+    @State private var action: Int? = 0
+    
     var body: some View {
         
-        HStack(spacing: 12) {
+        Button(action: showAppIcon) {
             
-            SettingIcon(color: .purple, icon: Image(systemName: "square.grid.3x3.fill"))
+            ZStack {
+                
+                NavigationLink(destination: AppIconView(), tag: 1, selection: $action) {
+                    
+                    EmptyView()
+                    
+                }
+                .hidden()
+                .disabled(true)
+                
+                HStack(spacing: 12) {
+                    
+                    SettingIcon(color: .purple, icon: Image(systemName: "square.grid.3x3.fill"))
 
-            Text("App Icon")
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
-                .padding(.trailing)
+                    Text("App Icon")
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing)
+                    
+                }
+                
+            }
+            .padding(.top, 14)
+            .padding(.bottom, 9)
+            .background(Color("Background"))
             
         }
-        .padding(.top, 14)
-        .padding(.bottom, 9)
+        .buttonStyle(RoundedTableCell())
         
+    }
+    
+    func showAppIcon() {
+        action = 1
     }
     
 }
