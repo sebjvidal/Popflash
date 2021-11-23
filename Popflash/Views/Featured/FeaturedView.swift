@@ -16,7 +16,7 @@ struct FeaturedView: View {
     
     @State private var statusOpacity: Double = 0
     @State private var selectedNade: Nade?
-    @State private var nadeViewIsPresented = false
+    @State private var selectedMap: Map?
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -36,12 +36,10 @@ struct FeaturedView: View {
                         Header()
                         
                         FeaturedNade(nades: $featuredViewModel.featuredNade,
-                                     selectedNade: $selectedNade,
-                                     nadeViewIsPresented: $nadeViewIsPresented)
+                                     selectedNade: $selectedNade)
                         
                         MoreFrom(maps: $featuredViewModel.featuredMap,
-                                 selectedNade: $selectedNade,
-                                 nadeViewIsPresented: $nadeViewIsPresented)
+                                 selectedNade: $selectedNade)
                         
                     }
                     .listRowSeparator(.hidden)
@@ -53,48 +51,60 @@ struct FeaturedView: View {
                 .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Featured", displayMode: .inline)
                 .navigationBarHidden(true)
+                .background(MapNavigationLink(selectedMap: $selectedMap))
                 .overlay(alignment: .top) {
-                    
                     StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
-                    
                 }
                 .refreshable {
-                    
                     fetchFeaturedData()
-                    
                 }
-                .onAppear(perform: onAppear)
                 
             }
             .navigationViewStyle(.stack)
-            .sheet(item: self.$selectedNade) { item in
-                
-                NadeView(nade: item)
-                
-            }
             
+        }
+        .onAppear(perform: onAppear)
+        .onOpenURL(perform: handleURL)
+        .sheet(item: self.$selectedNade) { item in
+            NadeView(nade: item)
         }
         
     }
     
     func fetchFeaturedData() {
-        
         featuredViewModel.fetchData()
-        
     }
     
     func onAppear() {
-        
         if featuredViewModel.featuredNade.isEmpty {
-            
             fetchFeaturedData()
-            
         }
         
         tabSelection = 0
-        
     }
     
+    func handleURL(_ url: URL) {
+        
+        if selectedMap != nil {
+            return
+        }
+        
+        if tabSelection != 0 {
+            
+            return
+        }
+        
+        if url.host != "featured" {
+            UIApplication.shared.open(url)
+            return
+        }
+        
+        if let id = url.mapID {
+            fetchMap(withID: id) { map in
+                selectedMap = map
+            }
+        }
+    }
 }
 
 private struct Header: View {
@@ -161,7 +171,6 @@ private struct FeaturedNade: View {
     @Binding var nades: [Nade]
     
     @Binding var selectedNade: Nade?
-    @Binding var nadeViewIsPresented: Bool
     
     var body: some View {
         
@@ -172,7 +181,6 @@ private struct FeaturedNade: View {
                 Button {
                     
                     selectedNade = nade
-                    nadeViewIsPresented.toggle()
                     
                 } label: {
                     
@@ -277,7 +285,6 @@ private struct MoreFrom: View {
     
     @Binding var maps: [Map]
     @Binding var selectedNade: Nade?
-    @Binding var nadeViewIsPresented: Bool
     
     @State private var action: Int? = 0
     
@@ -324,7 +331,7 @@ private struct MoreFrom: View {
                     
                 }
                 
-                Top5(selectedNade: $selectedNade, nadeViewIsPresented: $nadeViewIsPresented, map: map.name)
+                Top5(selectedNade: $selectedNade, map: map.name)
                 
             }
             
@@ -339,7 +346,6 @@ private struct Top5: View {
     @StateObject var top5Nades = NadesViewModel()
     
     @Binding var selectedNade: Nade?
-    @Binding var nadeViewIsPresented: Bool
     
     var map: String
     
@@ -363,7 +369,6 @@ private struct Top5: View {
                         Button {
                             
                             selectedNade = nade
-                            nadeViewIsPresented.toggle()
                             
                         } label: {
                             
