@@ -113,7 +113,9 @@ private struct AppearanceExplanation: View {
             
             Text("Automatic: Change the colour scheme based on the system appearance.")
             
-            Text("Light/Dark: Always use the Light/Dark colour scheme, regardless of the system appearance.")
+            Text("Light: Always use the Light colour scheme, regardless of the system appearance.")
+            
+            Text("Dark: Always use the Dark colour scheme, regardless of the system appearance.")
             
         }
         .font(.caption)
