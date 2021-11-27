@@ -8,9 +8,7 @@
 import SwiftUI
 
 enum RecentlyViewedViewModelOrder {
-    
     case newest
     case oldest
     case map
-    
 }
