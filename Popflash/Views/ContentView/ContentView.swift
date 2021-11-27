@@ -59,7 +59,6 @@ struct ContentView: View {
                                 appearance == 1 ? .light :
                                 appearance == 2 ? .dark : .none)
         .accentColor(TintColour.colour(withID: tint))
-//        .tint(TintColour.colour(withID: tint))
         .onOpenURL(perform: handleURL)
         .sheet(isPresented: $showWelcomeView) {
             WelcomeView()
