@@ -307,7 +307,7 @@ private struct ProfilePictureEditor: View {
     @State private var image: Image?
     @State private var showingImagePicker = false
     
-    @AppStorage("settings.tint") var tint: Int = 0
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
         
