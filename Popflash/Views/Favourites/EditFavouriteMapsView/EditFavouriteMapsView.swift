@@ -17,7 +17,7 @@ struct EditFavouriteMapsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @AppStorage("settings.tint") var tint: Int = 0
+    @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View { 
         
