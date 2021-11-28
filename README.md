@@ -8,9 +8,7 @@ Popflash is a SwiftUI-based project for the popular first-person shooter, [Count
 
 ## Featured
 Discover new grenade line-ups with the Featured tab.
-- [x] Firebase Function to update Featured daily
 - [x] Featured grenade line-up video
-- [ ] "More Like This" horizontal SrollView
 - [x] "More From [map]" NavigationLink
 - [x] "Top 5 on [map]" horizontal ScrollView
 
@@ -19,12 +17,11 @@ Find grenade line-ups by map. Filter by popularity, A-Z, Active Duty or Reserves
 - [x] Map Cell
 - [x] Filter maps
 
-Detail view:
+Detail View:
 - [x] Animated header
-- [x] Add to favourites button
+- [x] Add to favourites
 - [x] Search function
-- [X] Filter by type, i.e. Smoke, Flashbang, Molotov, HE Grenade
-- [X] Filter by metadata, i.e. server tickrate
+- [X] Filter by type and metadata
 
 
 ## Favourites
