@@ -12,118 +12,95 @@ struct MapsDetailView: View {
     
     @State private var isFavourite = false
     @State private var selectedNade: Nade?
-    @State private var scrollOffset = 0.0
     @State private var searchQuery = ""
     @State private var showingBottomSheet = false
     @State private var selectedMap: Map?
+    @State private var showingPrinciple = false
     
     @AppStorage("maps.filter.type") private var selectedType: [String] = ["All"]
     @AppStorage("maps.filter.tick") private var selectedTick: [String] = ["All"]
     @AppStorage("maps.filter.side") private var selectedSide: [String] = ["All"]
     @AppStorage("maps.filter.bind") private var selectedBind: [String] = ["All"]
-    
-    @AppStorage("tabSelection") var tabSelection: Int = 0
+    @AppStorage("tabSelection") private var tabSelection: Int = 0
     
     var body: some View {
-        List {
-            
-            Group {
-                
-                Header(icon: map.icon,
-                       name: map.name,
-                       group: map.group,
-                       scenario: map.scenario)
-                
-                SearchBar(placeholder: "Search \(map.name)",
-                          query: $searchQuery)
-                    .padding(.bottom, 6)
-                    .onChange(of: searchQuery) { _ in
-                        
-                        handleSearch()
-                        
-                    }
-                
-                NadeList(nades: $viewModel.nades, selectedNade: $selectedNade)
-                    .onChange(of: [selectedType, selectedTick, selectedSide, selectedBind]) { _ in
-                        
-                        viewModel.nades.removeAll()
-                        loadNades()
-                        
-                    }
-                
-                ActivityIndicator()
-                    .onAppear(perform: loadNades)
+        GeometryReader { geo in
+            List {
+                Group {
+                    Header(map: map, inset: geo.safeAreaInsets.top, showingPrinciple: $showingPrinciple)
+                    
+                    SearchBar(placeholder: "Search \(map.name)", query: $searchQuery)
+                        .padding(.bottom, 6)
+                        .onChange(of: searchQuery) { _ in
+                            handleSearch()
+                        }
+                    
+                    NadeList(nades: $viewModel.nades, selectedNade: $selectedNade)
+                        .onChange(of: [selectedType, selectedTick, selectedSide, selectedBind]) { _ in
+                            viewModel.nades.removeAll()
+                            loadNades()
+                        }
+                    
+                    ActivityIndicator()
+                        .onAppear(perform: loadNades)
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
+                .listRowSeparator(.hidden)
+                .listRowInsets(.some(EdgeInsets()))
                 
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 8)
-            .listRowSeparator(.hidden)
-            .listRowInsets(.some(EdgeInsets()))
-            
-        }
-        .listStyle(.plain)
-        .navigationBarTitle("", displayMode: .inline)
-        .navigationBarHidden(false)
-        .onOpenURL(perform: handleURL)
-        .background(MapNavigationLink(selectedMap: $selectedMap))
-        .toolbar {
-            
-            MoreToolbarItem(showingBottomSheet: $showingBottomSheet)
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
+            .listStyle(.plain)
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarHidden(false)
+            .onOpenURL(perform: handleURL)
+            .background(MapNavigationLink(selectedMap: $selectedMap))
+            .toolbar {
+                MoreToolbarItem(showingBottomSheet: $showingBottomSheet)
                 
-                FavouriteToolbarItem(map: map, isFavourite: $isFavourite)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    FavouriteToolbarItem(map: map, isFavourite: $isFavourite)
+                }
                 
+                ToolbarItem(placement: .principal) {
+                    KFImage(URL(string: map.icon)!)
+                        .resizable()
+                        .frame(width: 42, height: 42)
+                        .padding(.bottom, showingPrinciple ? 16 : 0)
+                        .opacity(showingPrinciple ? 1 : 0)
+                        .animation(.easeInOut, value: showingPrinciple)
+                }
             }
-            
+            .sheet(item: self.$selectedNade) { item in
+                NadeView(nade: item)
+            }
+            .bottomSheet(isPresented: $showingBottomSheet, detents: [.medium(), .large()], prefersGrabberVisible: true, uiApplication: UIApplication.shared) {
+                FilterView(map: map,
+                           isFavourite: $isFavourite,
+                           selectedType: $selectedType,
+                           selectedTick: $selectedTick,
+                           selectedSide: $selectedSide,
+                           selectedBind: $selectedBind)
+            }
         }
-        .sheet(item: self.$selectedNade) { item in
-            
-            NadeView(nade: item)
-            
-        }
-        .bottomSheet(isPresented: $showingBottomSheet,
-                     detents: [.medium(), .large()],
-                     prefersGrabberVisible: true,
-                     uiApplication: UIApplication.shared) {
-            
-            FilterView(map: map,
-                       isFavourite: $isFavourite,
-                       selectedType: $selectedType,
-                       selectedTick: $selectedTick,
-                       selectedSide: $selectedSide,
-                       selectedBind: $selectedBind)
-            
-        }
-        
+    
     }
     
     func loadNades() {
-
         if searchQuery.isEmpty {
-            
-            let ref = filteredRef(ref: Firestore.firestore().collection("nades")
-                                    .whereField("map", isEqualTo: map.name))
+            let ref = filteredRef(ref: Firestore.firestore().collection("nades").whereField("map", isEqualTo: map.name))
             
             viewModel.fetchData(ref: ref.limit(to: 10))
-        
         } else {
-            
-            let ref = filteredRef(ref: Firestore.firestore().collection("nades")
-                                    .whereField("map", isEqualTo: map.name)
-                                    .whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
+            let ref = filteredRef(ref: Firestore.firestore().collection("nades").whereField("map", isEqualTo: map.name).whereField("tags", arrayContainsAny: searchQuery.lowercased().split(separator: " ")))
             
             viewModel.fetchData(ref: ref.limit(to: 10))
-        
         }
-
     }
 
     func handleSearch() {
-
         viewModel.nades.removeAll()
         loadNades()
-
     }
     
     func filteredRef(ref: Query) -> Query {
@@ -164,35 +141,35 @@ struct MapsDetailView: View {
 }
 
 private struct Header: View {
-    
-    var icon: String
-    var name: String
-    var group: String
-    var scenario: String
+    var map: Map
+    var inset: CGFloat
+    @Binding var showingPrinciple: Bool
     
     var body: some View {
-        
         LazyVStack(alignment: .center) {
+            GeometryReader { geo in
+                KFImage(URL(string: map.icon))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .opacity(geo.frame(in: .global).maxY < inset ? 0 : 1)
+                    .animation(.easeInOut, value: geo.frame(in: .global).maxY)
+                    .onChange(of: geo.frame(in: .global).maxY) { val in
+                        showingPrinciple = inset > val
+                    }
+            }
+            .frame(width: 100, height: 100)
             
-            KFImage(URL(string: icon))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
-            
-            Text("\(name)")
+            Text("\(map.name)")
                 .font(.system(size: 32))
                 .font(.title)
                 .fontWeight(.bold)
             
-            Text("\(group) • \(scenario)")
+            Text("\(map.group) • \(map.scenario)")
                 .foregroundColor(.gray)
-            
         }
         .padding(.top, 4)
         .padding(.bottom, 45)
-        
     }
-    
 }
 
 private struct FavouriteToolbarItem: View {
