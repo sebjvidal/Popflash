@@ -15,6 +15,7 @@ struct FavouritesView: View {
     @State private var statusOpacity: Double = 0
     @State private var isShowing = false
     @State private var selectedNade: Nade?
+    @State private var selectedMap: Map?
     
     @AppStorage("tabSelection") var tabSelection: Int = 0
     
@@ -47,6 +48,7 @@ struct FavouritesView: View {
                 .environment(\.defaultMinListRowHeight, 1)
                 .navigationBarTitle("Favourites", displayMode: .inline)
                 .navigationBarHidden(true)
+                .background(MapNavigationLink(selectedMap: $selectedMap))
                 .overlay(alignment: .top) {
                     
                     StatusBarBlur(outerGeo: outerGeo, statusOpacity: $statusOpacity)
@@ -66,18 +68,37 @@ struct FavouritesView: View {
                 
             }
             .navigationViewStyle(.stack)
-            .onAppear(perform: onAppear)
             
         }
+        .onAppear(perform: onAppear)
+        .onOpenURL(perform: handleURL)
         
     }
     
     func onAppear() {
-        
         tabSelection = 2
-        
     }
     
+    func handleURL(_ url: URL) {
+        if selectedMap != nil {
+            return
+        }
+        
+        if tabSelection != 2 {
+            return
+        }
+        
+        if !["favourites", "map"].contains(url.host) {
+            UIApplication.shared.open(url)
+            return
+        }
+        
+        if let id = url.mapID {
+            fetchMap(withID: id) { map in
+                selectedMap = map
+            }
+        }
+    }
 }
 
 private struct Header: View {
