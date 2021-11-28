@@ -84,6 +84,10 @@ struct FeaturedView: View {
     }
     
     func handleURL(_ url: URL) {
+        if !url.isDeepLink {
+            return
+        }
+        
         if selectedMap != nil {
             return
         }
