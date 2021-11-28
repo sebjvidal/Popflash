@@ -142,11 +142,14 @@ private struct FavouriteMaps: View {
                 Divider()
                     .padding(.horizontal)
                 
-                Text("Maps")
-                    .font(.system(size: 20))
-                    .fontWeight(.semibold)
-                    .padding(.vertical, 11)
-                    .padding(.leading, 18)
+                mapsText
+                    .hidden()
+                    .background {
+                        GeometryReader { geo in
+                            mapsText
+                                .offset(x: geo.frame(in: .global).minX < 0 ? -geo.frame(in: .global).minX : 0)
+                        }
+                    }
                 
                 HStack(spacing: 16) {
 
@@ -165,6 +168,14 @@ private struct FavouriteMaps: View {
             
         }
         
+    }
+    
+    var mapsText: some View {
+        Text("Maps")
+            .font(.system(size: 20))
+            .fontWeight(.semibold)
+            .padding(.vertical, 11)
+            .padding(.leading, 18)
     }
     
 }
