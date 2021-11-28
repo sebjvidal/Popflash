@@ -408,7 +408,7 @@ private struct FavouriteNades: View {
     
 }
 
-struct FavouriteNadeCell: View {
+struct FavouriteNadeCell: View, Equatable {
     
     var nade: Nade
     
@@ -463,6 +463,10 @@ struct FavouriteNadeCell: View {
         .drawingGroup()
         .cellShadow()
         
+    }
+    
+    static func == (lhs: FavouriteNadeCell, rhs: FavouriteNadeCell) -> Bool {
+        return lhs.nade.id == rhs.nade.id
     }
     
 }
