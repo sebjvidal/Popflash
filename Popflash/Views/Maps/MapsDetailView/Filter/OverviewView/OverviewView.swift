@@ -243,7 +243,7 @@ private struct RadarImage: View {
     
     var body: some View {
         
-        KFImage(URL(string: url))
+        KFImage(URL(string: url)!)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: UIScreen.screenWidth,
