@@ -29,7 +29,6 @@ private struct CustomAppIcons: View {
     @State var selected: String? = UIApplication.shared.alternateIconName
     
     var icons = [AppIcon(name: "Default", asset: nil),
-                 AppIcon(name: "Blueprint", asset: "AppIconDev"),
                  AppIcon(name: "Blueprint", asset: "AppIconDev")]
     
     var body: some View {
