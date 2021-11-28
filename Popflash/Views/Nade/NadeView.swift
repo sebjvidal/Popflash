@@ -62,23 +62,23 @@ struct NadeView: View {
             SegmentedControl(selection: $selection)
             
             ScrollView {
-                
-                ScrollViewReader { scrollView in
-                    
-                    Details(nade: nade)
-                        .id(0)
-                        .onChange(of: nade) { _ in
-                            
-                            scrollView.scrollTo(0, anchor: .top)
-                            
-                        }
-                    
-                    Share(nade: nade)
+                VStack(spacing: 0) {
+                    ScrollViewReader { scrollView in
+                        
+                        Details(nade: nade)
+                            .id(0)
+                            .onChange(of: nade) { _ in
+                                
+                                scrollView.scrollTo(0, anchor: .top)
+                                
+                            }
+                    }
                     
                     Compliments(nade: $nade, player: $player)
                     
+                    Share(nade: nade)
+                    
                 }
-                
             }
             
         }
@@ -623,6 +623,7 @@ private struct Details: View {
             
             Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
                 .padding(.horizontal)
+                .padding(.bottom, 12)
             
         }
         
@@ -990,8 +991,6 @@ private struct Compliments: View {
     @Binding var nade: Nade
     @Binding var player: AVPlayer
     
-    let processor = CroppingImageProcessor(size: CGSize(width: 1284, height: 1), anchor: CGPoint(x: 0.5, y: 1.0))
-    
     var body: some View {
         
         if !nade.compliments.isEmpty {
@@ -1000,11 +999,12 @@ private struct Compliments: View {
                 
                 VStack(alignment: .leading, spacing: 11) {
                     
+                    Divider()
+                    
                     Text("Use With")
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
-                        .padding(.top, 3)
-                        .padding(.leading, 2)
+                        .padding(.leading, 1)
                     
                     HStack(spacing: 16) {
                         
@@ -1065,14 +1065,19 @@ private struct Share: View {
         
         Button(action: shareAction) {
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 
                 Divider()
                 
-                Label("Share", systemImage: "square.and.arrow.up")
-                    .foregroundColor(TintColour.colour(withID: tint))
-                    .padding(.top, 5)
-                    .padding(.leading, 1)
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Share")
+                        .padding(.top, 4)
+                }
+                .foregroundColor(TintColour.colour(withID: tint))
+                .padding(.top, 9)
+                .padding(.bottom, 13)
+                .padding(.leading, 1)
                 
                 Divider()
                 
@@ -1081,7 +1086,7 @@ private struct Share: View {
             
         }
         .buttonStyle(.plain)
-        .padding(.horizontal)
+        .padding([.horizontal, .bottom])
         .sheet(item: $shareLink) { dynamicLink in
             
             ShareSheet(items: [dynamicLink.link])
