@@ -45,6 +45,8 @@ struct SettingsView: View {
                             
                             SignOut()
                             
+                            Prompt()
+                            
                         }
                         
                     }
@@ -843,4 +845,16 @@ private struct SignOut: View {
         
     }
         
+}
+
+private struct Prompt: View {
+    var body: some View {
+        LazyVStack {
+            Text("Enjoying Popflash? Write a [review](https://apple.com) or leave a [tip!](https://apple.com)")
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+                .frame(width: UIScreen.screenWidth / 1.5)
+                .padding(.bottom)
+        }
+    }
 }
