@@ -63,8 +63,8 @@ struct FeaturedView: View {
             .navigationViewStyle(.stack)
             
         }
-        .onAppear(perform: onAppear)
         .onOpenURL(perform: handleURL)
+        .onAppear(perform: onAppear)
         .sheet(item: self.$selectedNade) { item in
             NadeView(nade: item)
         }
@@ -84,17 +84,15 @@ struct FeaturedView: View {
     }
     
     func handleURL(_ url: URL) {
-        
         if selectedMap != nil {
             return
         }
         
         if tabSelection != 0 {
-            
             return
         }
         
-        if url.host != "featured" {
+        if !["featured", "map"].contains(url.host) {
             UIApplication.shared.open(url)
             return
         }
@@ -121,7 +119,6 @@ private struct Header: View {
             HStack {
                 
                 VStack(alignment: .leading) {
-                    
                     Text(dateTimeString)
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
