@@ -151,6 +151,7 @@ private struct NadeList: View {
                         } label: {
 
                             FavouriteNadeCell(nade: nade)
+                                .equatable()
 
                         }
                         .padding(.horizontal)
