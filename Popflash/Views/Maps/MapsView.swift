@@ -68,7 +68,6 @@ struct MapsView: View {
     }
     
     func handleURL(_ url: URL) {
-        print(url)
         if selectedMap != nil {
             return
         }
@@ -77,7 +76,7 @@ struct MapsView: View {
             return
         }
         
-        if url.host != "maps" {
+        if !["maps", "map"].contains(url.host) {
             UIApplication.shared.open(url)
             return
         }
