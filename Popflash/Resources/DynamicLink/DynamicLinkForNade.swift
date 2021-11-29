@@ -10,7 +10,7 @@ import FirebaseDynamicLinks
 
 func dynamicLink(for nade: Nade, completion: @escaping (DynamicLink) -> Void) {
     
-    guard let link = URL(string: "https://popflash.app") else {
+    guard let link = URL(string: "https://popflash.app/nade?id=\(nade.id)") else {
         
         completion(DynamicLink(link: URL(string: "")!))
         
