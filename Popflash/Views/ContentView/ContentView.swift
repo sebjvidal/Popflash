@@ -88,6 +88,23 @@ struct ContentView: View {
     }
     
     func handleURL(_ url: URL) {
+        if url.isDynamicLink {
+            DynamicLinks.dynamicLinks().handleUniversalLink(url) { dynamicLink, error in
+                guard let dynamicLink = dynamicLink?.url else {
+                    return
+                }
+                
+                var urlString = dynamicLink.absoluteString
+                urlString = urlString.replacingOccurrences(of: "https://", with: "")
+                urlString = urlString.replacingOccurrences(of: "www.", with: "")
+                urlString = urlString.replacingOccurrences(of: "popflash.app/", with: "popflash://")
+                print(urlString)
+                UIApplication.shared.open(URL(string: urlString)!)
+            }
+            
+            return
+        }
+        
         if nade == nil {
             if let nadeID = url.nadeID {
                 fetchNade(withID: nadeID) { nade in
