@@ -613,7 +613,6 @@ private struct Details: View {
             
             VideoInfo(nade: nade)
                 .padding(.top, 12)
-                .padding(.bottom, 12)
             
             if !nade.warning.isEmpty {
                 
@@ -622,23 +621,11 @@ private struct Details: View {
             }
             
             Text(nade.longDescription.replacingOccurrences(of: "\\n", with: "\n"))
+                .padding(.top, 12)
                 .padding(.horizontal)
                 .padding(.bottom, 12)
             
         }
-        
-    }
-    
-    func videoDetails(nade: Nade) -> [Detail] {
-        
-        let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
-                       Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
-                       Detail(name: "TICK RATE", value: nade.tick, image: Image(systemName: "clock.fill")),
-                       Detail(name: "JUMP BIND", value: nade.bind, image: Image(systemName: "keyboard.fill")),
-                       Detail(name: "SIDE", value: nade.side, image: Image("\(nade.side.lowercased()).fill")),
-                       Detail(name: "TYPE", value: nade.type, image: Image(systemName: "circle.fill"))]
-        
-        return details
         
     }
     
@@ -936,9 +923,7 @@ struct VideoInfo: View {
     
     }
     
-    func videoDetails(detailsOf: Nade) -> [Detail] {
-        
-        let nade = detailsOf
+    func videoDetails(detailsOf nade: Nade) -> [Detail] {
         
         let details = [Detail(name: "VIEWS", value: "\(nade.views)", image: Image(systemName: "eye.fill")),
                        Detail(name: "FAVOURITES", value: "\(nade.favourites)", image: Image(systemName: "heart.fill")),
@@ -967,15 +952,15 @@ private struct Warning: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.black, .yellow)
                     .font(.system(size: 24))
-                    .padding(.leading, 4)
-                    .padding(.trailing, 4)
+                    .padding(.horizontal, 4)
                 
                 Text("\(warning)")
                 
             }
+            .padding(.top, 11)
             
             Divider()
-                .padding(.top, 8)
+                .padding(.top, 11)
             
         }
         .padding(.horizontal)
