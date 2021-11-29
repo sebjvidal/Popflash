@@ -96,7 +96,7 @@ struct FeaturedView: View {
             return
         }
         
-        if !["featured", "map"].contains(url.host) {
+        if !["featured", "map", "nade"].contains(url.host) {
             UIApplication.shared.open(url)
             return
         }

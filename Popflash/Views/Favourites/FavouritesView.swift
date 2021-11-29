@@ -92,7 +92,7 @@ struct FavouritesView: View {
             return
         }
         
-        if !["favourites", "map"].contains(url.host) {
+        if !["favourites", "map", "nade"].contains(url.host) {
             UIApplication.shared.open(url)
             return
         }

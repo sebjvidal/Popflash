@@ -80,7 +80,7 @@ struct MapsView: View {
             return
         }
         
-        if !["maps", "map"].contains(url.host) {
+        if !["maps", "map", "nade"].contains(url.host) {
             UIApplication.shared.open(url)
             return
         }
