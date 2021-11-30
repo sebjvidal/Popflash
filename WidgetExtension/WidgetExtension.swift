@@ -277,3 +277,16 @@ struct WidgetExtension: Widget {
     }
     
 }
+
+struct WidgetViewPreviews: PreviewProvider {
+    static var previews: some View {
+        WidgetExtensionEntryView(entry: SimpleEntry(date: .now, nade: .widgetPreview))
+            .previewContext(WidgetPreviewContext(family: .systemSmall))
+        
+        WidgetExtensionEntryView(entry: SimpleEntry(date: .now, nade: .widgetPreview))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+        
+        WidgetExtensionEntryView(entry: SimpleEntry(date: .now, nade: .widgetPreview))
+            .previewContext(WidgetPreviewContext(family: .systemLarge))
+    }
+}
