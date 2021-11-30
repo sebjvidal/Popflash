@@ -12,7 +12,7 @@ import AuthenticationServices
 struct WelcomeView: View {
     
     @State var selection = 0
-    
+
     @AppStorage("loggedInStatus") var loggedInStatus = false
     
     @Environment(\.dismiss) var dismiss
@@ -36,10 +36,7 @@ struct WelcomeView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut(duration: 0.15), value: selection)
             
-            Text("Popflash")
-                .font(.system(size: 50))
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
+            Title()
                 .padding(.top, 94)
             
         }
@@ -51,6 +48,41 @@ struct WelcomeView: View {
         
     }
     
+}
+
+private struct Title: View {
+    let orange = Color(.sRGB, red: 255/255, green: 126/255, blue: 21/255)
+    let pink = Color(.sRGB, red: 255/255, green: 22/255, blue: 141/255)
+    
+    @State var isAnimating = false
+    
+    var foreverAnimation: Animation {
+        Animation.linear(duration: 15.0)
+            .repeatForever(autoreverses: false)
+    }
+    
+    var popflashText: some View {
+        Text("Popflash")
+            .font(.system(size: 50))
+            .fontWeight(.bold)
+    }
+    
+    var gradient: some View {
+        Circle()
+            .fill(LinearGradient(colors: [orange, pink], startPoint: .leading, endPoint: .trailing))
+            .aspectRatio(1, contentMode: .fill)
+            .rotationEffect(Angle(degrees: isAnimating ? 360.0 : 0.0))
+            .animation(foreverAnimation, value: isAnimating)
+            .onAppear {
+                isAnimating = true
+            }
+    }
+    
+    var body: some View {
+        popflashText
+            .overlay(gradient)
+            .mask(popflashText)
+    }
 }
 
 private struct FeaturesPage: View {
@@ -81,11 +113,6 @@ private struct FeaturesPage: View {
             
             GetStarted(selection: $selection)
                 .padding(.bottom, 58)
-                .onTapGesture {
-                    
-                    standard.setValue(true, forKey: "hasLaunchedBefore")
-                    
-                }
             
         }
         
@@ -162,7 +189,7 @@ private struct Maps: View {
         HStack {
             
             Image(systemName: "map.fill")
-                .foregroundColor(.green)
+                .foregroundColor(.orange)
                 .font(.system(size: 38))
             
             VStack(alignment: .leading) {
@@ -452,6 +479,7 @@ private struct NotNow: View {
     @Binding var presentationMode: PresentationMode
     
     @AppStorage("settings.tint") var tint: Int = 1
+    @AppStorage("firstLaunch") var firstLaunch = true
     
     var body: some View {
         
@@ -467,7 +495,14 @@ private struct NotNow: View {
     func notNow() {
         
         $presentationMode.wrappedValue.dismiss()
+        firstLaunch = false
         
     }
 
+}
+
+struct WelcomeView_Previews: PreviewProvider {    
+    static var previews: some View {
+        WelcomeView()
+    }
 }
