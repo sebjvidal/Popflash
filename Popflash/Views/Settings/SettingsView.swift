@@ -138,6 +138,9 @@ private struct Profile: View {
                             .resizable()
                             .frame(width: 65, height: 65)
                             .clipShape(Circle())
+                            .overlay(Circle()
+                                        .strokeBorder(.gray, lineWidth: 0.5)
+                                        .frame(width: 65, height: 65))
                         
                     }
                     

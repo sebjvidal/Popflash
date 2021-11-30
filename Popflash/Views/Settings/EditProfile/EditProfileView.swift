@@ -335,23 +335,10 @@ private struct ProfilePictureEditor: View {
                         .foregroundColor(.white)
                         .padding(.bottom, 2)
                     
-                    if avatarURL != "" {
-                        
-                        KFImage(URL(string: avatarURL))
-                            .resizable()
-                            .frame(width: 65, height: 65)
-                            
-                        
-                    }
-                    
-                    if let image = image {
-                        
-                        image
-                            .resizable()
-                            .frame(width: 65, height: 65)
-                            .clipShape(Circle())
-                        
-                    }
+                    avatar
+                        .overlay(Circle()
+                                    .strokeBorder(.gray, lineWidth: 0.5)
+                                    .frame(width: 65, height: 65))
                     
                 }
                 .clipShape(Circle())
@@ -359,7 +346,6 @@ private struct ProfilePictureEditor: View {
                 .contextMenu {
                     
                     Button(action: pickImage) {
-                        
                         
                         Label("Upload Image", systemImage: "photo")
                         
@@ -400,6 +386,23 @@ private struct ProfilePictureEditor: View {
             
         }
         
+    }
+    
+    var avatar: some View {
+        ZStack {
+            if avatarURL != "" {
+                KFImage(URL(string: avatarURL))
+                    .resizable()
+                    .frame(width: 65, height: 65)
+            }
+            
+            if let image = image {
+                image
+                    .resizable()
+                    .frame(width: 65, height: 65)
+                    .clipShape(Circle())
+            }
+        }
     }
     
     func pickImage() {
