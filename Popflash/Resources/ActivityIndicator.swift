@@ -8,17 +8,30 @@
 import SwiftUI
 
 struct ActivityIndicator: View {
+    var style: UIActivityIndicatorView.Style = .medium
     
     var body: some View {
-        
-        LazyVStack {
-            
-            ProgressView()
-                .padding(.top, 12)
-                .padding(.bottom, 20)
-            
+        switch style {
+        case .large:
+            UIActivityIndicatorViewUIViewRepresentable()
+        default:
+            LazyVStack {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
         }
+    }
+}
+
+struct UIActivityIndicatorViewUIViewRepresentable: UIViewRepresentable {
+    let activityIndicator = UIActivityIndicatorView()
+    
+    func makeUIView(context: UIViewRepresentableContext<UIActivityIndicatorViewUIViewRepresentable>) -> UIActivityIndicatorView {
+        activityIndicator.style = .large
+        activityIndicator.startAnimating()
         
+        return activityIndicator
     }
     
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<UIActivityIndicatorViewUIViewRepresentable>) {}
 }
