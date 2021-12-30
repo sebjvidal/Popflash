@@ -21,7 +21,7 @@ struct RecentlyViewedView: View {
                 
                 NadeList(recentNades: $recentlyViewed.nades,
                          selectedNade: $selectedNade)
-                
+                    .buttonStyle(FavouriteNadeCellButtonStyle())
                 
                 ActivityIndicator()
                     .onAppear(perform: loadMore)
@@ -48,25 +48,16 @@ struct RecentlyViewedView: View {
     }
     
     func onAppear() {
-        
         if recentlyViewed.nades.isEmpty {
-            
             recentlyViewed.fetchData()
-            
         }
-        
     }
     
     func loadMore() {
-        
         if !recentlyViewed.nades.isEmpty {
-            
             recentlyViewed.fetchData()
-            
         }
-        
     }
-    
 }
 
 private struct Header: View {
@@ -100,161 +91,55 @@ private struct Header: View {
 }
 
 private struct NadeList: View {
-    
     @Binding var recentNades: [Nade]
     @Binding var selectedNade: Nade?
     
-    let sections = [RecentSection(title: "Today", lowerBound: date(bound: .lower), upperBound: date(bound: .upper)),
-                    RecentSection(title: "Yesterday", lowerBound: date(bound: .lower, subtracting: 1), upperBound: date(bound: .upper, subtracting: 1)),
-                    RecentSection(title: "Last 7 Days", lowerBound: date(bound: .lower, subtracting: 7), upperBound: date(bound: .upper, subtracting: 2)),
-                    RecentSection(title: "Last Month", lowerBound: date(bound: .lower, subtracting: 30), upperBound: date(bound: .upper, subtracting: 8)),
-                    RecentSection(title: "Last 3 Months", lowerBound: date(bound: .lower, subtracting: 91), upperBound: date(bound: .upper, subtracting: 31)),
-                    RecentSection(title: "Last 6 Months", lowerBound: date(bound: .lower, subtracting: 182), upperBound: date(bound: .upper, subtracting: 91)),
-                    RecentSection(title: "Last Year", lowerBound: date(bound: .lower, subtracting: 365), upperBound: date(bound: .upper, subtracting: 182))]
+    let sections: [String] = [
+        "Today",
+        "Yesterday",
+        "Last 7 Days",
+        "Last Month",
+        "Last 3 Months",
+        "Last 6 Months",
+        "Last Year",
+        "All Time"
+    ]
     
     var body: some View {
-        
-        Group {
-            
+        VStack(alignment: .leading, spacing: 0) {
             ForEach(sections, id: \.self) { section in
-            
-                if recentNades.contains(where: { nade in
-                    
-                    section.lowerBound...section.upperBound ~= dateObject(from: String(nade.dateAdded))
-                    
-                }) {
-                    
-                    VStack(alignment: .leading, spacing: 0) {
-                        
-                        Divider()
-                            .padding(.horizontal)
-                            .padding(.bottom, 10)
-                        
-                        Text(section.title)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .padding(.leading, 18)
-                            .padding(.bottom, 8)
-                        
-                    }
-                    
-                    ForEach(nadesIn(section: section).sorted(by: {
-                        
-                        $0.dateAdded > $1.dateAdded
-                        
-                    }), id: \.self) { nade in
-                        
-                        Button {
+                if recentsContains(section) {
+                    Divider()
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
 
-                            viewNade(nade: nade)
+                    Text(section).font(.title3)
+                        .fontWeight(.semibold)
+                        .padding(.leading, 18)
+                        .padding(.bottom, 8)
 
-                        } label: {
-
+                    ForEach(nades(section: section)) { nade in
+                        Button(action: { viewNade(nade: nade) }) {
                             FavouriteNadeCell(nade: nade)
                                 .equatable()
-
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom, lastNade(nade: nade, inSection: section) ? nade == recentNades.last ? 16 : 16 : 16)
-                        .listRowSeparator(.hidden)
-                        
+                        .padding([.horizontal, .bottom])
+                        .buttonStyle(FavouriteNadeCellButtonStyle())
                     }
-                    
                 }
-            
             }
-            
-            if recentNades.contains(where: { nade in
-                
-                dateObject(from: String(nade.dateAdded)) < date(bound: .lower, subtracting: 365)
-                
-            }) {
-                
-                Text("All Time")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .padding(.leading, 18)
-                
-                ForEach(otherNades(), id: \.self) { nade in
-                    
-                    Button {
-
-                        viewNade(nade: nade)
-
-                    } label: {
-
-                        FavouriteNadeCell(nade: nade)
-
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .listRowSeparator(.hidden)
-                    
-                }
-                
-            }
-            
         }
-        .buttonStyle(FavouriteNadeCellButtonStyle())
-        
+    }
+    
+    func recentsContains(_ section: String) -> Bool {
+        return recentNades.contains(where: { $0.section == section })
+    }
+    
+    func nades(section: String) -> [Nade] {
+        return recentNades.filter({ $0.section == section }).sorted(by: { $0.dateAdded > $1.dateAdded })
     }
     
     func viewNade(nade: Nade) {
-        
         selectedNade = nade
-        
     }
-    
-    func nadesIn(section: RecentSection) -> [Nade] {
-        
-        var nades = [Nade]()
-        
-        for nade in recentNades where section.lowerBound...section.upperBound ~= dateObject(from: String(nade.dateAdded)) {
-            
-            nades.append(nade)
-            
-        }
-        
-        return nades
-        
-    }
-    
-    func otherNades() -> [Nade] {
-        
-        var nades = [Nade]()
-        
-        for nade in recentNades {
-            
-            if dateObject(from: String(nade.dateAdded)) < date(bound: .lower, subtracting: 365) {
-                
-                nades.append(nade)
-                
-            }
-            
-        }
-        
-        return nades
-        
-    }
-    
-    func lastNade(nade: Nade, inSection section: RecentSection) -> Bool {
-        
-        if let last = nadesIn(section: section).last(where: { nade in
-            
-            section.lowerBound...section.upperBound ~= dateObject(from: String(nade.dateAdded))
-            
-        }) {
-            
-            if nade == last {
-                
-                return true
-                
-            }
-            
-        }
-        
-        return false
-        
-    }
-    
 }
