@@ -119,46 +119,38 @@ struct NadeView: View {
     }
     
     func removeDuplicateViews(forUser user: String) {
-        
         let lowerDate = date(bound: .lower)
         let lowerString = dateString(from: lowerDate)
-        
+
         guard let lowerDouble = Double(lowerString) else {
-            
             return
-            
         }
         
         let upperDate = date(bound: .upper)
         let upperString = dateString(from: upperDate)
-        
+
         guard let upperDouble = Double(upperString) else {
-            
             return
-            
         }
-        
+
         let db = Firestore.firestore()
         let recentRef = db.collection("nades").document(nade.documentID)
         let ref = db.collection("users").document(user).collection("recents")
             .whereField("ref", isEqualTo: recentRef)
             .whereField("dateAdded", isGreaterThan: lowerDouble)
             .whereField("dateAdded", isLessThan: upperDouble)
-        
-        ref.getDocuments { snapshot, error in
-            
-            guard let documents = snapshot?.documents else { return }
-            
-            for document in documents {
 
-                db.collection("users").document(user).collection("recents").document(document.documentID).delete()
-                
+        ref.getDocuments { snapshot, error in
+            guard let documents = snapshot?.documents else {
+                return
             }
-            
+
+            for document in documents {
+                db.collection("users").document(user).collection("recents").document(document.documentID).delete()
+            }
+
             addRecent(forUser: user)
-            
         }
-        
     }
     
     func addRecent(forUser user: String) {
@@ -270,216 +262,210 @@ private struct NadeContent: View {
 }
 
 private struct VideoView: View {
-    
     @State var nade: Nade
     @State var player: AVPlayer
     @State var isPlaying = false
     @State var progress: Float = 0
     @State var showControls = false
-    
+    @State var loading = true
     @Binding var fullscreen: Bool
+    
+    let timer = Timer.publish(every: 0.001, on: .main, in: .common).autoconnect()
     
     @AppStorage("settings.autoPlayVideo") var autoPlayVideo = false
     
     var body: some View {
-            
         GeometryReader { geo in
-            
             ZStack {
-                
                 VideoPlayer(player: player)
-                    .onTapGesture {
-                        
-                        showControls.toggle()
-                        
-                    }
+                    .onTapGesture(perform: toggleControls)
                     .onAppear(perform: setupPlayer)
                     .onDisappear(perform: resetPlayer)
 
-                VideoControls(player: $player, isPlaying: $isPlaying, progress: $progress, fullscreen: $fullscreen, showControls: $showControls)
+                VideoControls(player: $player,
+                              isPlaying: $isPlaying,
+                              progress: $progress,
+                              fullscreen: $fullscreen,
+                              showControls: $showControls,
+                              isLoading: $loading)
                 
             }
             .preference(key: SheetOffsetPreferenceKey.self, value: geo.frame(in: .global).minY)
             
         }
         .frame(width: width(), height: height())
+        .onReceive(timer, perform: tick)
         .onPreferenceChange(SheetOffsetPreferenceKey.self) {
-            
             fullscreen = $0 == 0
             
             if $0 <= 57 && $0 > 0 {
-                
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.allButUpsideDown
-                
             } else {
-                
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
-                
             }
-            
         }
-        
     }
     
     func width() -> CGFloat {
-        
         return fullscreen ? UIScreen.screenWidth * 1.777 : UIScreen.screenWidth
-        
     }
     
     func height() -> CGFloat {
-        
         return fullscreen ? UIScreen.screenWidth : (UIScreen.screenWidth) / 1.777
-        
+    }
+    
+    func toggleControls() {
+        showControls.toggle()
     }
     
     func setupPlayer() {
-        
         player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: nade.video)!))
-        
-        self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: .main) { (_) in
-            
-            self.progress = getSliderValue()
-            
-            if self.progress == 1.0 {
-                
-                self.isPlaying = false
-                
-            }
-            
-        }
-        
+
         if autoPlayVideo {
-            
             self.isPlaying = true
             self.player.play()
-            
         }
-        
     }
     
     func resetPlayer() {
-        
         self.isPlaying = false
         self.player.pause()
-        
     }
     
     func getSliderValue() -> Float {
-        
         return Float(self.player.currentTime().seconds / (self.player.currentItem?.duration.seconds)!)
-        
     }
     
     func getSeconds() -> Double {
-        
         return Double(Double(self.progress) * (self.player.currentItem?.duration.seconds)!)
-        
     }
     
+    func tick(_ output: Timer.TimerPublisher.Output) -> Void {
+        // Get player progress
+        self.progress = getSliderValue()
+
+        if self.progress == 1.0 {
+            self.isPlaying = false
+        }
+        
+        // Check if playback buffer is empty
+        if player.currentItem?.status == .readyToPlay {
+            if let buffer = player.currentItem?.isPlaybackLikelyToKeepUp {
+                if buffer {
+                    loading = false
+                } else {
+                    loading = true
+                }
+            }
+        } else {
+            loading = true
+        }
+    }
 }
 
 private struct SheetOffsetPreferenceKey: PreferenceKey {
-    
     static var defaultValue: CGFloat = .zero
-    
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
-    
 }
 
 private struct VideoControls: View {
-    
     @Binding var player: AVPlayer
     @Binding var isPlaying: Bool
     @Binding var progress: Float
     @Binding var fullscreen: Bool
     @Binding var showControls: Bool
+    @Binding var isLoading: Bool
     
     var body: some View {
-        
         ZStack {
-            
-            Color.black
-                .opacity(0.4)
-                .onTapGesture(perform: toggleControls)
-            
-            VStack {
+            ZStack {
+                shade
                 
-                HStack {
-                    
-                    Spacer()
-                    
-                    Button(action: rewind, label: {
+                VStack {
+                    HStack {
+                        Spacer()
                         
-                        Image(systemName: "backward.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 26))
+                        rewindButton
                         
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: playPause, label: {
+                        Spacer()
                         
-                        Image(systemName: progress == 1 ? "gobackward" : isPlaying ? "pause.fill" : "play.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: progress == 1 ? 36 : 42, weight: progress == 1 ? .bold : .regular))
+                        playPauseButton
                         
-                    })
-                    .frame(width: 45)
-                    
-                    Spacer()
-                    
-                    Button(action: forward, label: {
+                        Spacer()
                         
-                        Image(systemName: "forward.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 26))
+                        forwardButton
                         
-                    })
-                    
-                    Spacer()
-                    
-                }
-                
-            }
-            
-            VStack {
-                
-                Spacer()
-                
-                HStack(spacing: 16) {
-                    
-                    ProgressBar(value: $progress, player: $player, isplaying: $isPlaying)
-                    
-                    Button(action: manualFullscreen) {
-                        
-                        Image(fullscreen ? "minimise" : "maximise")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                        
+                        Spacer()
                     }
-                
                 }
-                .padding(.horizontal, fullscreen ? 34 : 20)
-                .padding(.bottom, fullscreen ? 26: 16)
                 
+                VStack {
+                    Spacer()
+                    
+                    HStack(spacing: 16) {
+                        ProgressBar(value: $progress,
+                                    player: $player,
+                                    isplaying: $isPlaying)
+                        
+                        fullscreenButton
+                    }
+                    .padding(.horizontal, fullscreen ? 34 : 20)
+                    .padding(.bottom, fullscreen ? 26: 16)
+                }
             }
+            .opacity(showControls ? 1 : 0)
+            .animation(.easeInOut(duration: 0.25), value: showControls)
             
+            ActivityIndicator(style: .large)
+                .opacity(isLoading ? 1 : 0)
         }
-        .opacity(showControls ? 1 : 0)
-        .animation(.easeInOut(duration: 0.25), value: showControls)
-        
+    }
+    
+    var shade: some View {
+        Color.black
+            .opacity(0.4)
+            .onTapGesture(perform: toggleControls)
+    }
+    
+    var rewindButton: some View {
+        Button(action: rewind) {
+            Image(systemName: "backward.fill")
+                .foregroundColor(.white)
+                .font(.system(size: 26))
+        }
+    }
+    
+    var playPauseButton: some View {
+        Button(action: playPause) {
+            Image(systemName: progress == 1 ? "gobackward" : isPlaying ? "pause.fill" : "play.fill")
+                .foregroundColor(.white)
+                .font(.system(size: progress == 1 ? 36 : 42, weight: progress == 1 ? .bold : .regular))
+        }
+        .frame(width: 45)
+        .opacity(isLoading ? 0 : 1)
+    }
+    
+    var forwardButton: some View {
+        Button(action: forward) {
+            Image(systemName: "forward.fill")
+                .foregroundColor(.white)
+                .font(.system(size: 26))
+        }
+    }
+    
+    var fullscreenButton: some View {
+        Button(action: manualFullscreen) {
+            Image(fullscreen ? "minimise" : "maximise")
+                .font(.system(size: 20))
+                .foregroundColor(.white)
+        }
     }
     
     func toggleControls() {
-        
         showControls.toggle()
-        
     }
     
     func rewind() {
-        
         let wasPlaying = isPlaying
         
         player.pause()
@@ -487,67 +473,42 @@ private struct VideoControls: View {
         progress = 0
         
         if wasPlaying {
-            
             player.play()
-            
-            
         }
-        
     }
     
     func playPause() {
-        
         if !isPlaying {
-            
             if progress == 1 {
-                
                 player.seek(to: CMTime(seconds: 0, preferredTimescale: 1))
-                
             }
             
             player.play()
             isPlaying = true
-            
         } else {
-            
             player.pause()
             isPlaying = false
-            
         }
-        
     }
     
     func forward() {
-        
         guard let playerItem = player.currentItem else {
-            
             return
-            
         }
         
         if !CMTIME_IS_INDEFINITE(playerItem.duration) && !CMTIME_IS_INVALID(playerItem.duration) {
-            
             player.seek(to: playerItem.duration, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.positiveInfinity)
             progress = 1
-            
         }
-        
     }
     
     func manualFullscreen() {
-        
         if fullscreen {
-            
             UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
-            
         } else {
-            
             UIDevice.current.setValue(UIDeviceOrientation.landscapeRight.rawValue, forKey: "orientation")
-            
         }
-        
     }
-    
 }
 
 struct SegmentedControl: View {
@@ -720,41 +681,26 @@ private struct FavouriteButton: View {
     }
     
     func favouriteAction() {
-        
         if loading {
-            
             return
-            
         }
         
         guard let user = Auth.auth().currentUser else {
-            
             return
-            
         }
         
         if user.isAnonymous {
-            
             showingLoginAlert = true
-            
         } else {
-            
             if isFavourite {
-                
                 removeFromFavourites()
-                
             } else {
-                
                 addToFavourites()
-                
             }
-            
         }
-        
     }
     
     func addToFavourites() {
-        
         guard let user = Auth.auth().currentUser else { return }
         
         if user.isAnonymous { return }
@@ -830,7 +776,6 @@ private struct FavouriteButton: View {
     }
     
     func favouriteDate() -> Double {
-        
         let date = Date()
         let formatter = DateFormatter()
         
@@ -839,18 +784,12 @@ private struct FavouriteButton: View {
         let dateString = formatter.string(from: date)
         let dateDouble = Double(dateString) ?? 0
         
-        print(dateDouble)
-        
         return dateDouble
-        
     }
     
     func showLogin() {
-        
         showingLoginSheet = true
-        
     }
-    
 }
 
 struct VideoInfo: View {
@@ -1082,35 +1021,8 @@ private struct Share: View {
     }
     
     func shareAction() {
-        
         dynamicLink(for: nade) { dynamicLink in
-            
             shareLink = dynamicLink
-            
         }
-        
     }
-    
-}
-
-private struct VideoPlayer: UIViewControllerRepresentable {
-    
-    var player: AVPlayer
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayer>) -> AVPlayerViewController {
-        
-        let controller = AVPlayerViewController()
-        
-        controller.player = player
-        controller.showsPlaybackControls = false
-        controller.videoGravity = .resizeAspectFill
-        
-        try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-        
-        return controller
-        
-    }
-    
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayer>) {}
-    
 }
