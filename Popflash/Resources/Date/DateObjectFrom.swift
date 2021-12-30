@@ -12,7 +12,6 @@ func dateObject(from dateString: String) -> Date {
     formatter.dateFormat = "yyyyMMddHHmmss"
     
     guard let date = formatter.date(from: dateString.replacingOccurrences(of: ".0", with: "")) else {
-        print(false)
         return Date()
     }
     
