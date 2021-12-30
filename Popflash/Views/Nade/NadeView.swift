@@ -552,18 +552,16 @@ private struct Details: View {
                     Text(nade.map)
                         .foregroundColor(.gray)
                         .fontWeight(.semibold)
-                        .padding(.horizontal)
                     
                     Text(nade.name)
                         .font(.system(size: 22))
                         .fontWeight(.bold)
-                        .padding(.horizontal)
                     
                     Text(nade.shortDescription)
                         .padding(.top, 8)
-                        .padding(.horizontal)
                     
                 }
+                .padding(.leading)
                 
                 Spacer(minLength: 0)
                 
