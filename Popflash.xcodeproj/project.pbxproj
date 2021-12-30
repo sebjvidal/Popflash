@@ -71,6 +71,13 @@
 		C29092F4270B73D60017C049 /* PopflashApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29092F3270B73D60017C049 /* PopflashApp.swift */; };
 		C29092F9270B7CAA0017C049 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29092F8270B7CAA0017C049 /* URL.swift */; };
 		C29092FB270B7DC30017C049 /* TabIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29092FA270B7DC30017C049 /* TabIdentifier.swift */; };
+		C29ED162277898650009F4EB /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29ED161277898650009F4EB /* VideoPlayer.swift */; };
+		C29ED1E6277DB2710009F4EB /* RecentSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29ED1E5277DB2710009F4EB /* RecentSections.swift */; };
+		C29ED1EA277DB68E0009F4EB /* RecentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29ED1E9277DB68E0009F4EB /* RecentSection.swift */; };
+		C29ED1EC277DC5090009F4EB /* DateBound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29ED1EB277DC5090009F4EB /* DateBound.swift */; };
+		C29ED1ED277DD2D30009F4EB /* DateBound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29ED1EB277DC5090009F4EB /* DateBound.swift */; };
+		C29ED1EE277DD2D60009F4EB /* DateObjectFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */; };
+		C29ED1EF277DD2EA0009F4EB /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7B26C54F44004DEE87 /* Date.swift */; };
 		C2A3018927122760007EF964 /* AppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A3018827122760007EF964 /* AppearanceView.swift */; };
 		C2A3018C2712E2F2007EF964 /* TintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A3018B2712E2F2007EF964 /* TintView.swift */; };
 		C2A3018F2712F4B7007EF964 /* TintColour.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A3018E2712F4B7007EF964 /* TintColour.swift */; };
@@ -112,7 +119,6 @@
 		C2DE781826D4FEB80092BADE /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2DE781126D4FEB80092BADE /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2DE783A26D56EEC0092BADE /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE783926D56EEC0092BADE /* ActivityIndicator.swift */; };
 		C2DE785126D826A60092BADE /* RecentlyViewedViewModelOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DE785026D826A60092BADE /* RecentlyViewedViewModelOrder.swift */; };
-		C2E65E7926C54F0E004DEE87 /* RecentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7826C54F0E004DEE87 /* RecentSection.swift */; };
 		C2E65E7C26C54F44004DEE87 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7B26C54F44004DEE87 /* Date.swift */; };
 		C2E65E7E26C54F63004DEE87 /* DateObjectFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */; };
 		C2E65E8026C6ACCE004DEE87 /* DateStringFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E65E7F26C6ACCE004DEE87 /* DateStringFrom.swift */; };
@@ -226,6 +232,10 @@
 		C29092F3270B73D60017C049 /* PopflashApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopflashApp.swift; sourceTree = "<group>"; };
 		C29092F8270B7CAA0017C049 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		C29092FA270B7DC30017C049 /* TabIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabIdentifier.swift; sourceTree = "<group>"; };
+		C29ED161277898650009F4EB /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
+		C29ED1E5277DB2710009F4EB /* RecentSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSections.swift; sourceTree = "<group>"; };
+		C29ED1E9277DB68E0009F4EB /* RecentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSection.swift; sourceTree = "<group>"; };
+		C29ED1EB277DC5090009F4EB /* DateBound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateBound.swift; sourceTree = "<group>"; };
 		C2A3018827122760007EF964 /* AppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceView.swift; sourceTree = "<group>"; };
 		C2A3018B2712E2F2007EF964 /* TintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TintView.swift; sourceTree = "<group>"; };
 		C2A3018E2712F4B7007EF964 /* TintColour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TintColour.swift; sourceTree = "<group>"; };
@@ -271,7 +281,6 @@
 		C2DE782426D500240092BADE /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		C2DE783926D56EEC0092BADE /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		C2DE785026D826A60092BADE /* RecentlyViewedViewModelOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyViewedViewModelOrder.swift; sourceTree = "<group>"; };
-		C2E65E7826C54F0E004DEE87 /* RecentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSection.swift; sourceTree = "<group>"; };
 		C2E65E7B26C54F44004DEE87 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateObjectFrom.swift; sourceTree = "<group>"; };
 		C2E65E7F26C6ACCE004DEE87 /* DateStringFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateStringFrom.swift; sourceTree = "<group>"; };
@@ -420,6 +429,7 @@
 				C223FB9125E6785B004EEA5F /* PlayerView.swift */,
 				C2D21AD625FBE38F00FA7368 /* ProgressBar.swift */,
 				C2BA142A27273F1A000B6C4B /* PushNotifications */,
+				C29ED1E4277DB24C0009F4EB /* RecentSection */,
 				C27E495E25DE7DD800692E01 /* ScreenSize.swift */,
 				C2D44B2627039E5C003A151E /* ScrollOffset.swift */,
 				C2C5EEFA267209DA002ACAE1 /* SearchBar.swift */,
@@ -429,6 +439,7 @@
 				C29092FA270B7DC30017C049 /* TabIdentifier.swift */,
 				C21953CE2747B60B00837D4F /* UniversalLinks */,
 				C29092F8270B7CAA0017C049 /* URL.swift */,
+				C29ED164277898AD0009F4EB /* VideoPlayer */,
 				C2D44B222700E269003A151E /* VisualEffectView.swift */,
 			);
 			path = Resources;
@@ -527,7 +538,6 @@
 				C23C6D0225D3EE08008D283F /* Map.swift */,
 				C231054A25D5A68D000193A9 /* Nade.swift */,
 				C2BA142D2729B03C000B6C4B /* Overview.swift */,
-				C2E65E7826C54F0E004DEE87 /* RecentSection.swift */,
 				C2334C6526B3285F004C0FAA /* SkillGroup.swift */,
 			);
 			path = Models;
@@ -633,6 +643,23 @@
 				C2069B1425CC041B00ACFD15 /* ContentView.swift */,
 			);
 			path = ContentView;
+			sourceTree = "<group>";
+		};
+		C29ED164277898AD0009F4EB /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				C29ED161277898650009F4EB /* VideoPlayer.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
+		C29ED1E4277DB24C0009F4EB /* RecentSection */ = {
+			isa = PBXGroup;
+			children = (
+				C29ED1E9277DB68E0009F4EB /* RecentSection.swift */,
+				C29ED1E5277DB2710009F4EB /* RecentSections.swift */,
+			);
+			path = RecentSection;
 			sourceTree = "<group>";
 		};
 		C2A1D2D526B0A20300DF92DF /* Frameworks */ = {
@@ -786,6 +813,7 @@
 			isa = PBXGroup;
 			children = (
 				C2E65E7B26C54F44004DEE87 /* Date.swift */,
+				C29ED1EB277DC5090009F4EB /* DateBound.swift */,
 				C2E65E7D26C54F63004DEE87 /* DateObjectFrom.swift */,
 				C2E65E7F26C6ACCE004DEE87 /* DateStringFrom.swift */,
 			);
@@ -1031,7 +1059,7 @@
 				C2B968ED26C01A5100CB2C04 /* MapFrom.swift in Sources */,
 				C2B968DF26BDAE0D00CB2C04 /* MapCollectionView.swift in Sources */,
 				C2A301DE27161892007EF964 /* SegmentedPickerItemStyle.swift in Sources */,
-				C2E65E7926C54F0E004DEE87 /* RecentSection.swift in Sources */,
+				C29ED162277898650009F4EB /* VideoPlayer.swift in Sources */,
 				C2DE780626D2A8A10092BADE /* SubscribeTo.swift in Sources */,
 				C231055625D5A7E4000193A9 /* NadeView.swift in Sources */,
 				C23BB237262F4ED100A24E23 /* Detail.swift in Sources */,
@@ -1056,7 +1084,9 @@
 				C21085C425E5832B0062DC81 /* WelcomeView.swift in Sources */,
 				C21953A92745A8F200837D4F /* FetchMap.swift in Sources */,
 				C2A301DB271617C2007EF964 /* SegmentedPickerStyle.swift in Sources */,
+				C29ED1EA277DB68E0009F4EB /* RecentSection.swift in Sources */,
 				C231054B25D5A68D000193A9 /* Nade.swift in Sources */,
+				C29ED1E6277DB2710009F4EB /* RecentSections.swift in Sources */,
 				C2BA14332729EACD000B6C4B /* Callout.swift in Sources */,
 				C2E7A6B126A33EFA0057B5ED /* CellShadow.swift in Sources */,
 				C2BA14312729B15B000B6C4B /* OverviewFrom.swift in Sources */,
@@ -1088,6 +1118,7 @@
 				C2A3018C2712E2F2007EF964 /* TintView.swift in Sources */,
 				C2DE783A26D56EEC0092BADE /* ActivityIndicator.swift in Sources */,
 				C2DE785126D826A60092BADE /* RecentlyViewedViewModelOrder.swift in Sources */,
+				C29ED1EC277DC5090009F4EB /* DateBound.swift in Sources */,
 				C23C6D0325D3EE08008D283F /* Map.swift in Sources */,
 				C2B968EF26C16F9A00CB2C04 /* RecentlyViewedViewModel.swift in Sources */,
 				C2069B0125CAF01900ACFD15 /* MapsView.swift in Sources */,
@@ -1132,6 +1163,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29ED1EE277DD2D60009F4EB /* DateObjectFrom.swift in Sources */,
+				C29ED1EF277DD2EA0009F4EB /* Date.swift in Sources */,
+				C29ED1ED277DD2D30009F4EB /* DateBound.swift in Sources */,
 				C29092F027089E470017C049 /* NadeFrom.swift in Sources */,
 				C2BB805226F77A0300592CBD /* WidgetExtension.swift in Sources */,
 				C29092EF27089A0A0017C049 /* Nade.swift in Sources */,
