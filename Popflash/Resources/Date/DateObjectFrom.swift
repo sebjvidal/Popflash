@@ -8,16 +8,13 @@
 import SwiftUI
 
 func dateObject(from dateString: String) -> Date {
-    
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyyMMddHHmmss"
     
     guard let date = formatter.date(from: dateString.replacingOccurrences(of: ".0", with: "")) else {
-        
+        print(false)
         return Date()
-        
     }
     
     return date
-    
 }
