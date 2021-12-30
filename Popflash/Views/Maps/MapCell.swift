@@ -64,6 +64,7 @@ struct MapCell: View {
                     NewButton(lastAdded: map.lastAdded)
                     
                     Image(systemName: "chevron.right")
+                        .padding(.leading, 8)
                         .padding(.trailing, 12)
                     
                 }
