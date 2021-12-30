@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct Detail: Hashable {
-    
-    func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(name)
-        hasher.combine(value)
-        
-    }
-
     var name: String
     var value: String
     var image: Image
     
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(value)
+    }
 }
