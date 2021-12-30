@@ -502,11 +502,7 @@ private struct Compliments: View {
 }
 
 struct FeaturedView_Previews: PreviewProvider {
-    
     static var previews: some View {
-        
         FeaturedView()
-        
     }
-    
 }
