@@ -9,11 +9,8 @@ import SwiftUI
 import FirebaseFirestore
 
 func nadeFrom(doc: DocumentSnapshot) -> Nade? {
-    
     guard let data = doc.data() else {
-        
         return nil
-        
     }
     
     let documentID = doc.documentID
@@ -35,6 +32,7 @@ func nadeFrom(doc: DocumentSnapshot) -> Nade? {
     let dateAdded = data["dateAdded"] as? Double ?? 0
     let compliments = data["compliments"] as? Array ?? [String]()
     let warning = data["warning"] as? String ?? ""
+    let section = ""
     
     let nade = Nade(documentID: documentID,
                     id: id,
@@ -54,8 +52,8 @@ func nadeFrom(doc: DocumentSnapshot) -> Nade? {
                     tags: tags,
                     dateAdded: dateAdded,
                     compliments: compliments,
-                    warning: warning)
+                    warning: warning,
+                    section: section)
     
     return nade
-    
 }
