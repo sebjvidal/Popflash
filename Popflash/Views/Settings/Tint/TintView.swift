@@ -104,9 +104,7 @@ private struct TintOption: View {
     }
     
     func setTint() {
-        
         tint = id
-        
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(TintColour.colour(withID: id))
     }
-    
 }
