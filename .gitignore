@@ -2,6 +2,7 @@
 
 ## User settings
 xcuserdata/*
+*.xcuserdatad
 .DS_Store
 
 # Firebase
