@@ -829,25 +829,16 @@ private struct SignOut: View {
     }
     
     func signOutAction() {
-        
         showingActionSheet = true
-        
     }
     
     func signOut() {
-        
         DispatchQueue.global(qos: .background).async {
-            
             try? Auth.auth().signOut()
-            
         }
         
-        loggedInStatus = false
-        
         authenticateAnonymously()
-        
     }
-        
 }
 
 private struct Prompt: View {
