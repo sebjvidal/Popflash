@@ -28,6 +28,7 @@ struct UIActivityIndicatorViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: UIViewRepresentableContext<UIActivityIndicatorViewUIViewRepresentable>) -> UIActivityIndicatorView {
         activityIndicator.style = .large
+        activityIndicator.color = .white
         activityIndicator.startAnimating()
         
         return activityIndicator
