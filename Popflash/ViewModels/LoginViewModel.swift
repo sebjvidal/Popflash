@@ -43,8 +43,6 @@ class LoginViewModel: ObservableObject {
 
             }
 
-            self.loggedInStatus = true
-
             print("Logged into Firebase successfully.")
             
             if let uid = result?.user.uid {
