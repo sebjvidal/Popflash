@@ -13,7 +13,6 @@ import FirebaseDynamicLinks
 public var standard = UserDefaults.standard
 
 struct ContentView: View {
-    
     @State var showWelcomeView = false
     @State var map: Map?
     @State var nade: Nade?
@@ -24,7 +23,6 @@ struct ContentView: View {
     @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
-        
         TabView(selection: $tabSelection) {
             FeaturedView()
                 .tabItem {
@@ -55,9 +53,7 @@ struct ContentView: View {
                 .tag(3)
         }
         .onAppear(perform: onAppear)
-        .preferredColorScheme(appearance == 0 ? .none :
-                                appearance == 1 ? .light :
-                                appearance == 2 ? .dark : .none)
+        .preferredColorScheme(colourScheme())
         .accentColor(TintColour.colour(withID: tint))
         .onOpenURL(perform: handleURL)
         .sheet(isPresented: $showWelcomeView) {
@@ -67,15 +63,27 @@ struct ContentView: View {
         .sheet(item: $nade) { nade in
             NadeView(nade: nade)
         }
-        
     }
     
     func onAppear() {
         displayWelcomeView()
+        
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(TintColour.colour(withID: tint))
     }
     
     func resetNade() {
         nade = nil
+    }
+    
+    func colourScheme() -> ColorScheme? {
+        switch appearance {
+        case 1:
+            return .light
+        case 2:
+            return .dark
+        default:
+            return .none
+        }
     }
     
     func displayWelcomeView() {
