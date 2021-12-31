@@ -11,46 +11,37 @@ import FirebaseAuth
 import FirebaseMessaging
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    
     static var orientationLock = UIInterfaceOrientationMask.portrait
-    
     let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        
         return AppDelegate.orientationLock
-        
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         // Configure Firebase
         FirebaseApp.configure()
         
         //Initialise UserAccessGroup for Keychain Sharing
         do {
-            
             try Auth.auth().useUserAccessGroup("DY2GQFY855.com.sebvidal.Popflash")
-            
         } catch {
-            
             print(error.localizedDescription)
-            
         }
         
         // Add auth stateDidChangeListener for log in/out events
         Auth.auth().addStateDidChangeListener { auth, user in
-            
             if let user = user {
+                if user.isAnonymous {
+                    UserDefaults.standard.set(false, forKey: "loggedInStatus")
+                } else {
+                    UserDefaults.standard.set(true, forKey: "loggedInStatus")
+                }
                 
                 print("User \(user.uid) logged in. Anonymous: \(user.isAnonymous)")
-                
             } else {
-                
                 authenticateAnonymously()
-                
             }
-            
         }
         
         // Setup push notifications
@@ -77,25 +68,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     // MARK: UISceneSession Lifecycle
-    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-        
     }
     
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        if let messageID = userInfo[gcmMessageIDKey] {
-            
-            print("Message ID: \(messageID)")
-            
-        }
-
         completionHandler(UIBackgroundFetchResult.newData)
-        
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
@@ -105,48 +85,32 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 extension AppDelegate: MessagingDelegate {
-    
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
-        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-        
-        print(dataDict)
-        
+        let _: [String: String] = ["token": fcmToken ?? ""]
     }
-    
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
         let userInfo = notification.request.content.userInfo
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
         completionHandler([[.banner, .badge, .sound]])
-        
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
         let userInfo = response.notification.request.content.userInfo
         
         if let link = userInfo["link"] as? String,
            let url = URL(string: link) {
-            
             if url.isDeepLink {
-                
                 UIApplication.shared.open(url)
-                
             }
-            
         }
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
         completionHandler()
-        
     }
-    
 }
