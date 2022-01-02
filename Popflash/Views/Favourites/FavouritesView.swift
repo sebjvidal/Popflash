@@ -13,7 +13,6 @@ import FirebaseFirestore
 struct FavouritesView: View {
     
     @State private var statusOpacity: Double = 0
-    @State private var isShowing = false
     @State private var selectedNade: Nade?
     @State private var selectedMap: Map?
     
@@ -34,7 +33,7 @@ struct FavouritesView: View {
                         
                         Header()
                         
-                        FavouriteMaps(isShowing: $isShowing)
+                        FavouriteMaps()
                         
                         FavouriteNades(selectedNade: $selectedNade)
                         
@@ -57,12 +56,6 @@ struct FavouritesView: View {
                 .sheet(item: self.$selectedNade) { item in
                     
                     NadeView(nade: item)
-                    
-                }
-                .sheet(isPresented: $isShowing) {
-                    
-                    EditFavouriteMapsView()
-                        .interactiveDismissDisabled()
                     
                 }
                 
@@ -132,17 +125,11 @@ private struct Header: View {
 
 
 private struct FavouriteMaps: View {
-    
-    @Binding var isShowing: Bool
-    
     @State private var showingFavouriteMapsEdittingView = false
     
     var body: some View {
-        
         ScrollView(.horizontal, showsIndicators: false) {
-            
             VStack(alignment: .leading, spacing: 0) {
-                
                 Divider()
                     .padding(.horizontal)
                 
@@ -155,23 +142,15 @@ private struct FavouriteMaps: View {
                         }
                     }
                 
-                HStack(spacing: 16) {
-
-                    FavouriteMapsList()
-                    
-                    EditFavouritesButton(isShowing: $isShowing)
-                    
-                }
-                .padding([.horizontal, .bottom])
+                FavouriteMapsList()
+                    .padding([.horizontal, .bottom])
                 
                 Divider()
                     .padding(.horizontal)
                 
             }
             .frame(minWidth: UIScreen.screenWidth)
-            
         }
-        
     }
     
     var mapsText: some View {
@@ -181,49 +160,45 @@ private struct FavouriteMaps: View {
             .padding(.vertical, 11)
             .padding(.leading, 18)
     }
-    
 }
 
 private struct FavouriteMapsList: View {
-    
+    @State var showingEditSheet = false
+    @State var showingLoginSheet = false
     @StateObject var mapsViewModel = FavouriteMapsViewModel()
     
     var body: some View {
-        
-        ForEach(mapsViewModel.maps.sorted(by: {
-            
-            $0.position < $1.position
-            
-        }), id: \.self) { map in
-            
-            NavigationLink(destination: MapsDetailView(map: map)) {
-                
-                FavouriteMapCell(map: map)
-                
+        HStack(spacing: 16) {
+            ForEach(mapsViewModel.maps.sorted(by: { $0.position < $1.position }), id: \.self) { map in
+                NavigationLink(destination: MapsDetailView(map: map)) {
+                    FavouriteMapCell(map: map)
+                }
             }
             
+            EditFavouritesButton(showingEditSheet: $showingEditSheet, showingLoginSheet: $showingLoginSheet)
         }
         .buttonStyle(FavouriteMapCellButtonStyle())
         .onAppear(perform: onAppear)
-        
+        .sheet(isPresented: $showingEditSheet) {
+            EditFavouriteMapsView()
+                .interactiveDismissDisabled()
+        }
+        .sheet(isPresented: $showingLoginSheet, onDismiss: onAppear) {
+            LoginSheet()
+        }
     }
     
     func onAppear() {
-        
         guard let user = Auth.auth().currentUser else {
-            
             return
-            
         }
         
-        if !mapsViewModel.maps.isEmpty && user.isAnonymous {
-            
+        if user.isAnonymous {
             mapsViewModel.clear()
-            
+        } else {
+            mapsViewModel.fetchData()
         }
-        
     }
-    
 }
 
 
@@ -257,20 +232,14 @@ private struct FavouriteMapCell: View {
 }
 
 private struct EditFavouritesButton: View {
-    
+    @Binding var showingEditSheet: Bool
+    @Binding var showingLoginSheet: Bool
     @State private var showingLoginAlert = false
-    @State private var showingLoginSheet = false
-    
-    @Binding var isShowing: Bool
-    
     @AppStorage("settings.tint") var tint: Int = 1
     
     var body: some View {
-        
         Button(action: showEditFavouritesMapView) {
-            
             ZStack {
-                
                 Rectangle()
                     .frame(width: 100, height: 150)
                     .foregroundColor(Color("Favourite_Map_Background"))
@@ -282,70 +251,45 @@ private struct EditFavouritesButton: View {
                 Image(systemName: "plus")
                     .foregroundColor(TintColour.colour(withID: tint))
                     .font(.system(size: 24))
-                
             }
-            
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .shadow(color: .black.opacity(0.1), radius: 6, y: 5)
         .buttonStyle(FavouriteMapCellButtonStyle())
-        .sheet(isPresented: $showingLoginSheet) {
-            
-            LoginSheet()
-            
-        }
         .alert(isPresented: $showingLoginAlert) {
-            
             Alert(title: Text("Sign In"),
                   message: Text("Sign in to Popflash to add maps to your favourites."),
                   primaryButton: .default(Text("Sign In"), action: showLogin),
-                  secondaryButton: .cancel())
-            
+                  secondaryButton: .cancel()
+            )
         }
-        
     }
     
     func showEditFavouritesMapView() {
-        
         guard let user = Auth.auth().currentUser else {
-            
             return
-            
         }
         
         if user.isAnonymous {
-            
             showingLoginAlert.toggle()
-            
         } else {
-            
-            isShowing.toggle()
-            
+            showingEditSheet.toggle()
         }
-        
     }
     
     func showLogin() {
-        
         showingLoginSheet.toggle()
-        
     }
-    
 }
 
 private struct FavouriteNades: View {
-    
     @Binding var selectedNade: Nade?
     @State var nadeViewIsPresented = false
-    
     @StateObject var favouritesViewModel = FavouritesViewModel()
-    
-    @AppStorage("favourites.nades") var favouriteNades = [String]()
+    @AppStorage("loggedInStatus") var loggedInStatus = false
     
     var body: some View {
-        
         HStack(alignment: .center) {
-            
             Text("Grenades")
                 .font(.system(size: 20))
                 .fontWeight(.semibold)
@@ -355,61 +299,51 @@ private struct FavouriteNades: View {
             Spacer()
             
             Menu {
-                
                 Button("Map") {}
                 Button("Date Added: Oldest") {}
                 Button("Date Added: Newest") {}
-                
             } label: {
-                
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(.title3)
-                
             }
             .buttonStyle(.borderless)
-            
         }
         .padding(.horizontal)
         .onAppear(perform: onAppear)
+        .onChange(of: loggedInStatus, perform: update)
         
         ForEach(favouritesViewModel.nades, id: \.self) { nade in
-            
             Button {
-                
                 self.selectedNade = nade
                 nadeViewIsPresented.toggle()
-                
             } label: {
-                
                 FavouriteNadeCell(nade: nade)
                     .padding(.horizontal)
                     .padding(.bottom, 16)
-                
             }
             .buttonStyle(FavouriteNadeCellButtonStyle())
-            
         }
-        
     }
     
     func onAppear() {
-        
-        favouritesViewModel.fetchData()
-        
         guard let user = Auth.auth().currentUser else {
-            
             return
-            
         }
         
         if user.isAnonymous {
-            
             favouritesViewModel.clear()
-            
+        } else {
+            favouritesViewModel.fetchData()
         }
-        
     }
     
+    func update(_ status: Bool) {
+        if status == true {
+            favouritesViewModel.fetchData()
+        } else {
+            favouritesViewModel.clear()
+        }
+    }
 }
 
 struct FavouriteNadeCell: View, Equatable {
@@ -470,7 +404,6 @@ struct FavouriteNadeCell: View, Equatable {
     }
     
     static func == (lhs: FavouriteNadeCell, rhs: FavouriteNadeCell) -> Bool {
-        return lhs.nade.id == rhs.nade.id
+        return lhs.nade.nadeID == rhs.nade.nadeID
     }
-    
 }
