@@ -654,7 +654,7 @@ private struct FavouriteButton: View {
         }
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.id)
+        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.nadeID)
         
         ref.getDocuments { snapshot, error in
             
@@ -664,7 +664,7 @@ private struct FavouriteButton: View {
                 
                 let data = document.data()
                 
-                if data["id"] as! String == nade.id {
+                if data["id"] as! String == nade.nadeID {
                     
                     isFavourite = true
                     
@@ -746,7 +746,7 @@ private struct FavouriteButton: View {
         loading = true
         
         let db = Firestore.firestore()
-        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.id)
+        let ref = db.collection("users").document(user.uid).collection("nades").whereField("id", isEqualTo: nade.nadeID)
         
         ref.getDocuments { snapshot, error in
             
