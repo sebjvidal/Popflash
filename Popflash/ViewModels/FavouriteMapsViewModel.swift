@@ -47,7 +47,7 @@ class FavouriteMapsViewModel: ObservableObject {
                 
                 self?.fetchMap(from: mapRef, withPosition: position) { map in
                     if let existingMaps = self?.maps {
-                        if !_maps.contains(map) {
+                        if !existingMaps.contains(map) {
                             self?.maps.append(map)
                         }
                     }
