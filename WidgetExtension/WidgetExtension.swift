@@ -120,7 +120,7 @@ struct WidgetExtensionEntryView : View {
             WidgetDetails(nade: entry.nade)
             
         }
-        .widgetURL(URL(string: "popflash://featured/nade?id=\(entry.nade.id)")!)
+        .widgetURL(URL(string: "popflash://featured/nade?id=\(entry.nade.nadeID)")!)
         
     }
     
