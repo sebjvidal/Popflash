@@ -525,11 +525,8 @@ struct NadeCell: View, Equatable {
     }
     
     static func == (lhs: NadeCell, rhs: NadeCell) -> Bool {
-        
-        return lhs.nade.id == lhs.nade.id
-        
+        return lhs.nade.nadeID == lhs.nade.nadeID
     }
-    
 }
 
 struct NadeDetails: View {
