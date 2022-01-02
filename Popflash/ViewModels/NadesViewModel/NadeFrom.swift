@@ -35,7 +35,7 @@ func nadeFrom(doc: DocumentSnapshot) -> Nade? {
     let section = ""
     
     let nade = Nade(documentID: documentID,
-                    id: id,
+                    nadeID: id,
                     name: name,
                     map: map,
                     type: type,
