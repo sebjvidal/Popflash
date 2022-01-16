@@ -342,7 +342,7 @@ private struct ProfilePictureEditor: View {
                     
                 }
                 .clipShape(Circle())
-                .contentShape(Circle())
+                .contentShape(.contextMenuPreview, Circle())
                 .contextMenu {
                     
                     Button(action: pickImage) {
