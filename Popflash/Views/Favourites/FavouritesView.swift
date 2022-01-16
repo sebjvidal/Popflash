@@ -225,6 +225,7 @@ private struct FavouriteMapCell: View {
             
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .cellShadow()
         
     }
