@@ -11,7 +11,6 @@ import Kingfisher
 
 class MapCollectionViewCoordinator: NSObject, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UICollectionViewDataSource {
     var parent: MapCollectionView
-    var previousData: [String] = []
     
     init(_ parent: MapCollectionView) {
         self.parent = parent
@@ -53,8 +52,6 @@ class MapCollectionViewCoordinator: NSObject, UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        previousData = self.parent.selectedMaps
-        
         let item = self.parent.maps[indexPath.item]
         let cell = collectionView.cellForItem(at: indexPath) as! FavouriteMapCollectionViewCell
         
@@ -79,11 +76,16 @@ class MapCollectionViewCoordinator: NSObject, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let item = self.parent.maps[indexPath.item].id
-        let itemProvider = NSItemProvider(object: item as NSString)
-        let dragItem = UIDragItem(itemProvider: itemProvider)
-        dragItem.localObject = item
         
-        return [dragItem]
+        if parent.selectedMaps.contains(item) {
+            let itemProvider = NSItemProvider(object: item as NSString)
+            let dragItem = UIDragItem(itemProvider: itemProvider)
+            dragItem.localObject = item
+            
+            return [dragItem]
+        } else {
+            return []
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
