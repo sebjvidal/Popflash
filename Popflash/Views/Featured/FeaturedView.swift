@@ -154,7 +154,7 @@ private struct FeaturedNade: View {
                     FeaturedCell(nade: nade)
                         .cellShadow()
                         .padding(.horizontal)
-                        .padding(.bottom, 8)
+                        .padding(.bottom)
                 }
             }
             .buttonStyle(MapCellButtonStyle())
@@ -239,7 +239,7 @@ private struct MoreFrom: View {
             VStack(alignment: .leading, spacing: 0) {
                 Divider()
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                    .padding(.top, 1)
                 
                 Text("More from \(map.name)")
                     .font(.system(size: 20))
