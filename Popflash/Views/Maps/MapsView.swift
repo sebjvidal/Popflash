@@ -148,6 +148,7 @@ private struct MapsList: View {
                 
                 Button(action: { action = map }) {
                     MapCell(map: map)
+                        .equatable()
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)
                         .cellShadow()
