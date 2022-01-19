@@ -483,7 +483,7 @@ private struct AppIconRow: View {
                 
                 HStack(spacing: 12) {
                     
-                    SettingIcon(color: .purple, icon: Image(systemName: "square.grid.3x3.fill"))
+                    SettingIcon(color: .blue, icon: Image(systemName: "square.grid.3x3.fill"))
 
                     Text("App Icon")
                     
@@ -643,7 +643,7 @@ private struct NotificationsRow: View {
                 
                 HStack(spacing: 12) {
                     
-                    SettingIcon(color: .red, icon: Image(systemName: "app.badge"), edges: [.leading, .bottom], length: 1)
+                    SettingIcon(color: .red, icon: Image(systemName: "bell.badge.fill"))
                     
                     Text("Notifications")
                         .padding(.vertical, 18)
