@@ -685,7 +685,7 @@ private struct DeleteAccount: View {
                 .fontWeight(.semibold)
                 .padding(.leading, 18)
             
-            Text("Delete your account and associated data.")
+            Text("Delete your account and all associated data.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .padding(.leading, 18)
