@@ -138,7 +138,7 @@ private struct FavouriteMaps: View {
                     .background {
                         GeometryReader { geo in
                             mapsText
-                                .offset(x: geo.frame(in: .global).minX < 0 ? -geo.frame(in: .global).minX : 0)
+                                .offset(x: geo.frame(in: .named("favouriteMaps")).minX < 0 ? -geo.frame(in: .named("favouriteMaps")).minX : 0)
                         }
                     }
                 
@@ -151,6 +151,7 @@ private struct FavouriteMaps: View {
             }
             .frame(minWidth: UIScreen.screenWidth)
         }
+        .coordinateSpace(name: "favouriteMaps")
     }
     
     var mapsText: some View {
