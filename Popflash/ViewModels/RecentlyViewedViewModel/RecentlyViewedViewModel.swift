@@ -11,10 +11,16 @@ import FirebaseFirestore
 
 class RecentlyViewedViewModel: ObservableObject {
     @Published var nades: [Nade] = []
-    
+    @Published var state: LoadingState = .loaded
     private var lastDocument: QueryDocumentSnapshot!
     
     func fetchData(order: RecentlyViewedViewModelOrder = .newest) {
+        state = .loading
+        
+        defer {
+            state = .loaded
+        }
+        
         guard let user = Auth.auth().currentUser else {
             return
         }
@@ -91,9 +97,11 @@ class RecentlyViewedViewModel: ObservableObject {
     }
     
     func refresh() {
-        self.nades.removeAll()
-        self.lastDocument = nil
-        
-        fetchData()
+        DispatchQueue.main.async {
+            self.nades.removeAll()
+            self.lastDocument = nil
+            
+            self.fetchData()
+        }
     }
 }
