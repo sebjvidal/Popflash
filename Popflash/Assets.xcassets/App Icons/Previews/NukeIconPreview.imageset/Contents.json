@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Popflash_Nuke.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
