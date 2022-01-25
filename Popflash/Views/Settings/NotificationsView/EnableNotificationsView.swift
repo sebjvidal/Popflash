@@ -146,7 +146,7 @@ private struct PopflashRow: View {
                 
                 HStack {
 
-                    Image("Icon")
+                    Image("AppIconPreview")
                         .resizable()
                         .frame(width: 29, height: 29)
                         .clipShape(RoundedRectangle(cornerRadius: 6.5, style: .continuous))
