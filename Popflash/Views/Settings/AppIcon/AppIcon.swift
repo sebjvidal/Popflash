@@ -11,6 +11,11 @@ struct AppIcon: Identifiable, Hashable {
     var id = UUID()
     var name: String
     var asset: String?
+    
+    init(name: String, asset: String?) {
+        self.name = name
+        self.asset = asset
+    }
 }
 
 enum ListPosition {
