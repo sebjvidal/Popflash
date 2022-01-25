@@ -633,7 +633,7 @@ private struct SkillGroupCell: View {
                         .lineLimit(4)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 8)
-                        .foregroundColor(Color("Headline"))
+                        .foregroundColor(.primary)
                     
                     Spacer()
                     
