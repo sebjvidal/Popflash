@@ -391,7 +391,7 @@ private struct AppearanceRow: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 6.5, style: .continuous)
                             .frame(width: 29, height: 29)
-                            .foregroundColor(Color("Headline"))
+                            .foregroundColor(.primary)
                         
                         Image("Dark_Mode")
                             .resizable()
