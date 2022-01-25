@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Popflash_Inferno.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
