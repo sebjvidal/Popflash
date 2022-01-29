@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct AppIconView: View {
+    @State private var selection: String? = UIApplication.shared.alternateIconName
+    
     var body: some View {
         List {
             Group {
                 Divider()
                     .padding(.horizontal)
-                CustomAppIcons()
+                
+                DefaultCustomIcons(selected: $selection)
+                
+                CsgoCustomIcons(selected: $selection)
             }
             .listRowInsets(.some(EdgeInsets()))
             .listRowSeparator(.hidden)
@@ -25,16 +30,68 @@ struct AppIconView: View {
     }
 }
 
-private struct CustomAppIcons: View {
-    @State var selected: String? = UIApplication.shared.alternateIconName
+private struct DefaultCustomIcons: View {
+    @Binding var selected: String?
     
-    var icons = [AppIcon(name: "Default", asset: nil),
-                 AppIcon(name: "Blueprint", asset: "AppIconDev")]
+    var icons = [
+        AppIcon(name: "Default", asset: nil),
+        AppIcon(name: "Blueprint", asset: "AppIconDev")
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Popflash Collection")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.top, 16)
+                .padding(.leading, 20)
+                .padding(.bottom, 6)
+            
+            CustomAppIcons(icons: icons, selected: $selected)
+        }
+    }
+}
+
+private struct CsgoCustomIcons: View {
+    @Binding var selected: String?
+    
+    var icons = [
+        AppIcon(name: "Inferno", asset: "InfernoIcon", premium: true),
+        AppIcon(name: "Nuke", asset: "NukeIcon", premium: true),
+        AppIcon(name: "Dust II", asset: "Dust IIIcon", premium: true),
+        AppIcon(name: "Cobblestone", asset: "CobblestoneIcon", premium: true),
+        AppIcon(name: "Cache", asset: "CacheIcon", premium: true),
+        AppIcon(name: "Mirage", asset: "MirageIcon", premium: true),
+        AppIcon(name: "Train", asset: "TrainIcon", premium: true),
+        AppIcon(name: "Overpass", asset: "OverpassIcon", premium: true),
+        AppIcon(name: "Vertigo", asset: "VertigoIcon", premium: true),
+        AppIcon(name: "Ancient", asset: "AncientIcon", premium: true)
+    ]
+        .sorted { $0.name < $1.name }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("CS:GO Collection")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.top)
+                .padding(.leading, 20)
+                .padding(.bottom, 6)
+            
+            CustomAppIcons(icons: icons, selected: $selected)
+        }
+        .padding(.bottom)
+    }
+}
+
+private struct CustomAppIcons: View {
+    var icons: [AppIcon]
+    @Binding var selected: String?
     
     var body: some View {
         VStack(spacing: 0) {
-            ForEach(icons, id: \.self) { icon in
-                DefaultIconRow(name: icon.name, asset: icon.asset, selected: $selected, position: pos(icon))
+            ForEach(icons) { icon in
+                DefaultIconRow(icon: icon, selected: $selected, position: pos(icon))
                     .buttonStyle(RoundedTableCell())
                 if pos(icon) != .last {
                     Divider()
@@ -45,7 +102,7 @@ private struct CustomAppIcons: View {
         .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .cellShadow()
-        .padding()
+        .padding(.horizontal)
     }
     
     func pos(_ icon: AppIcon) -> ListPosition? {
@@ -66,8 +123,7 @@ private struct CustomAppIcons: View {
 }
 
 private struct DefaultIconRow: View {
-    @State var name: String
-    @State var asset: String?
+    @State var icon: AppIcon
     @Binding var selected: String?
     @State var position: ListPosition?
     
@@ -76,17 +132,18 @@ private struct DefaultIconRow: View {
     var body: some View {
         Button(action: setIcon) {
             HStack {
-                Image(uiImage: UIImage(named: asset ?? "AppIcon")!)
+                Image(iconPreviewName())
                     .resizable()
                     .aspectRatio(1, contentMode: .fit)
                     .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
-                Text(name)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                
+                Text(icon.name)
                     .padding(.leading, 8)
+                
                 Spacer()
-                Image(systemName: "checkmark")
-                    .foregroundColor(TintColour.colour(withID: 1))
-                    .opacity(selected == asset ? 1 : 0)
+                
+                disclosureIndicator
                     .padding(.top, position == .first ? 0 : 6)
                     .padding(.bottom, position == .last ? 0: 6)
             }
@@ -97,15 +154,37 @@ private struct DefaultIconRow: View {
         }
     }
     
+    var disclosureIndicator: some View {
+        ZStack {
+            if icon.premium {
+                Image(systemName: "lock.fill")
+                    .foregroundStyle(.secondary)
+            } else {
+                Image(systemName: "checkmark")
+                    .foregroundColor(TintColour.colour(withID: 1))
+                    .opacity(selected == icon.asset ? 1 : 0)
+            }
+        }
+    }
+    
+    func iconPreviewName() -> String {
+        if let name = icon.asset {
+            return "\(name)Preview"
+        } else {
+            return "AppIconPreview"
+        }
+    }
+    
     func setIcon() {
-        UIApplication.shared.setAlternateIconName(asset)
-        selected = asset
+        UIApplication.shared.setAlternateIconName(icon.asset)
+        selected = icon.asset
     }
 }
 
 struct AppIconView_Previews: PreviewProvider {
     static var previews: some View {
-        AppIconView()
-            .preferredColorScheme(.dark)
+        NavigationView {
+            AppIconView()
+        }
     }
 }
