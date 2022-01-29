@@ -18,11 +18,7 @@ class FavouriteMapsViewModel: ObservableObject {
             return
         }
         
-        guard let user = Auth.auth().currentUser else {
-            return
-        }
-        
-        if user.isAnonymous {
+        guard let user = Auth.auth().currentUser, !user.isAnonymous else {
             return
         }
         
