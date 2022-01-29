@@ -83,7 +83,7 @@ struct MapsDetailView: View {
                            selectedBind: $selectedBind)
             }
         }
-    
+        .overlay(alignment: .bottom, content: proPromptOverlay)
     }
     
     func loadNades() {
@@ -97,7 +97,7 @@ struct MapsDetailView: View {
             viewModel.fetchData(ref: ref.limit(to: 10))
         }
     }
-
+    
     func handleSearch() {
         viewModel.nades.removeAll()
         loadNades()
@@ -138,6 +138,10 @@ struct MapsDetailView: View {
             }
         }
     }
+    
+    @ViewBuilder func proPromptOverlay() -> some View {
+        ProPrompt(map: map)
+    }
 }
 
 private struct Header: View {
@@ -175,14 +179,14 @@ private struct Header: View {
 private struct FavouriteToolbarItem: View {
     
     var map: Map
-
+    
     @Binding var isFavourite: Bool
     @State var isLoading = true
     @State var showingLoginAlert = false
     @State var showingLoginSheet = false
     
     var body: some View {
-
+        
         Button(action: favourite) {
             
             ZStack {
@@ -195,8 +199,8 @@ private struct FavouriteToolbarItem: View {
                     .opacity(isLoading ? 0 : 1)
                 
             }
-            .onAppear(perform: getFavourite)
-
+            .onAppear(perform: onAppear)
+            
         }
         .sheet(isPresented: $showingLoginSheet) {
             
@@ -214,44 +218,11 @@ private struct FavouriteToolbarItem: View {
         
     }
     
-    func getFavourite() {
-        
-        guard let user = Auth.auth().currentUser else {
-            
-            return
-            
-        }
-        
-        if user.isAnonymous {
-            
+    func onAppear() {
+        map.getFavourite { isFavourite in
+            self.isFavourite = isFavourite
             isLoading = false
-            
-            return
-            
         }
-        
-        let db = Firestore.firestore()
-        let mapRef = db.collection("maps").document(map.id)
-        let ref = db.collection("users").document(user.uid).collection("maps").whereField("map", isEqualTo: mapRef)
-        
-        ref.getDocuments { snapshot, error in
-            
-            guard let documents = snapshot?.documents else {
-                
-                return
-                
-            }
-            
-            isFavourite = !documents.isEmpty
-            
-            DispatchQueue.main.async {
-                
-                isLoading = false
-                
-            }
-            
-        }
-        
     }
     
     func favourite() {
@@ -399,66 +370,45 @@ private struct FavouriteToolbarItem: View {
 }
 
 private struct MoreToolbarItem: ToolbarContent {
-    
     @Binding var showingBottomSheet: Bool
-
+    
     var body: some ToolbarContent {
-
         ToolbarItem(placement: .navigationBarTrailing) {
-
-            Button(action: seeMore, label: {
-
-                Image(systemName: "ellipsis")
-                
-            })
-
+            Button(action: seeMore, label: label)
         }
-
     }
-
+    
     func seeMore() {
-
         showingBottomSheet.toggle()
-
     }
-
+    
+    @ViewBuilder func label() -> some View {
+        Image(systemName: "ellipsis")
+    }
 }
 
 private struct NadeList: View {
-    
     @Binding var nades: [Nade]
     @Binding var selectedNade: Nade?
     
     var body: some View {
-            
         ForEach(nades, id: \.self) { nade in
-            
             Button {
-                
                 selectNade(nade: nade)
-                
             } label: {
-                
                 NadeCell(nade: nade)
                     .equatable()
                     .cellShadow()
                     .padding(.bottom, 8)
-                
             }
             .buttonStyle(NadeCellButtonStyle())
-            
         }
-        
     }
     
     func selectNade(nade: Nade) {
-        
         selectedNade = nade
-        
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    
     }
-    
 }
 
 struct NadeCell: View, Equatable {
@@ -530,16 +480,13 @@ struct NadeCell: View, Equatable {
 }
 
 struct NadeDetails: View {
-    
     var views: Int
     var favourites: Int
     var tick: String
     var bind: String
     
     var body: some View {
-        
         HStack(spacing: 0) {
-            
             Label("\(views)", systemImage: "eye.fill")
             
             Spacer(minLength: 0)
@@ -553,36 +500,88 @@ struct NadeDetails: View {
             Spacer(minLength: 0)
             
             Label("\(bind)", systemImage: "keyboard.fill")
-            
         }
         .foregroundStyle(.primary)
         .font(.caption2)
         .labelStyle(.compact)
-        
     }
-    
 }
 
 private struct NadeCellTypeIcon: View {
-
     var type: String
-
+    
     var body: some View {
-
         ZStack {
-
             Image("\(type)_Icon")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 30)
-
         }
         .frame(width: 40, height: 40)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .padding(.trailing, 8)
         .padding(.top, 8)
-
     }
+}
 
+private struct ProPrompt: View {
+    var map: Map
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            Image("\(map.name)IconPreview")
+                .resizable()
+                .frame(width: 48, height: 48)
+                .padding([.leading, .vertical], 12)
+            
+            VStack(alignment: .leading) {
+                Text("Love \(map.name)?")
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                
+                Text("Get the custom \(map.name) app icon with Popflash Pro!")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            .padding(10)
+            
+            Spacer(minLength: 0)
+            
+            Button(action: {}, label: proLabel)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .padding(.trailing, 12)
+        }
+        .frame(maxWidth: .infinity)
+        .background(.regularMaterial)
+        .clipShape(roundRect)
+        .overlay(roundRect.stroke(.secondary).opacity(0.15))
+        .padding([.horizontal, .bottom], 8)
+    }
+    
+    var roundRect: some Shape {
+        RoundedRectangle(cornerRadius: 20, style: .continuous)
+    }
+    
+    @ViewBuilder func proLabel() -> some View {
+        Text("GO PRO")
+            .font(.callout)
+            .fontWeight(.semibold)
+    }
+}
+
+struct MapsDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        TabView {
+            NavigationView {
+                MapsDetailView(map: Map.preview)
+                    .tabItem {
+                        Image(systemName: "star.fill")
+                        Text("Featured")
+                    }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
 }
